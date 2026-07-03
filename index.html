@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl" data-theme="dark">
+<html lang="pl" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,12 +7,10 @@
     (function () {
       var d = document.documentElement;
       d.classList.add("js");
-      try {
-        var p = new URLSearchParams(location.search).get("theme");
-        var t = p || localStorage.getItem("tow-theme") || "dark";
-        d.setAttribute("data-theme", t === "light" ? "light" : "dark");
-        if (p) localStorage.setItem("tow-theme", p === "light" ? "light" : "dark");
-      } catch (e) { d.setAttribute("data-theme", "dark"); }
+      // Strona jest JASNA — wersja oryginalna. Motyw jest na stałe jasny:
+      // ani parametr ?theme=dark w adresie, ani stare ustawienie zapisane
+      // w przeglądarce nie przełączą już strony na ciemną.
+      d.setAttribute("data-theme", "light");
     })();
   </script>
   <title>Projektant Wnętrz Wrocław | Typ od Wnętrz – Projekty Online i Stacjonarne</title>
@@ -48,7 +46,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=5" />
+  <link rel="stylesheet" href="styles.css?v=6" />
 </head>
 <body>
 
@@ -89,7 +87,7 @@
       <a href="#kontakt" style="--i:6"><span>07</span> Kontakt</a>
     </nav>
     <div class="mobile__foot">
-      <a href="/cdn-cgi/l/email-protection#09616c63497d7079666d7e676c7d7b73277965"><span class="__cf_email__" data-cfemail="adc5c8c7edd9d4ddc2c9dac3c8d9dfd783ddc1">[email&#160;protected]</span></a>
+      <a href="/cdn-cgi/l/email-protection#49212c23093d3039262d3e272c3d3b33673925"><span class="__cf_email__" data-cfemail="84ece1eec4f0fdf4ebe0f3eae1f0f6feaaf4e8">[email&#160;protected]</span></a>
       <a href="https://www.instagram.com/typ_od_wnetrz/" target="_blank" rel="noopener">Instagram @typ_od_wnetrz</a>
       <span>Wrocław &amp; online — cała Polska</span>
     </div>
@@ -118,7 +116,7 @@
           </div>
         </div>
       </div>
-
+      <a href="#manifest" class="hero__scroll" aria-label="Przewiń w dół"><span>Przewiń</span><i></i></a>
     </section>
 
     <!-- trust strip -->
@@ -328,7 +326,7 @@
             <p class="lead">Projektuję głównie online dla całej Polski, a we Wrocławiu i okolicach spotykam się na inwentaryzacji i budowie. Możliwe są też projekty zagraniczne.</p>
             <div class="contact__chan">
               <a href="https://www.instagram.com/typ_od_wnetrz/" target="_blank" rel="noopener"><span class="k">Instagram — najszybszy kontakt</span><span class="v">@typ_od_wnetrz</span></a>
-              <a href="/cdn-cgi/l/email-protection#137b767953676a637c77647d766761693d637f"><span class="k">E-mail</span><span class="v"><span class="__cf_email__" data-cfemail="cda5a8a78db9b4bda2a9baa3a8b9bfb7e3bda1">[email&#160;protected]</span></span></a>
+              <a href="/cdn-cgi/l/email-protection#f79f929db7838e87989380999283858dd9879b"><span class="k">E-mail</span><span class="v"><span class="__cf_email__" data-cfemail="7018151a300409001f14071e1504020a5e001c">[email&#160;protected]</span></span></a>
             </div>
             <div class="contact__note">Telefon uzgadniamy po wstępnej wycenie — najpierw poznajmy zakres i budżet, żeby rozmowa była konkretna.</div>
             <div class="contact__loc"><b>Wrocław &amp; online</b> — projekty zdalne w całej Polsce, spotkania we Wrocławiu i okolicach.</div>
@@ -396,7 +394,7 @@
         <div class="foot__col">
           <h5>Kontakt</h5>
           <a href="https://www.instagram.com/typ_od_wnetrz/" target="_blank" rel="noopener">Instagram @typ_od_wnetrz</a>
-          <a href="/cdn-cgi/l/email-protection#91f9f4fbd1e5e8e1fef5e6fff4e5e3ebbfe1fd"><span class="__cf_email__" data-cfemail="137b767953676a637c77647d766761693d637f">[email&#160;protected]</span></a>
+          <a href="/cdn-cgi/l/email-protection#2a424f406a5e535a454e5d444f5e5850045a46"><span class="__cf_email__" data-cfemail="29414c43695d5059464d5e474c5d5b53075945">[email&#160;protected]</span></a>
           <p>Wrocław &amp; online — cała Polska</p>
         </div>
         <div class="foot__col">

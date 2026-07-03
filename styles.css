@@ -255,7 +255,12 @@ body.menu-open .mobile__nav a { opacity: 1; transform: translateY(0); transition
 .hero__sub { color: var(--cream-on-dark); max-width: 40ch; font-size: clamp(1rem, 1.5vw, 1.18rem); opacity: 0.9; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; }
 
-
+/* scroll cue */
+.hero__scroll {
+  position: absolute; left: var(--gut); bottom: clamp(20px, 4vh, 38px); z-index: 3;
+  display: flex; align-items: center; gap: 12px; color: var(--bone);
+  font-size: 0.68rem; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.8;
+}
 .hero__scroll i { display: block; width: 1px; height: 46px; background: linear-gradient(var(--bone), transparent); position: relative; overflow: hidden; }
 .hero__scroll i::after { content: ""; position: absolute; top: -50%; left: 0; width: 100%; height: 50%; background: var(--brass); animation: scrolldrop 2.2s var(--ease) infinite; }
 @keyframes scrolldrop { 0% { top: -50%; } 60%,100% { top: 100%; } }
@@ -665,3 +670,23 @@ html[data-theme="dark"] .form__field label .opt { color: var(--warm-gray); opaci
 html[data-theme="dark"] .ph   { background: linear-gradient(150deg, #2b2318 0%, #1c1710 60%, #14100A 100%); }
 html[data-theme="dark"] .ph.v2 { background: linear-gradient(150deg, #302819 0%, #201A11 55%, #17120B 100%); }
 html[data-theme="dark"] .ph.v3 { background: linear-gradient(150deg, #272015 0%, #1A1610 60%, #120F09 100%); }
+
+/* — KALKULATOR: przywrócony kontrast beż / czerń ——————————————————————————
+   Na ciemnej stronie lewy panel formularza wraca do ciepłego beżu (jasny
+   „moment" na czerni), a prawy panel wyceny zostaje czarny. Zaznaczony
+   kwadrat typu jest ciemny — „koresponduje" z czarnym panelem po prawej.
+   Robimy to lokalnie: przywracamy jasne wartości tokenów tylko wewnątrz
+   .calc__form, więc cała jego zawartość renderuje się jak w wersji jasnej. */
+html[data-theme="dark"] .calc__form {
+  --bone: #F5F0E8;
+  --bone-2: #EFE7DA;
+  --beige: #E9DFCF;
+  --sand: #DECDB4;
+  --taupe: #C9B79E;
+  --warm-gray: #8A8073;
+  --graphite: #2A2723;
+  background: #F5F0E8;
+  color: #2A2723;
+}
+/* gałka suwaka/przełącznika znów jasna (jak w wersji beżowej) */
+html[data-theme="dark"] .calc__form .toggle__sw::after { background: #F5F0E8; }
