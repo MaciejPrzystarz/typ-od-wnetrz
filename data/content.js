@@ -16,7 +16,7 @@ window.PROCESS_STEPS = [
 
 window.TIMELINE = [
   { label: "Łazienka / jedno pomieszczenie", time: "ok. 1 miesiąc" },
-  { label: "Mieszkanie", time: "ok. 1,5–2 miesiące" },
+  { label: "Mieszkanie", time: "ok. 1,5–3 miesiąca" },
   { label: "Dom", time: "ok. 2–4 miesiące" },
   { label: "Bardzo duży dom", time: "ok. 3–5 miesięcy" },
 ];

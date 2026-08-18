@@ -120,7 +120,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .btn--solid:hover { color: var(--ink); }
 .btn--solid:hover::before { transform: translateY(0); }
 
-.btn--ghost { color: white; border: 1px solid color-mix(in srgb, var(--c) 38%, transparent); }
+.btn--ghost { color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 38%, transparent); }
 .btn--ghost::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
   background: var(--graphite);
@@ -193,6 +193,12 @@ input, select, textarea { font: inherit; color: inherit; }
 .nav a:hover::after { left: 0; right: 0; }
 
 .hdr__cta { display: flex; align-items: center; gap: 14px; }
+
+/* "Oblicz wycenę" przejmuje kolor nagłówka: nad filmem jest jasny (--bone),
+   a po przewinięciu, gdy header dostaje jasne tło, staje się czarny
+   (--graphite). Obsługuje to .hdr / .hdr.is-stuck - stąd currentColor,
+   a nie kolor wpisany na sztywno. Ramka idzie za tekstem. */
+.hdr__cta .btn--ghost { --c: currentColor; }
 
 /* social - Instagram / TikTok */
 .social { display: flex; align-items: center; gap: 6px; }
@@ -284,7 +290,9 @@ body.menu-open .mobile__nav a { opacity: 1; transform: translateY(0); transition
 .hero h1 em { font-style: italic; color: var(--brass-soft); }
 /* wcięcie drugiej linii przeskalowane do mniejszego stopnia pisma */
 .hero h1 .indent { display: inline-block; margin-left: clamp(14px, 2.6vw, 46px); }
-.hero__bottom { display: flex; flex-direction: column; align-items: flex-start; gap: clamp(18px, 2.6vh, 26px); margin-top: clamp(18px, 2.6vh, 30px); max-width: 46ch; }
+/* margin-top celowo mały - podtytuł ma siedzieć TUŻ pod nagłówkiem.
+   Odstęp do przycisków robi natomiast `gap`, nie ten margines. */
+.hero__bottom { display: flex; flex-direction: column; align-items: flex-start; gap: clamp(18px, 2.6vh, 26px); margin-top: clamp(6px, 0.9vh, 12px); max-width: 46ch; }
 .hero__sub { color: var(--cream-on-dark); max-width: 46ch; font-size: clamp(0.94rem, 1.05vw, 1.04rem); opacity: 0.9; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; }
 
@@ -319,6 +327,8 @@ html.js .hero.is-in [data-anim] {
 
 /* trust strip */
 .trust { border-top: var(--hair); }
+/* pasek zaufania ma trzymać się sekcji pod spodem, a nie wisieć w połowie drogi */
+.trust + .section { padding-top: clamp(40px, 5vw, 76px); }
 .trust .wrap { display: flex; flex-wrap: wrap; gap: clamp(20px,4vw,60px); align-items: center; justify-content: space-between; padding-block: 26px; }
 .trust span { font-size: 0.8rem; letter-spacing: 0.08em; color: var(--warm-gray); display: inline-flex; align-items: center; gap: 0.7em; }
 .trust span b { color: var(--graphite); font-weight: 600; font-family: var(--display); font-size: 1.5rem; }
@@ -380,15 +390,45 @@ html.js .hero.is-in [data-anim] {
 /* =========================================================================
    BANNER - full-bleed statement (Omnires-style)
    ========================================================================= */
-.banner { position: relative; min-height: clamp(420px, 72vh, 760px); display: flex; align-items: flex-end; overflow: hidden; background: var(--ink); }
+/* Zdjęcie i tekst leżą w tej samej komórce siatki: kadr nie jest przycinany -
+   to on wyznacza wysokość sekcji, a napis nakłada się na jego dolną część. */
+.banner { position: relative; display: grid; overflow: hidden; background: var(--ink); }
 .banner image-slot, .banner .ph { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+.banner__img { grid-area: 1 / 1; align-self: start; width: 100%; height: auto; z-index: 0; display: block; }
 .banner::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background: linear-gradient(180deg, rgba(23,20,15,0.22) 0%, rgba(23,20,15,0.08) 42%, rgba(23,20,15,0.84) 100%); }
-.banner__inner { position: relative; z-index: 2; width: 100%; padding-block: clamp(44px, 8vh, 96px); color: var(--bone); }
-.banner__inner .kicker { color: var(--bone); }
+/* Wcięcie od krawędzi i odstęp od dołu liczone tak samo jak w hero
+   (patrz .hero__inner), żeby oba napisy stały w jednej linii pionowej. */
+.banner__inner {
+  --hero-col:  calc(max(0px, (100vw - var(--maxw)) / 2) + var(--gut));
+  --hero-edge: clamp(16px, 1.8vw, 34px);
+  grid-area: 1 / 1; align-self: end;
+  position: relative; z-index: 2; width: 100%;
+  max-width: none; margin-inline: 0;
+  padding-inline: calc((var(--hero-col) + var(--hero-edge)) / 2);
+  padding-block: clamp(52px, 9vh, 108px);
+  color: var(--bone);
+}
+.banner__inner .kicker { color: var(--bone); opacity: 0.92; }
 .banner__inner .kicker::before { background: var(--brass); opacity: 1; }
-.banner__inner h2 { font-family: var(--display); font-size: clamp(2.2rem, 5.2vw, 4.4rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.01em; margin: 20px 0 30px; max-width: 20ch; }
+/* Napis w tej samej skali i rytmie co nagłówek w hero. */
+.banner__inner h2 {
+  color: var(--bone);
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  line-height: 1.12;
+  margin: 0.6em 0 clamp(20px, 2.6vh, 30px);
+  max-width: 26ch;
+}
 .banner__inner h2 em { font-style: italic; color: var(--brass-soft); }
+.banner__inner h2 .indent { display: inline-block; margin-left: clamp(14px, 2.6vw, 46px); }
+/* Na wąskich ekranach kadr jest za niski, żeby zmieścić na nim napis -
+   zdjęcie zostaje w całości u góry, a tekst schodzi pod nie, na ciemne tło. */
+@media (max-width: 900px){
+  .banner { display: block; }
+  .banner__img { width: 100%; height: auto; }
+  .banner::after { display: none; }
+  .banner__inner { padding-block: clamp(28px, 6vw, 44px); }
+}
 
 /* =========================================================================
    OFERTA - 8 typów
@@ -611,13 +651,17 @@ html.js .hero.is-in [data-anim] {
    FOOTER (light, minimal - full version next pass)
    ========================================================================= */
 .foot { background: var(--ink); color: var(--cream-on-dark); padding-block: clamp(56px, 7vw, 96px) 40px; }
-.foot__top { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: clamp(28px,4vw,60px); padding-bottom: clamp(40px,5vw,68px); border-bottom: 1px solid rgba(201,183,158,0.2); }
+.foot__top { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: clamp(28px,4vw,60px); padding-bottom: clamp(40px,5vw,68px); border-bottom: 1px solid rgba(201,183,158,0.2); }
 .foot__big { font-family: var(--display); font-size: clamp(2rem, 4.4vw, 3.4rem); font-weight: 500; line-height: 1.04; max-width: 16ch; }
 .foot__big em { font-style: italic; color: var(--brass-soft); }
 .foot__col h5 { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--brass-soft); margin-bottom: 16px; }
 .foot__col a, .foot__col p { display: block; color: var(--muted-on-dark); font-size: 0.95rem; margin-bottom: 9px; transition: color 0.3s; }
 .foot__col a:hover { color: var(--cream-on-dark); }
+.foot__col a.foot__link { display: flex; align-items: center; gap: 10px; }
+.foot__link svg { flex: none; color: var(--brass-soft); transition: color 0.3s; }
+.foot__link:hover svg { color: var(--cream-on-dark); }
 .foot__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; padding-top: 28px; font-size: 0.82rem; color: var(--muted-on-dark); }
+@media (max-width: 1040px){ .foot__top { grid-template-columns: repeat(3, 1fr); } .foot__big { grid-column: 1 / -1; } }
 @media (max-width: 760px){ .foot__top { grid-template-columns: 1fr; } }
 
 /* =========================================================================
@@ -659,6 +703,7 @@ html.js [data-reveal][data-reveal-stagger].is-in > * {
 .about { display: grid; grid-template-columns: 0.82fr 1.18fr; gap: clamp(28px, 5vw, 84px); align-items: center; }
 .about__media { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 2px; background: var(--beige); }
 .about__media image-slot, .about__media .ph { width: 100%; height: 100%; }
+.about__media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block; }
 .about__body .kicker { margin-bottom: clamp(18px, 2.4vw, 26px); }
 .about__body h2 { font-size: clamp(2rem, 4vw, 3.4rem); margin-bottom: clamp(16px, 2vw, 24px); }
 .about__body .lead { margin-bottom: 16px; }

@@ -71,11 +71,6 @@ window.PRICING = {
     { min: 150, rate: 0.20, label: "powyżej 150 m²" },
     { min: 100, rate: 0.10, label: "powyżej 100 m²" },
   ],
-  rushSurcharge: 0.20, // tryb przyspieszony +20%
+  rushSurcharge: 0.15, // tryb przyspieszony +15%
   minArea: 10, // poniżej -> wycena indywidualna
 };
-
-window.CONSULTATIONS = [
-  { name: "Szkic Projektu - 1h", price: 290 },
-  { name: "Szkic Projektu - 2h", price: 390 },
-];
