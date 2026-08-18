@@ -7,7 +7,7 @@
     (function () {
       var d = document.documentElement;
       d.classList.add("js");
-      // Strona jest JASNA — wersja oryginalna. Motyw jest na stałe jasny:
+      // Strona jest JASNA - wersja oryginalna. Motyw jest na stałe jasny:
       // ani parametr ?theme=dark w adresie, ani stare ustawienie zapisane
       // w przeglądarce nie przełączą już strony na ciemną.
       d.setAttribute("data-theme", "light");
@@ -22,13 +22,13 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="pl_PL" />
   <meta property="og:site_name" content="Typ od Wnętrz" />
-  <meta property="og:title" content="Typ od Wnętrz — projektowanie wnętrz bez chaosu" />
-  <meta property="og:description" content="Projekty wnętrz z jasnym harmonogramem, wizualizacjami 3D i listą zakupów. Wrocław i online — cała Polska." />
+  <meta property="og:title" content="Typ od Wnętrz - projektowanie wnętrz bez chaosu" />
+  <meta property="og:description" content="Projekty wnętrz z jasnym harmonogramem, wizualizacjami 3D i listą zakupów. Wrocław i online - cała Polska." />
   <meta property="og:url" content="https://typodwnetrz.pl/" />
   <meta property="og:image" content="https://typodwnetrz.pl/og-image.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <!-- schema.org — usługa / profesjonalista -->
+  <!-- schema.org - usługa / profesjonalista -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -37,6 +37,10 @@
     "description": "Projektowanie wnętrz, wizualizacje 3D, projekty online i stacjonarne.",
     "areaServed": "Polska",
     "url": "https://typodwnetrz.pl",
+    "sameAs": [
+      "https://www.instagram.com/typ_od_wnetrz/",
+      "https://www.tiktok.com/@mateusz_przystarz"
+    ],
     "address": { "@type": "PostalAddress", "addressLocality": "Wrocław", "addressCountry": "PL" },
     "priceRange": "45–220 zł / m²",
     "knowsAbout": ["projektowanie wnętrz", "wizualizacje 3D", "projekt kuchni", "projekt łazienki", "projekt salonu", "projekt domu"]
@@ -46,14 +50,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=6" />
+  <link rel="stylesheet" href="styles.css?v=14" />
 </head>
 <body>
 
   <!-- ============================ HEADER ============================ -->
   <header class="hdr">
     <div class="wrap hdr__row">
-      <a class="logo" href="#top" aria-label="Typ od Wnętrz — strona główna">
+      <a class="logo" href="#top" aria-label="Typ od Wnętrz - strona główna">
         <span class="logo__mark">T</span>
         <span class="logo__txt">Typ od Wnętrz<small>Studio projektowe</small></span>
       </a>
@@ -67,6 +71,20 @@
         <a href="#kontakt">Kontakt</a>
       </nav>
       <div class="hdr__cta">
+        <div class="social" aria-label="Social media">
+          <a href="https://www.instagram.com/typ_od_wnetrz/" target="_blank" rel="noopener" aria-label="Instagram - @typ_od_wnetrz" title="Instagram">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="https://www.tiktok.com/@mateusz_przystarz" target="_blank" rel="noopener" aria-label="TikTok - @mateusz_przystarz" title="TikTok">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M13.2 3h2.5a4.9 4.9 0 0 0 4.3 4.3v2.5a7.4 7.4 0 0 1-4.3-1.5v6.1a5.7 5.7 0 1 1-5.7-5.7c.3 0 .6 0 .9.1v2.6a3.1 3.1 0 1 0 2.3 3V3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
         <a href="#wycena" class="btn btn--ghost">Oblicz wycenę</a>
       </div>
       <button class="burger" aria-label="Otwórz menu" aria-controls="mobileMenu">
@@ -87,9 +105,10 @@
       <a href="#kontakt" style="--i:6"><span>07</span> Kontakt</a>
     </nav>
     <div class="mobile__foot">
-      <a href="/cdn-cgi/l/email-protection#49212c23093d3039262d3e272c3d3b33673925"><span class="__cf_email__" data-cfemail="84ece1eec4f0fdf4ebe0f3eae1f0f6feaaf4e8">[email&#160;protected]</span></a>
+      <a href="mailto:typodwnetrz@gmail.com">typodwnetrz@gmail.com</a>
       <a href="https://www.instagram.com/typ_od_wnetrz/" target="_blank" rel="noopener">Instagram @typ_od_wnetrz</a>
-      <span>Wrocław &amp; online — cała Polska</span>
+      <a href="https://www.tiktok.com/@mateusz_przystarz" target="_blank" rel="noopener">TikTok @mateusz_przystarz</a>
+      <span>Wrocław &amp; online - cała Polska</span>
     </div>
   </div>
 
@@ -98,7 +117,9 @@
     <!-- ============================ HERO ============================ -->
     <section class="hero" aria-label="Wprowadzenie">
       <div class="hero__media">
-        <image-slot id="hero" class="ph" shape="rect" placeholder="Wgraj główny rendering wnętrza (poziomy, ~2400px)"></image-slot>
+        <video class="hero__video" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true" tabindex="-1">
+          <source src="images/hero-video.mp4" type="video/mp4" />
+        </video>
       </div>
       <div class="hero__inner wrap">
         <span class="kicker hero__kicker" data-anim style="--d:0.1">Studio projektowe · Wrocław &amp; online</span>
@@ -108,7 +129,7 @@
         </h1>
         <div class="hero__bottom">
           <p class="hero__sub" data-anim style="--d:0.34">
-            Projektuję wnętrza bez chaosu, zgadywania i remontowej ruletki — od pierwszego pomysłu po konkretne materiały i listę zakupów.
+            Projektuję wnętrza bez chaosu, zgadywania i remontowej ruletki - od pierwszego pomysłu po konkretne materiały i listę zakupów.
           </p>
           <div class="hero__actions" data-anim style="--d:0.44">
             <a href="#projekty" class="btn btn--solid">Zobacz projekty <span class="arr">→</span></a>
@@ -138,7 +159,7 @@
         </div>
         <div class="intro__grid" data-reveal data-reveal-stagger>
           <div class="intro__cell"><div class="n">01</div><h3>Jasne zasady</h3><p>Harmonogram, umowa i zakres ustalone od pierwszego dnia. Wiesz, co, kiedy i za ile.</p></div>
-          <div class="intro__cell"><div class="n">02</div><h3>Realny budżet</h3><p>Projektuję pod Twoje pieniądze — nie pod portfolio. Lista zakupów to konkretne produkty.</p></div>
+          <div class="intro__cell"><div class="n">02</div><h3>Realny budżet</h3><p>Projektuję pod Twoje pieniądze - nie pod portfolio. Lista zakupów to konkretne produkty.</p></div>
           <div class="intro__cell"><div class="n">03</div><h3>Bez chaosu</h3><p>Ankieta, inspiracje i materiały w jednym miejscu. Etapy, które się nie rozjeżdżają.</p></div>
           <div class="intro__cell"><div class="n">04</div><h3>Twoje życie</h3><p>Nie narzucam wizji ponad codzienność. Projekt ma działać dla Ciebie, nie dla Instagrama.</p></div>
         </div>
@@ -150,19 +171,21 @@
       <div class="wrap">
         <div class="about">
           <div class="about__media" data-reveal>
-            <image-slot id="about" class="ph v2" shape="rect" placeholder="Wgraj spójne zdjęcie z sesji (pionowe, ~1200×1500px)"></image-slot>
+            <image-slot id="about" class="ph v2" shape="rect" placeholder="Wgraj zdjęcie z sesji (pionowe, ~1200×1500px)"></image-slot>
           </div>
           <div class="about__body" data-reveal data-reveal-stagger>
             <span class="kicker">O mnie</span>
-            <h2 class="display">Architekt z dyplomem — nie projektant po kursie w tydzień.</h2>
-            <p class="lead">Skończyłem architekturę i jestem inżynierem. Za każdą wizualizacją stoi realna wiedza o konstrukcji, instalacjach i tym, jak wnętrze naprawdę działa — a nie tylko ładny render.</p>
-            <p class="about__txt">Projektuję po swojemu: z dystansem, konkretem i bez zadęcia. Prowadzę projekt od pierwszej rozmowy po komplet dokumentacji, tak żeby każdy etap był jasny, a Ty przez cały czas wiedział/a, co się dzieje i za ile.</p>
+            <h2 class="display">Architekt z dyplomem - nie projektant po kursie w tydzień.</h2>
+            <p class="lead">Jestem absolwentem studiów inżynierskich na kierunku Architektura na Politechnice Wrocławskiej oraz magisterskich na Wydziale Architektury Wnętrz wrocławskiej ASP.</p>
+            <p class="about__txt">Posiadam wieloletnie doświadczenie w projektowaniu wnętrz oraz wcześniejszą praktykę przy projektach czysto architektonicznych od strony technicznej. Jestem również laureatem międzynarodowego konkursu Roca One Day Design Challenge.</p>
+            <p class="about__txt">Choć w przeszłości pracowałem w różnych biurach projektowych, to niezależna praca z klientem daje mi największą satysfakcję i motywację do działania. Z natury jestem ekstrawertykiem - otwartym na ludzi i ich potrzeby, co pozwala mi łatwo budować relacje oraz tworzyć projekty idealnie dopasowane do indywidualnego stylu życia użytkownika.</p>
+            <p class="about__txt">W projektowaniu stawiam na równowagę między estetyką a funkcjonalnością, ergonomią i wygodą, a moim ulubionym narzędziem kreowania atmosfery jest praca ze światłem.</p>
             <ul class="about__points">
-              <li><b>Wykształcenie</b><span>Ukończona architektura, tytuł inżyniera — nie tygodniowe kursy online.</span></li>
-              <li><b>Doświadczenie</b><span>Zrealizowane projekty dla klientów, dla których liczył się porządek i konkret.</span></li>
-              <li><b>Jak pracuję</b><span>Zdalnie dla całej Polski, spotkania we Wrocławiu i okolicach.</span></li>
+              <li><b>Wykształcenie</b><span>Architektura na Politechnice Wrocławskiej (inż.) oraz Architektura Wnętrz na wrocławskiej ASP (mgr).</span></li>
+              <li><b>Wyróżnienia</b><span>Laureat międzynarodowego konkursu Roca One Day Design Challenge.</span></li>
+              <li><b>Jak pracuję</b><span>Na co dzień zdalnie, niezależnie od lokalizacji. We Wrocławiu i okolicach spotykam się na inwentaryzacji - w razie potrzeby dojazd w inny rejon też jest możliwy.</span></li>
             </ul>
-            <a href="#projekty" class="tlink">Zobacz projekty <span aria-hidden="true">→</span></a>
+            <a href="#kontakt" class="tlink">Masz pomysł na swoje wnętrze? Napisz do mnie w formularzu <span aria-hidden="true">→</span></a>
           </div>
         </div>
       </div>
@@ -173,7 +196,7 @@
       <div class="wrap">
         <div class="shead" data-reveal>
           <h2 class="display">Wybrane projekty</h2>
-          <p class="lead">Kuchnie, łazienki, salony, mieszkania i domy — projektowane online dla całej Polski i stacjonarnie we Wrocławiu.</p>
+          <p class="lead">Kuchnie, łazienki, salony, mieszkania i domy - projektowane online dla całej Polski i stacjonarnie we Wrocławiu.</p>
         </div>
         <div class="pf__filter" id="pfFilter"></div>
         <div class="pf__grid" id="pfGrid"></div>
@@ -183,17 +206,27 @@
       </div>
     </section>
 
+    <!-- ============================ BANNER (full-bleed) ============================ -->
+    <section class="banner" aria-label="Materiał, światło, detal">
+      <image-slot id="banner" class="ph" shape="rect" placeholder="Wgraj szeroki, klimatyczny kadr wnętrza (poziomy, ~2400px)"></image-slot>
+      <div class="banner__inner wrap">
+        <span class="kicker">Materiał · światło · detal</span>
+        <h2 class="display">Każdy detal ma znaczenie -<br /><em>od fugi po klamkę.</em></h2>
+        <a href="#wycena" class="btn btn--ghost btn--on-dark">Oblicz wstępną wycenę <span class="arr">→</span></a>
+      </div>
+    </section>
+
     <!-- ============================ OFERTA ============================ -->
     <section class="section" id="oferta">
       <div class="wrap">
         <div class="shead" data-reveal>
           <h2 class="display">Osiem typów projektu</h2>
-          <p class="lead">Od samego układu funkcjonalnego po pełny projekt wykonawczy. Typy można łączyć — łazienka może być Typ 8, kuchnia Typ 4, a salon Typ 3.</p>
+          <p class="lead">Od samego układu funkcjonalnego po pełny projekt wykonawczy. Typy można łączyć - łazienka może być Typ 8, kuchnia Typ 4, a salon Typ 3.</p>
         </div>
         <div class="offer__grid" id="offerGrid"></div>
         <div class="offer__note" data-reveal data-reveal-stagger>
           <div><h4>Łączenie typów</h4><p>Każde pomieszczenie może mieć inny zakres. Płacisz tylko za to, czego naprawdę potrzebujesz.</p></div>
-          <div><h4>Małe pomieszczenia</h4><p>Pomieszczenia poniżej 10 m² wyceniam indywidualnie — napisz, co chcesz zaprojektować.</p></div>
+          <div><h4>Małe pomieszczenia</h4><p>Pomieszczenia poniżej 10 m² wyceniam indywidualnie - napisz, co chcesz zaprojektować.</p></div>
           <div><h4>Szkic Projektu / konsultacja</h4><p>290 zł / 1h lub 390 zł / 2h. Przy projekcie powyżej 10 m² koszt konsultacji odliczam od ceny projektu.</p></div>
         </div>
       </div>
@@ -204,7 +237,7 @@
       <div class="wrap">
         <div class="shead" data-reveal>
           <h2 class="display">Oblicz wstępną wycenę</h2>
-          <p class="lead">Podaj metraż, wybierz typ projektu i sprawdź orientacyjny koszt. To punkt wyjścia do rozmowy — nie finalna oferta.</p>
+          <p class="lead">Podaj metraż, wybierz typ projektu i sprawdź orientacyjny koszt. To punkt wyjścia do rozmowy - nie finalna oferta.</p>
         </div>
 
         <div class="calc" data-reveal>
@@ -227,7 +260,8 @@
 
             <button class="toggle" id="rushToggle" type="button" aria-pressed="false">
               <span class="toggle__sw"></span>
-              <span class="toggle__txt"><b>Tryb przyspieszony</b><span>Szybszy termin realizacji — dopłata +15%, ustalana indywidualnie</span></span>
+              <!-- procent wypełnia app.js z window.PRICING.rushSurcharge — nie wpisuj go na sztywno -->
+              <span class="toggle__txt"><b>Tryb przyspieszony</b><span>Szybszy termin realizacji - dopłata +<span id="rushPct">20</span>%, ustalana indywidualnie</span></span>
             </button>
           </div>
 
@@ -259,7 +293,7 @@
       <div class="wrap">
         <div class="shead" data-reveal>
           <h2 class="display">Proces bez chaosu</h2>
-          <p class="lead" style="color:var(--muted-on-dark)">Osiem klarownych etapów — od pierwszej rozmowy po komplet dokumentacji. Wiesz, co dzieje się na każdym kroku.</p>
+          <p class="lead" style="color:var(--muted-on-dark)">Osiem klarownych etapów - od pierwszej rozmowy po komplet dokumentacji. Wiesz, co dzieje się na każdym kroku.</p>
         </div>
         <div class="proc__grid" id="procGrid" data-reveal data-reveal-stagger></div>
       </div>
@@ -270,7 +304,7 @@
       <div class="wrap">
         <div class="shead" data-reveal>
           <h2 class="display">Czas realizacji</h2>
-          <p class="lead">Orientacyjne ramy czasowe. Dokładny harmonogram ustalamy w umowie — i się go trzymamy.</p>
+          <p class="lead">Orientacyjne ramy czasowe. Dokładny harmonogram ustalamy w umowie - i się go trzymamy.</p>
         </div>
         <div class="timeline" id="timeline" data-reveal></div>
       </div>
@@ -322,17 +356,19 @@
         <div class="contact">
           <aside class="contact__aside" data-reveal>
             <span class="kicker">Porozmawiajmy</span>
-            <h2 class="display" style="margin-top:18px">Opisz wnętrze — odezwę się z konkretem.</h2>
+            <h2 class="display" style="margin-top:18px">Opisz wnętrze - odezwę się z konkretem.</h2>
             <p class="lead">Projektuję głównie online dla całej Polski, a we Wrocławiu i okolicach spotykam się na inwentaryzacji i budowie. Możliwe są też projekty zagraniczne.</p>
             <div class="contact__chan">
-              <a href="https://www.instagram.com/typ_od_wnetrz/" target="_blank" rel="noopener"><span class="k">Instagram — najszybszy kontakt</span><span class="v">@typ_od_wnetrz</span></a>
-              <a href="/cdn-cgi/l/email-protection#f79f929db7838e87989380999283858dd9879b"><span class="k">E-mail</span><span class="v"><span class="__cf_email__" data-cfemail="7018151a300409001f14071e1504020a5e001c">[email&#160;protected]</span></span></a>
+              <a href="https://www.instagram.com/typ_od_wnetrz/" target="_blank" rel="noopener"><span class="k">Instagram - najszybszy kontakt</span><span class="v">@typ_od_wnetrz</span></a>
+              <a href="mailto:typodwnetrz@gmail.com"><span class="k">E-mail</span><span class="v">typodwnetrz@gmail.com</span></a>
             </div>
-            <div class="contact__note">Telefon uzgadniamy po wstępnej wycenie — najpierw poznajmy zakres i budżet, żeby rozmowa była konkretna.</div>
-            <div class="contact__loc"><b>Wrocław &amp; online</b> — projekty zdalne w całej Polsce, spotkania we Wrocławiu i okolicach.</div>
+            <div class="contact__note">Telefon uzgadniamy po wstępnej wycenie - najpierw poznajmy zakres i budżet, żeby rozmowa była konkretna.</div>
+            <div class="contact__loc"><b>Wrocław &amp; online</b> - projekty zdalne w całej Polsce, spotkania we Wrocławiu i okolicach.</div>
           </aside>
 
-          <form class="form" id="contactForm" novalidate>
+          <!-- Wysyłka przez Formspree - endpoint ustawiany w app.js (FORMSPREE_ENDPOINT).
+               action/method są fallbackiem, gdyby JS nie wystartował. -->
+          <form class="form" id="contactForm" method="POST" action="" novalidate>
             <div class="form__row">
               <div class="form__field"><label for="f-name">Imię</label><input id="f-name" name="name" type="text" required autocomplete="name" /></div>
               <div class="form__field"><label for="f-email">E-mail</label><input id="f-email" name="email" type="email" required autocomplete="email" /></div>
@@ -359,7 +395,7 @@
             </div>
             <div class="form__field full"><label for="f-msg">Opisz wnętrze</label><textarea id="f-msg" name="message" placeholder="Co chcesz zaprojektować, na jakim etapie jesteś, co jest dla Ciebie najważniejsze..."></textarea></div>
 
-            <div class="form__estimate" id="formEstimate" hidden><span class="est-dot"></span><span>Dołączona wstępna wycena z kalkulatora: <b id="formEstimateVal">—</b></span></div>
+            <div class="form__estimate" id="formEstimate" hidden><span class="est-dot"></span><span>Dołączona wstępna wycena z kalkulatora: <b id="formEstimateVal">-</b></span></div>
 
             <label class="form__check">
               <input type="checkbox" id="f-estimate" name="attachEstimate" />
@@ -372,11 +408,16 @@
               <span>Wyrażam zgodę na kontakt i przetwarzanie danych w celu odpowiedzi na zapytanie.</span>
             </label>
 
-            <button type="submit" class="btn btn--solid" style="width:100%">Wyślij zapytanie <span class="arr">→</span></button>
+            <!-- pułapka na boty - ukryta, człowiek tego nie wypełni -->
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" />
+
+            <button type="submit" class="btn btn--solid" id="formSubmit" style="width:100%">Wyślij zapytanie <span class="arr">→</span></button>
+
+            <p class="form__error" id="formError" role="alert" hidden></p>
 
             <div class="form__sent" id="formSent">
               <div class="ic"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 14.5l6 6L23 7" stroke="currentColor" stroke-width="2"/></svg></div>
-              <h3>Dziękuję — wiadomość poszła w świat.</h3>
+              <h3>Dziękuję - wiadomość poszła w świat.</h3>
               <p>Odezwę się zwykle w ciągu 1–2 dni roboczych z konkretną propozycją następnego kroku.</p>
             </div>
           </form>
@@ -394,8 +435,9 @@
         <div class="foot__col">
           <h5>Kontakt</h5>
           <a href="https://www.instagram.com/typ_od_wnetrz/" target="_blank" rel="noopener">Instagram @typ_od_wnetrz</a>
-          <a href="/cdn-cgi/l/email-protection#2a424f406a5e535a454e5d444f5e5850045a46"><span class="__cf_email__" data-cfemail="29414c43695d5059464d5e474c5d5b53075945">[email&#160;protected]</span></a>
-          <p>Wrocław &amp; online — cała Polska</p>
+          <a href="https://www.tiktok.com/@mateusz_przystarz" target="_blank" rel="noopener">TikTok @mateusz_przystarz</a>
+          <a href="mailto:typodwnetrz@gmail.com">typodwnetrz@gmail.com</a>
+          <p>Wrocław &amp; online - cała Polska</p>
         </div>
         <div class="foot__col">
           <h5>Nawigacja</h5>
@@ -412,10 +454,10 @@
     </div>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="image-slot.js"></script>
+  <script src="image-slot.js"></script>
   <script src="data/projects.js"></script>
   <script src="data/offer.js"></script>
   <script src="data/content.js"></script>
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>

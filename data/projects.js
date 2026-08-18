@@ -1,12 +1,12 @@
 /**
- * Portfolio — dane projektów.
+ * Portfolio - dane projektów.
  * W Next.js: data/projects.ts (export const projects = [...]).
  * `slot` = id dla <image-slot> (podmiana renderingu); `orient` steruje układem w gridzie.
  */
 window.PROJECTS = [
   {
     slug: "apartament-stare-miasto",
-    title: "Apartament — Stare Miasto",
+    title: "Apartament - Stare Miasto",
     category: "Mieszkania",
     location: "Wrocław",
     year: "2025",
@@ -51,7 +51,7 @@ window.PROJECTS = [
     location: "okolice Wrocławia",
     year: "2024",
     orient: "tall",
-    excerpt: "Parter 140 m² — spójna paleta drewna, lnu i kamienia.",
+    excerpt: "Parter 140 m² - spójna paleta drewna, lnu i kamienia.",
     slot: "pf-05",
   },
   {

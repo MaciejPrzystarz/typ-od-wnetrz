@@ -22,7 +22,7 @@ window.OFFER_TYPES = [
     n: 3,
     name: "Wizualizacje + lista zakupów lub układ",
     price: 130,
-    scope: "Wizualizacje oraz lista zakupów albo układ funkcjonalny — do wyboru.",
+    scope: "Wizualizacje oraz lista zakupów albo układ funkcjonalny - do wyboru.",
     tags: ["wizualizacje 3D", "lista zakupów"],
   },
   {
@@ -76,6 +76,6 @@ window.PRICING = {
 };
 
 window.CONSULTATIONS = [
-  { name: "Szkic Projektu — 1h", price: 290 },
-  { name: "Szkic Projektu — 2h", price: 390 },
+  { name: "Szkic Projektu - 1h", price: 290 },
+  { name: "Szkic Projektu - 2h", price: 390 },
 ];

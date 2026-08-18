@@ -1,5 +1,5 @@
 /* =========================================================================
-   TYP OD WNĘTRZ — interactions
+   TYP OD WNĘTRZ - interactions
    ========================================================================= */
 (function () {
   "use strict";
@@ -58,11 +58,33 @@
   let ticking = false;
   const parallax = () => {
     const y = window.scrollY;
-    const m = $(".hero__media image-slot, .hero__media .ph");
+    const m = $(".hero__media .hero__video, .hero__media image-slot, .hero__media .ph");
     if (m && y < window.innerHeight) m.style.transform = `translateY(${y * 0.18}px) scale(1.02)`;
     ticking = false;
   };
   window.addEventListener("scroll", () => { if (!ticking) { requestAnimationFrame(parallax); ticking = true; } }, { passive: true });
+
+  /* ---------------- Hero video loop ---------------- */
+  const heroVideo = $(".hero__video");
+  if (heroVideo) {
+    const rm = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // Autoplay can still be blocked (iOS low-power, data saver) - retry on first interaction.
+    const play = () => { if (!rm.matches) heroVideo.play().catch(() => {}); };
+    play();
+    ["pointerdown", "touchstart", "keydown"].forEach((ev) =>
+      window.addEventListener(ev, play, { once: true, passive: true })
+    );
+    // Don't burn CPU while the hero is off-screen.
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((entries) => {
+        entries.forEach((e) => (e.isIntersecting ? play() : heroVideo.pause()));
+      }, { threshold: 0.01 }).observe(heroVideo);
+    }
+    // Respect reduced-motion: freeze on the first frame instead of looping.
+    const applyRM = () => { if (rm.matches) { heroVideo.pause(); heroVideo.removeAttribute("loop"); } else { heroVideo.setAttribute("loop", ""); play(); } };
+    applyRM();
+    rm.addEventListener?.("change", applyRM);
+  }
 
   /* ---------------- Smooth scroll for in-page anchors ---------------- */
   $$('a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
@@ -88,7 +110,7 @@
     const list = filter && filter !== "Wszystkie" ? projects.filter((p) => p.category === filter) : projects;
     pfGrid.innerHTML = list.map((p, i) => `
       <a class="pf__item ${p.orient}" href="#kontakt" data-reveal aria-label="${p.title}">
-        <image-slot id="${p.slot}" class="ph ${phVariants[i % 3]}" shape="rect" placeholder="Wgraj rendering — ${p.title}"></image-slot>
+        <image-slot id="${p.slot}" class="ph ${phVariants[i % 3]}" shape="rect" placeholder="Wgraj rendering - ${p.title}"></image-slot>
         <div class="pf__shade"></div>
         <span class="pf__cat">${p.category}</span>
         <div class="pf__meta">
@@ -117,7 +139,7 @@
   renderPortfolio("Wszystkie");
 
   /* =======================================================================
-     OFERTA — 8 typów
+     OFERTA - 8 typów
      ===================================================================== */
   const offer = window.OFFER_TYPES || [];
   const offerGrid = $("#offerGrid");
@@ -168,7 +190,7 @@
   }
 
   function render() {
-    typeName.innerHTML = `Typ ${state.type} — <b>${activeType().name}</b>`;
+    typeName.innerHTML = `Typ ${state.type} - <b>${activeType().name}</b>`;
     if (state.area < P.minArea) {
       outMain.classList.add("is-hidden");
       outSmall.classList.remove("is-hidden");
@@ -203,16 +225,21 @@
     b.classList.add("is-on");
     render();
   });
+  // etykieta dopłaty zawsze zgodna z PRICING (bez zaszytego procentu w HTML)
+  const rushPct = $("#rushPct");
+  if (rushPct) rushPct.textContent = Math.round(P.rushSurcharge * 100);
+
   rushToggle.addEventListener("click", () => {
     state.rush = !state.rush;
     rushToggle.classList.toggle("is-on", state.rush);
+    rushToggle.setAttribute("aria-pressed", String(state.rush));
     render();
   });
 
   setArea(60);
   render();
 
-  // CTA — pass estimate to contact (placeholder behaviour for prototype)
+  // CTA - pass estimate to contact (placeholder behaviour for prototype)
   $("#outCta")?.addEventListener("click", () => {
     const t = $("#kontakt");
     if (t) window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 70, behavior: "smooth" });
@@ -237,7 +264,7 @@
   }
 
   /* =======================================================================
-     OPINIE — slider
+     OPINIE - slider
      ===================================================================== */
   const revTrack = $("#revTrack");
   const reviews = window.REVIEWS || [];
@@ -265,7 +292,7 @@
   if (csList && window.CASE_STUDIES) {
     csList.innerHTML = window.CASE_STUDIES.map((c, i) => `
       <article class="cs__item" data-reveal>
-        <div class="cs__media"><image-slot id="${c.slot}" class="ph ${i % 2 ? "v2" : "v3"}" shape="rect" placeholder="Rendering — ${c.title}"></image-slot></div>
+        <div class="cs__media"><image-slot id="${c.slot}" class="ph ${i % 2 ? "v2" : "v3"}" shape="rect" placeholder="Rendering - ${c.title}"></image-slot></div>
         <div class="cs__body">
           <span class="cs__tag">${c.tag}</span>
           <h3>${c.title}</h3>
@@ -278,7 +305,7 @@
   }
 
   /* =======================================================================
-     FAQ — accordion
+     FAQ - accordion
      ===================================================================== */
   const faqList = $("#faqList");
   if (faqList && window.FAQ) {
@@ -303,7 +330,7 @@
   }
 
   /* =======================================================================
-     KONTAKT — formularz + dołączenie wyceny z kalkulatora
+     KONTAKT - formularz + dołączenie wyceny z kalkulatora
      ===================================================================== */
   const form = $("#contactForm");
   if (form) {
@@ -312,7 +339,7 @@
     offer.forEach((t) => {
       const o = document.createElement("option");
       o.value = `Typ ${t.n}`;
-      o.textContent = `Typ ${t.n} — ${t.name} (${t.price} zł/m²)`;
+      o.textContent = `Typ ${t.n} - ${t.name} (${t.price} zł/m²)`;
       typeSel.appendChild(o);
     });
 
@@ -346,19 +373,78 @@
       typeSel.value = `Typ ${state.type}`;
     });
 
-    form.addEventListener("submit", (e) => {
+    const submitBtn = $("#formSubmit");
+    const errorBox = $("#formError");
+    const btnLabel = submitBtn ? submitBtn.innerHTML : "";
+
+    // Zgłoszenia lecą na typodwnetrz@gmail.com przez Formspree.
+    // ⬇ WKLEJ TU swój endpoint z formspree.io (Forms → New form → skopiuj URL).
+    // Dopóki jest pusty, formularz działa jak wcześniej: waliduje i pokazuje ekran
+    // „dziękuję", ale NIC nie wysyła.
+    const FORMSPREE_ENDPOINT = "";
+
+    if (FORMSPREE_ENDPOINT) form.setAttribute("action", FORMSPREE_ENDPOINT);
+
+    const showSent = () => {
+      form.querySelectorAll(".form__row, .form__field, .form__check, .form__estimate, .form__error, button[type=submit]")
+        .forEach((n) => (n.style.display = "none"));
+      $("#formSent").classList.add("is-on");
+    };
+
+    const showError = (msg) => {
+      errorBox.textContent = msg;
+      errorBox.hidden = false;
+    };
+
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      // simple required validation
+      errorBox.hidden = true;
+
+      // simple required validation — ramka jest też CZYSZCZONA, gdy pole zostanie poprawione
       let ok = true;
       ["f-name", "f-email", "f-consent"].forEach((id) => {
         const el = $("#" + id);
-        const valid = el.type === "checkbox" ? el.checked : el.value.trim() !== "";
-        if (!valid) { ok = false; el.closest(".form__field, .form__check").style.outline = ""; el.style.borderColor = el.type === "checkbox" ? "" : "#b5483a"; }
+        let valid = el.type === "checkbox" ? el.checked : el.value.trim() !== "";
+        // e-mail musi mieć sensowny kształt, inaczej odpowiedź nie ma gdzie trafić
+        if (valid && id === "f-email") valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(el.value.trim());
+        if (!valid) ok = false;
+        if (el.type !== "checkbox") el.style.borderColor = valid ? "" : "#b5483a";
       });
-      if (!ok) return;
-      // prototype: no backend — show success state
-      form.querySelectorAll(".form__row, .form__field, .form__check, .form__estimate, button[type=submit]").forEach((n) => n.style.display = "none");
-      $("#formSent").classList.add("is-on");
+      if (!ok) {
+        showError("Uzupełnij proszę imię, poprawny adres e-mail i zgodę na kontakt.");
+        return;
+      }
+
+      if (!FORMSPREE_ENDPOINT) {
+        // brak skonfigurowanego endpointu - zachowanie prototypu
+        console.warn("[kontakt] FORMSPREE_ENDPOINT jest pusty - zapytanie NIE zostało wysłane.");
+        showSent();
+        return;
+      }
+
+      const data = new FormData(form);
+      data.set("_subject", `Zapytanie ze strony - ${data.get("name") || "bez imienia"}`);
+      // czytelna wycena w treści maila zamiast samego "on" z checkboxa
+      data.delete("attachEstimate");
+      if (attachCb.checked) data.set("Wycena z kalkulatora", estimateVal.textContent);
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Wysyłam…";
+
+      try {
+        const res = await fetch(FORMSPREE_ENDPOINT, {
+          method: "POST",
+          body: data,
+          headers: { Accept: "application/json" },
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        showSent();
+      } catch (err) {
+        console.error("[kontakt] wysyłka nieudana:", err);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = btnLabel;
+        showError("Nie udało się wysłać zapytania. Napisz proszę bezpośrednio na typodwnetrz@gmail.com - odpowiem tak samo szybko.");
+      }
     });
   }
 

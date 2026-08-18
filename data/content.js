@@ -5,7 +5,7 @@
 
 window.PROCESS_STEPS = [
   { n: "01", title: "Zgłoszenie i rozmowa", desc: "Opisujesz wnętrze, zakres i potrzeby. Rozmawiamy, żeby dobrać właściwy typ projektu." },
-  { n: "02", title: "Wybór zakresu", desc: "Dobieramy typ projektu — od samego układu funkcjonalnego po pełny projekt wykonawczy." },
+  { n: "02", title: "Wybór zakresu", desc: "Dobieramy typ projektu - od samego układu funkcjonalnego po pełny projekt wykonawczy." },
   { n: "03", title: "Umowa, harmonogram i rezerwacja", desc: "Dostajesz umowę, pro-formę i harmonogram. Rezerwacja terminu po wpłacie 20% (30% przy małych projektach)." },
   { n: "04", title: "Ankieta, inspiracje i materiały", desc: "Dedykowana ankieta projektowa i folder na Dysku Google. Wszystkie materiały w jednym miejscu." },
   { n: "05", title: "Układy funkcjonalne", desc: "Przygotowuję 3 szkicowe wersje układu i składam finalną na podstawie Twoich decyzji." },
@@ -39,7 +39,7 @@ window.CASE_STUDIES = [
     result: "Mieszkanie wygląda przestronniej, klient wiedział dokładnie co kupić i podejmował decyzje bez stresu.",
   },
   {
-    title: "Dom pod klucz — bez remontowej ruletki",
+    title: "Dom pod klucz - bez remontowej ruletki",
     tag: "Dom · 140 m²",
     slot: "cs-02",
     problem: "Stan deweloperski, duży metraż i obawa przed rozjeżdżającym się budżetem.",
