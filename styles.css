@@ -106,7 +106,18 @@ input, select, textarea { font: inherit; color: inherit; }
 .wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gut); }
 .section { padding-block: var(--sect); }
 .section--dark { background: var(--ink); color: var(--cream-on-dark); }
-.section--panel { background: var(--bone-2); }
+/* Rytm strony: sekcje idą na zmianę złamana biel / cieplejszy beż, aż do
+   stopki. Beż to --beige (ten sam panel co karty w kontakcie), a nie
+   subtelniejszy --bone-2 - przy tak długiej stronie słabszy odcień gubił
+   się i sąsiednie sekcje zlewały się w jedną płaszczyznę.
+   .section--dark (opinie) stoi poza tym rytmem: to celowa przerwa, po
+   której naprzemienność startuje od jasnej. */
+.section--panel { background: var(--beige); }
+/* Sekcja, która nie potrzebuje pełnego oddechu `--sect` - w opiniach treść
+   jest jednym blokiem tekstu i listą, a nie siatką kafli, więc pełny margines
+   robił z niej najwyższą sekcję strony. */
+.section--tight { padding-block: clamp(56px, 6.5vw, 112px); }
+.section--tight .shead { margin-bottom: clamp(26px, 3vw, 44px); }
 
 /* ------------------------------- Buttons ------------------------------- */
 .btn {
@@ -358,7 +369,20 @@ html.js .hero.is-in [data-anim] {
 .shead { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(24px, 5vw, 80px); align-items: end; margin-bottom: clamp(44px, 6vw, 80px); }
 .shead h2 { font-size: clamp(2.4rem, 5.4vw, 4.6rem); }
 .shead .lead { padding-bottom: 0.3em; }
-@media (max-width: 860px){ .shead { grid-template-columns: 1fr; } }
+/* Nagłówek sekcji na czerni (opinie): --warm-gray z domyślnego `.lead` jest
+   ciemnoszary i na czarnym tle praktycznie znika. */
+.section--dark .shead h2 { color: var(--bone); }
+.section--dark .lead { color: var(--muted-on-dark); }
+/* Zdanie nad tabelą typów projektu wyrównane do prawej krawędzi siatki -
+   domyka nagłówek sekcji z drugiej strony i prowadzi wzrok wprost na kafle.
+   Krój zostaje ten sam co w pozostałych `.lead` (Hanken Grotesk). */
+.offer__lead { text-align: right; }
+@media (max-width: 860px){
+  .shead { grid-template-columns: 1fr; }
+  /* w jednej kolumnie tekst wraca do lewej - wyrównanie do prawej pod
+     nagłówkiem wyglądałoby jak pomyłka, a nie jak decyzja */
+  .offer__lead { text-align: left; }
+}
 
 /* =========================================================================
    INTRO / MANIFEST
@@ -537,7 +561,12 @@ html.js .hero.is-in [data-anim] {
    PROCES - editorial steps
    ========================================================================= */
 .proc__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: color-mix(in srgb, var(--taupe) 40%, transparent); border-top: var(--hair); border-left: var(--hair); }
-.section--dark .proc__grid { background: rgba(201,183,158,0.18); border-color: rgba(201,183,158,0.24); }
+/* Kafle kroków są czarne, mimo że sekcja stoi na beżowym takcie rytmu
+   (.section--panel). Typografia w środku idzie więc na wersję
+   „na ciemnym" - kość na nagłówki, przygaszony krem na opisy, jaśniejszy
+   mosiądz na numery. Włos rozdzielający kafle zostaje na regule bazowej
+   (taupe 40%): na czarnych kaflach czyta się jasno, a przy krawędzi siatki
+   wtapia się w beż sekcji. */
 .proc__step { background: var(--ink); padding: clamp(28px, 3vw, 46px); display: flex; gap: clamp(18px, 2vw, 30px); position: relative; }
 .proc__step .pn { font-family: var(--display); font-size: clamp(1.6rem, 2.4vw, 2.3rem); color: var(--brass-soft); line-height: 1; flex: none; }
 .proc__step h3 { font-family: var(--display); font-size: clamp(1.4rem, 2vw, 1.85rem); font-weight: 500; line-height: 1.08; margin-bottom: 10px; color: var(--bone); }
