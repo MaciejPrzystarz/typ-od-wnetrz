@@ -587,20 +587,58 @@ html.js .hero.is-in [data-anim] {
 /* =========================================================================
    OPINIE - slider
    ========================================================================= */
-.rev { position: relative; }
-.rev__track { display: flex; transition: transform 0.7s var(--ease); }
-.rev__slide { min-width: 100%; padding-right: clamp(0px, 4vw, 80px); }
-.rev__q { font-family: var(--display); font-weight: 500; font-style: italic; font-size: clamp(1.7rem, 3.6vw, 3rem); line-height: 1.18; letter-spacing: -0.01em; text-wrap: balance; }
-.section--dark .rev__q { color: var(--bone); }
-.rev__mark { font-family: var(--display); font-size: clamp(4rem, 9vw, 8rem); line-height: 0.6; color: var(--brass-soft); display: block; height: 0.4em; }
-.rev__who { display: flex; align-items: center; gap: 14px; margin-top: clamp(28px, 4vw, 46px); }
-.rev__who .nm { font-weight: 600; color: var(--cream-on-dark); }
-.rev__who .mt { color: var(--muted-on-dark); font-size: 0.9rem; }
-.rev__who .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--brass); }
-.rev__nav { display: flex; gap: 12px; margin-top: clamp(36px, 5vw, 60px); }
+/* Sekcja jest korespondencją, nie „kartami z opiniami": po lewej jedna
+   wiadomość, po prawej spis nadawców, który zarazem przełącza slajdy.
+   Spis celowo BEZ numerów - to lista osób, a nie sekwencja etapów. */
+/* Te same proporcje i odstęp co `.shead` - spis nadawców staje wtedy dokładnie
+   pod leadem nagłówka i prawa strona sekcji ma jedną oś zamiast dziury. */
+/* minmax(0, …) jest tu konieczne: w kolumnie z wiadomością siedzi flexowy tor
+   pięciu slajdów z `min-width:100%`, więc automatyczne minimum kolumny to suma
+   ich min-contentów - bez tego kolumna puchnie i osie się rozjeżdżają. */
+.rev { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(24px, 5vw, 80px); align-items: start; }
+/* Okno slidera. Wysokość dokłada app.js pod aktywny slajd - i BEZ animacji.
+   `transition: height` tu nie wolno: kiedy dokument jest niewidoczny (inna
+   karta, zgaszony ekran) przejście nie postępuje, wysokość zostaje na starej
+   wartości, a `overflow: hidden` ucina resztę wiadomości. To ta sama pułapka
+   co z `aspect-ratio` w portfolio. Ruch i tak niesie przesuwanie poziome. */
+.rev__view { overflow: hidden; }
+.rev__track { display: flex; align-items: flex-start; transition: transform 0.7s var(--ease); }
+.rev__slide { min-width: 100%; }
+/* 70ch to wciąż poniżej granicy czytelności (~80 znaków), a na szerokim
+   ekranie ścina najdłuższym wiadomościom kilkadziesiąt pikseli wysokości. */
+.rev__msg, .rev__who { max-width: 70ch; }
+/* Fraza wiodąca: pierwsze zdanie klienta. Cała reszta wiadomości jest
+   groteskiem - kilkaset znaków kursywy Cormoranta to ściana, nie cytat. */
+.rev__lead { font-family: var(--display); font-weight: 500; font-style: italic; font-size: clamp(1.35rem, 2.1vw, 1.95rem); line-height: 1.22; letter-spacing: -0.01em; color: var(--bone); text-wrap: balance; }
+.rev__body { margin-top: clamp(14px, 1.5vw, 20px); color: color-mix(in srgb, var(--cream-on-dark) 78%, transparent); font-size: 1rem; line-height: 1.6; text-wrap: pretty; }
+.rev__body p + p { margin-top: 0.8em; }
+/* Podpis jak pod listem: włos nad spodem wiadomości, imię Cormorantem. */
+.rev__who { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; margin-top: clamp(18px, 2vw, 26px); padding-top: 14px; border-top: 1px solid color-mix(in srgb, var(--brass) 34%, transparent); }
+.rev__who .nm { font-family: var(--display); font-size: 1.32rem; font-weight: 600; color: var(--bone); }
+/* Zakres projektu stoi w podświetlonym wierszu spisu obok - pod wiadomością
+   byłby drugi raz to samo, o dwa centymetry dalej. Wraca dopiero na wąskim
+   ekranie, gdzie spis zwija się do znaczników (patrz media query niżej). */
+.rev__who .mt { display: none; color: var(--muted-on-dark); font-size: 0.88rem; }
+/* Prawa kolumna trzyma spis i strzałki razem jako jeden element siatki.
+   Osobne wiersze gridu odpadają: kolumna z wiadomością jest wyższa, więc
+   nadmiar rozkładał się na wiersze i strzałki odjeżdżały od spisu. */
+.rev__side { display: flex; flex-direction: column; }
+.rev__nav { display: flex; gap: 12px; margin-top: clamp(20px, 2.4vw, 30px); }
 .rev__nav button { width: 54px; height: 54px; border-radius: 50%; border: 1px solid rgba(201,183,158,0.34); color: var(--cream-on-dark); display: grid; place-items: center; transition: all 0.4s var(--ease); }
 .rev__nav button:hover { background: var(--brass); border-color: var(--brass); color: var(--ink); }
-.rev__count { margin-left: auto; align-self: center; font-variant-numeric: tabular-nums; color: var(--muted-on-dark); letter-spacing: 0.1em; font-size: 0.86rem; }
+
+/* Spis nadawców */
+.rev__index { list-style: none; border-top: 1px solid color-mix(in srgb, var(--brass) 20%, transparent); }
+.rev__index li { border-bottom: 1px solid color-mix(in srgb, var(--brass) 20%, transparent); }
+.rev__pick { position: relative; display: flex; align-items: baseline; justify-content: space-between; gap: 18px; width: 100%; text-align: left; padding: 11px 0; font-family: var(--display); font-size: 1.14rem; line-height: 1.2; color: var(--muted-on-dark); transition: color 0.4s var(--ease), padding-left 0.5s var(--ease); }
+.rev__pick .mt { flex: none; font-family: var(--ui); font-size: 0.78rem; letter-spacing: 0.02em; color: color-mix(in srgb, var(--muted-on-dark) 74%, transparent); text-align: right; }
+.rev__pick:hover { color: var(--cream-on-dark); }
+/* Aktywny nadawca odsuwa się od krawędzi i „wyciąga" mosiężny znacznik -
+   ten sam ruch, co przy przewijaniu wiadomości, więc czytelnie się łączą. */
+.rev__pick.is-on { color: var(--bone); padding-left: 30px; }
+.rev__pick.is-on .mt { color: var(--muted-on-dark); }
+.rev__pick.is-on::before { content: ""; position: absolute; left: 0; top: 1.15em; width: 18px; height: 1px; background: var(--brass-soft); }
+.rev__pick:focus-visible { outline: 1px solid var(--brass-soft); outline-offset: 4px; }
 
 /* =========================================================================
    CASE STUDIES
@@ -802,7 +840,7 @@ html[data-theme="dark"] .toggle__sw::after { background: var(--pale); }
 html[data-theme="dark"] .out__price { color: var(--pale); }
 html[data-theme="dark"] .calc__small b { color: var(--pale); }
 html[data-theme="dark"] .proc__step h3 { color: var(--pale); }
-html[data-theme="dark"] .section--dark .rev__q { color: var(--pale); }
+html[data-theme="dark"] .section--dark .rev__lead { color: var(--pale); }
 
 /* - karta wyróżniona w ofercie: podniesione tło + jasny tytuł - */
 html[data-theme="dark"] .tcard.is-featured { background: #241E13; }

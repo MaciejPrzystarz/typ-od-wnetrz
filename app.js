@@ -269,19 +269,96 @@
   const revTrack = $("#revTrack");
   const reviews = window.REVIEWS || [];
   if (revTrack && reviews.length) {
-    revTrack.innerHTML = reviews.map((r) => `
-      <div class="rev__slide"><blockquote class="rev__q">${r.quote}</blockquote>
-        <div class="rev__who"><span class="nm">${r.name}</span><span class="dot"></span><span class="mt">${r.meta}</span></div></div>`).join("");
+    // Wiadomość składa się z frazy wiodącej (`lead` - pierwsze zdanie klienta,
+    // Cormorantem) i reszty tekstu (`quote`: string albo tablica akapitów).
+    // Razem czytają się jako całość maila, tak jak przyszedł.
+    revTrack.innerHTML = reviews.map((r) => {
+      const paras = (Array.isArray(r.quote) ? r.quote : [r.quote]).filter(Boolean);
+      const lead = r.lead ? `<p class="rev__lead">${r.lead}</p>` : "";
+      const body = paras.length ? `<div class="rev__body">${paras.map((p) => `<p>${p}</p>`).join("")}</div>` : "";
+      return `
+      <article class="rev__slide">
+        <blockquote class="rev__msg">${lead}${body}</blockquote>
+        <footer class="rev__who"><span class="nm">${r.name}</span><span class="mt">${r.meta}</span></footer>
+      </article>`;
+    }).join("");
+
+    // Spis nadawców = nawigacja. Bez numerów: to nie jest sekwencja ani ranking,
+    // tylko lista osób. Kolejność w spisie to kolejność slajdów.
+    //
+    // Wiadomości bez podpisu mają w `name` „Klienci" / „Klientka" - w spisie
+    // pięć takich wierszy pod sobą nie odróżniałoby niczego od niczego, więc
+    // tam etykietą jest zakres projektu (to on je rozróżnia). Pod samą
+    // wiadomością podpis zostaje pełny: „Klienci · Dom · Ostrów Wielkopolski".
+    const revIndex = $("#revIndex");
+    if (revIndex) {
+      revIndex.innerHTML = reviews.map((r, i) => {
+        const anon = /^Klien/.test(r.name);
+        return `
+        <li><button type="button" class="rev__pick" data-i="${i}" aria-label="Opinia: ${r.name}, ${r.meta}"><span class="nm">${anon ? r.meta : r.name}</span><span class="mt">${anon ? "" : r.meta}</span></button></li>`;
+      }).join("");
+      revIndex.addEventListener("click", (e) => {
+        const b = e.target.closest(".rev__pick");
+        if (b) go(Number(b.dataset.i));
+      });
+    }
+    const picks = revIndex ? $$(".rev__pick", revIndex) : [];
+
     let ri = 0;
     const total = reviews.length;
-    const cnt = $("#revCount");
+    const revView = $("#revView");
+    // Slajdy stoją obok siebie we flexie, więc bez tego wszystkie miałyby
+    // wysokość najdłuższej opinii, a pod krótkimi zostawałaby dziura.
+    // Okno dostaje wysokość aktywnego slajdu (transition dopiero po
+    // pierwszym pomiarze - patrz `.rev__view.is-measured`).
+    const fit = () => {
+      if (!revView) return;
+      const slide = revTrack.children[ri];
+      // getBoundingClientRect, nie offsetHeight: ten drugi zaokrągla w dół i
+      // przy ułamkowych wysokościach ucinał ostatni wiersz o piksel-dwa.
+      if (slide) revView.style.height = `${Math.ceil(slide.getBoundingClientRect().height)}px`;
+    };
     const go = (n) => {
       ri = (n + total) % total;
       revTrack.style.transform = `translateX(-${ri * 100}%)`;
-      cnt.textContent = `${String(ri + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
+      picks.forEach((b, i) => {
+        b.classList.toggle("is-on", i === ri);
+        // aria-current, nie aria-selected: to zwykłe przyciski w liście,
+        // a nie zakładki z rolą tab.
+        if (i === ri) b.setAttribute("aria-current", "true");
+        else b.removeAttribute("aria-current");
+      });
+      fit();
     };
+    // Wysokość slajdu zmienia to samo, co zmienia łamanie tekstu: szerokość
+    // okna, dojeżdżający Cormorant, zoom przeglądarki. ResizeObserver łapie
+    // wszystkie te przypadki naraz - i tylko wtedy, gdy naprawdę coś urosło.
+    // Pętli nie ma: obserwujemy slajdy, a `fit` zmienia wysokość okna.
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(fit);
+      Array.from(revTrack.children).forEach((c) => ro.observe(c));
+    } else {
+      window.addEventListener("resize", fit);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    }
     $("#revPrev").addEventListener("click", () => go(ri - 1));
     $("#revNext").addEventListener("click", () => go(ri + 1));
+
+    // Przesuwanie palcem - na telefonie nikt nie celuje w strzałki.
+    // Gest liczy się dopiero od 48 px i tylko jeśli jest wyraźnie poziomy,
+    // żeby zwykłe przewijanie strony w pionie nie przeskakiwało opinii.
+    let tx = 0, ty = 0;
+    revTrack.addEventListener("touchstart", (e) => {
+      tx = e.touches[0].clientX;
+      ty = e.touches[0].clientY;
+    }, { passive: true });
+    revTrack.addEventListener("touchend", (e) => {
+      const t = e.changedTouches[0];
+      const dx = t.clientX - tx;
+      const dy = t.clientY - ty;
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.4) go(dx < 0 ? ri + 1 : ri - 1);
+    }, { passive: true });
+
     go(0);
   }
 

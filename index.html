@@ -317,18 +317,34 @@
     </section>
 
     <!-- ============================ OPINIE ============================ -->
-    <section class="section section--dark" id="opinie">
+    <section class="section section--dark section--tight" id="opinie">
       <div class="wrap">
-        <span class="kicker" style="color:var(--brass-soft)" data-reveal>Co myślą o mnie moi klienci</span>
-        <div class="rev" data-reveal style="margin-top:28px">
-          <span class="rev__mark">"</span>
-          <div style="overflow:hidden">
-            <div class="rev__track" id="revTrack"></div>
+        <div class="shead" data-reveal>
+          <h2 class="display">Opinie</h2>
+          <p class="lead">Wiadomości, które dostaję po oddaniu projektu. Wycięte są tylko powitania i sprawy prywatne – reszta jest bez zmian.</p>
+        </div>
+        <div class="rev" data-reveal>
+          <div class="rev__col">
+            <!-- wysokość tego okna ustawia app.js pod aktywny slajd - wiadomości
+                 mają różną długość, a bez tego wszystkie rosłyby do najdłuższej -->
+            <div class="rev__view" id="revView">
+              <div class="rev__track" id="revTrack"></div>
+            </div>
+            <!-- widoczne tylko na wąskich ekranach (patrz .rev__hint w styles.css) -->
+            <p class="rev__hint">Przesuń palcem, aby zobaczyć kolejną opinię</p>
           </div>
-          <div class="rev__nav">
-            <button id="revPrev" aria-label="Poprzednia opinia"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.4"/></svg></button>
-            <button id="revNext" aria-label="Następna opinia"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="1.4"/></svg></button>
-            <span class="rev__count" id="revCount">01 / 04</span>
+          <!-- Prawa kolumna: spis nadawców (nawigacja slidera, a przy okazji
+               widać, ile tych wiadomości jest) i pod nim strzałki. Strzałki
+               są tu, bo pod wiadomością dokładały sekcji ~100 px wysokości,
+               a obok spisu mieszczą się w miejscu, które i tak jest puste.
+               Na wąskim ekranie CSS odwraca kolejność: najpierw strzałki,
+               potem listwa znaczników. Spis wypełnia app.js z window.REVIEWS. -->
+          <div class="rev__side">
+            <ul class="rev__index" id="revIndex" aria-label="Wybierz opinię"></ul>
+            <div class="rev__nav">
+              <button id="revPrev" aria-label="Poprzednia opinia"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.4"/></svg></button>
+              <button id="revNext" aria-label="Następna opinia"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="1.4"/></svg></button>
+            </div>
           </div>
         </div>
       </div>
