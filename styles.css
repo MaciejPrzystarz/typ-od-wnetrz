@@ -1572,3 +1572,98 @@ html { scroll-padding-top: 84px; }
   .pfp.is-linked > .pfp__head::before { display: none; }
 }
 
+/* =========================================================================
+   PODSTRONA: PRZYKŁADOWE SKŁADOWE PROJEKTU (przykladowy-projekt.html)
+   Lista plików PDF renderowanych przez PDF.js (samples.js). Każda składowa
+   to nagłówek z zakresem i opisem plus stos stron dokumentu.
+   ========================================================================= */
+.smp__section { padding-top: clamp(40px, 5vw, 76px); }
+.smp__list { display: flex; flex-direction: column; gap: clamp(48px, 6vw, 92px); }
+
+.smp__head {
+  display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between;
+  gap: 14px clamp(24px, 4vw, 60px);
+  padding-bottom: 18px; margin-bottom: clamp(20px, 2.6vw, 32px);
+  border-bottom: var(--hair);
+}
+.smp__scope { display: block; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--brass); margin-bottom: 10px; }
+.smp__title { font-family: var(--display); font-size: clamp(1.8rem, 3.2vw, 2.8rem); font-weight: 500; line-height: 1.05; }
+.smp__note { max-width: 56ch; margin-top: 10px; color: var(--warm-gray); text-wrap: pretty; }
+.smp__open { flex: none; font-size: 0.86rem; letter-spacing: 0.04em; color: var(--graphite); border-bottom: 1px solid color-mix(in srgb, var(--taupe) 70%, transparent); padding-bottom: 3px; transition: color 0.35s var(--ease), border-color 0.35s var(--ease); }
+.smp__open:hover { color: var(--brass); border-color: var(--brass); }
+
+/* Stos stron. Papier dostaje własne tło i cień, żeby na beżu strony było
+   widać, gdzie kończy się jedna kartka, a zaczyna druga. */
+.smp__doc { display: flex; flex-direction: column; align-items: center; gap: clamp(14px, 2vw, 26px); }
+/* Strona nigdy nie przekracza 80% wysokości okna: pionowe A4 rozciągnięte na
+   szerokość kolumny wychodziło poza ekran i trzeba było przewijać jeden
+   dokument przez kilka ruchów. Poziome rysunki są niższe, więc ich to nie
+   dotyczy. Wyśrodkowanie robi flex (align-items), NIE `margin-inline: auto`
+   z `max-width` - patrz pułapka opisana przy portfolio. */
+.smp__page {
+  display: block; width: auto; max-width: 100%; height: auto; max-height: 80vh;
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--taupe) 55%, transparent);
+  box-shadow: 0 18px 40px -30px rgba(0, 0, 0, 0.55);
+}
+.smp__status { color: var(--warm-gray); font-size: 0.92rem; padding-block: clamp(24px, 4vw, 48px); }
+.smp__status--err { color: var(--graphite); }
+.smp__status a { border-bottom: 1px solid var(--brass); }
+
+.smp__empty { color: var(--warm-gray); padding-block: clamp(30px, 5vw, 60px); }
+
+@media (max-width: 620px) {
+  .smp__head { align-items: start; }
+  .smp__open { order: 3; }
+}
+
+/* ------------------------------ Harmonogram (przykład) ------------------------------ */
+/* Wiersz mówi trzy rzeczy naraz: kiedy, po czyjej stronie i co. Kolumna „kto"
+   jest tu najważniejsza - pokazuje, że terminy wiążą obie strony, a nie tylko
+   projektanta. Etapy z płatnością dostają mosiężny znacznik po prawej. */
+.sched__note { max-width: 68ch; color: var(--warm-gray); margin-bottom: clamp(24px, 3vw, 38px); text-wrap: pretty; }
+.sched { list-style: none; border-top: var(--hair); }
+.sched__row {
+  display: grid; grid-template-columns: auto auto 1fr auto; align-items: baseline;
+  gap: 4px clamp(16px, 2.6vw, 40px);
+  padding: clamp(14px, 1.8vw, 20px) 0;
+  border-bottom: var(--hair);
+  transition: padding-left 0.5s var(--ease);
+}
+.sched__row:hover { padding-left: 12px; }
+.sched__date { display: flex; flex-direction: column; gap: 2px; min-width: 6.5em; }
+.sched__date b { font-family: var(--num); font-size: 1.02rem; font-weight: 600; font-variant-numeric: tabular-nums lining-nums; letter-spacing: -0.01em; }
+.sched__date i { font-style: normal; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warm-gray); }
+/* „Ja" i „Ty" różnią się kolorem, nie tylko literą - przy przewijaniu widać
+   rytm: kto kogo czeka. */
+.sched__who {
+  min-width: 2.2em; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  padding-bottom: 2px; border-bottom: 1px solid currentColor;
+}
+.sched__who[data-who="Ja"] { color: var(--graphite); }
+.sched__who[data-who="Ty"] { color: var(--brass); }
+.sched__what { text-wrap: pretty; }
+.sched__pay {
+  flex: none; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--brass); white-space: nowrap;
+}
+.sched__row.is-pay { background: linear-gradient(90deg, color-mix(in srgb, var(--brass) 7%, transparent), transparent 62%); }
+
+@media (max-width: 700px) {
+  /* Na telefonie data i „kto" idą w jeden rząd nad opisem - cztery kolumny
+     zwężone do szerokości ekranu robiły z opisu pionowy makaron. */
+  .sched__row { grid-template-columns: auto auto 1fr; gap: 6px 14px; padding-block: 16px; }
+  .sched__date { flex-direction: row; align-items: baseline; gap: 8px; min-width: 0; }
+  .sched__what { grid-column: 1 / -1; }
+  /* znacznik wpłaty wraca do pierwszego rzędu, do prawej krawędzi - pod
+     opisem lądował w środku wiersza i wyglądał jak zgubiony */
+  .sched__pay { grid-row: 1; grid-column: 3; justify-self: end; }
+  .sched__row:hover { padding-left: 0; }
+}
+/* Legenda kolumny „kto" - bez niej etykiety JA/TY trzeba zgadywać. */
+.sched__legend { display: flex; flex-wrap: wrap; gap: 8px clamp(18px, 3vw, 36px); margin-bottom: clamp(16px, 2vw, 24px); font-size: 0.86rem; color: var(--warm-gray); }
+.sched__legend span span { margin-right: 0.5em; }
+/* Informacja pod skróconym podglądem wielostronicowego pliku. */
+.smp__more { align-self: flex-start; font-size: 0.86rem; color: var(--warm-gray); }
+.smp__more a { border-bottom: 1px solid var(--brass); color: var(--graphite); }
+.smp__more a:hover { color: var(--brass); }

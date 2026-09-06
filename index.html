@@ -71,6 +71,7 @@
         <a href="#o-mnie">O mnie</a>
         <a href="#projekty">Projekty</a>
         <a href="#oferta">Oferta</a>
+        <a href="przykladowy-projekt.html">Co dostajesz</a>
         <a href="#proces">Proces</a>
         <a href="#wycena">Wycena</a>
         <a href="#faq">FAQ</a>
@@ -105,16 +106,18 @@
       <a href="#o-mnie" style="--i:0"><span>01</span> O mnie</a>
       <a href="#projekty" style="--i:1"><span>02</span> Projekty</a>
       <a href="#oferta" style="--i:2"><span>03</span> Oferta</a>
-      <a href="#proces" style="--i:3"><span>04</span> Proces</a>
-      <a href="#wycena" style="--i:4"><span>05</span> Wycena</a>
-      <a href="#faq" style="--i:5"><span>06</span> FAQ</a>
-      <a href="#kontakt" style="--i:6"><span>07</span> Kontakt</a>
+      <a href="przykladowy-projekt.html" style="--i:3"><span>04</span> Co dostajesz</a>
+      <a href="#proces" style="--i:4"><span>05</span> Proces</a>
+      <a href="#wycena" style="--i:5"><span>06</span> Wycena</a>
+      <a href="#faq" style="--i:6"><span>07</span> FAQ</a>
+      <a href="#kontakt" style="--i:7"><span>08</span> Kontakt</a>
     </nav>
+    <!-- CTA „Oblicz wycenę" z paska nagłówka jest na telefonie ukryte,
+         więc jego odpowiednik siedzi w menu – żeby najważniejsza akcja
+         była zawsze o jedno tapnięcie stąd. -->
+    <a href="#wycena" class="btn btn--ghost btn--on-dark mobile__cta">Oblicz wstępną wycenę <span class="arr">→</span></a>
     <div class="mobile__foot">
-      <a href="mailto:typodwnetrz@gmail.com">typodwnetrz@gmail.com</a>
-      <a href="https://www.instagram.com/typ_od_wnetrz/" target="_blank" rel="noopener">Instagram @typ_od_wnetrz</a>
-      <a href="https://www.tiktok.com/@mateusz_przystarz" target="_blank" rel="noopener">TikTok @mateusz_przystarz</a>
-      <span>Wrocław &amp; online - cała Polska</span>
+      <span>Wrocław &amp; online – cała Polska</span>
     </div>
   </div>
 
@@ -502,6 +505,7 @@
         <div class="foot__col">
           <h5>Nawigacja</h5>
           <a href="#projekty">Projekty</a>
+          <a href="przykladowy-projekt.html">Co dostajesz</a>
           <a href="#oferta">Oferta</a>
           <a href="#wycena">Wycena</a>
           <a href="#faq">FAQ</a>
@@ -521,9 +525,12 @@
   </footer>
 
   <script src="image-slot.js"></script>
-  <script src="data/projects.js"></script>
-  <script src="data/offer.js"></script>
-  <script src="data/content.js"></script>
-  <script src="app.js?v=8"></script>
+  <script src="data/projects.js?v=6"></script>
+  <script src="data/offer.js?v=5"></script>
+  <script src="data/content.js?v=8"></script>
+  <!-- lista przykładowych PDF-ów: app.js sprawdza ją, żeby wiedzieć, czy
+       pokazać odnośnik do podstrony przykladowy-projekt.html -->
+  <script src="data/samples.js?v=7"></script>
+  <script src="app.js?v=27"></script>
 </body>
 </html>
