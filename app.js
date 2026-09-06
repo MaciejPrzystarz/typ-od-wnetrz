@@ -279,7 +279,7 @@
   }
 
   function render() {
-    typeName.innerHTML = `Typ ${state.type} - <b>${activeType().name}</b>`;
+    typeName.innerHTML = `Typ ${state.type} – <b>${activeType().name}</b>`;
     if (state.area < P.minArea) {
       outMain.classList.add("is-hidden");
       outSmall.classList.remove("is-hidden");
@@ -335,7 +335,9 @@
   setArea(60);
   render();
 
-  // CTA - pass estimate to contact (placeholder behaviour for prototype)
+  // „Wyślij zapytanie z tą wyceną" - dowozi do formularza. Drugi handler na tym
+  // samym przycisku (w bloku KONTAKT) zaznacza checkbox i przepisuje metraż
+  // oraz typ z kalkulatora, żeby wycena poszła w treści zgłoszenia.
   $("#outCta")?.addEventListener("click", () => {
     const t = $("#kontakt");
     if (t) window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 70, behavior: "smooth" });
@@ -465,7 +467,7 @@
   if (csList && window.CASE_STUDIES) {
     csList.innerHTML = window.CASE_STUDIES.map((c, i) => `
       <article class="cs__item" data-reveal>
-        <div class="cs__media"><image-slot id="${c.slot}" class="ph ${i % 2 ? "v2" : "v3"}" shape="rect" placeholder="Rendering - ${c.title}"></image-slot></div>
+        <div class="cs__media"><image-slot id="${c.slot}" class="ph ${i % 2 ? "v2" : "v3"}" shape="rect" placeholder="Rendering – ${c.title}"></image-slot></div>
         <div class="cs__body">
           <span class="cs__tag">${c.tag}</span>
           <h3>${c.title}</h3>
@@ -619,7 +621,7 @@
         console.error("[kontakt] wysyłka nieudana:", err);
         submitBtn.disabled = false;
         submitBtn.innerHTML = btnLabel;
-        showError("Nie udało się wysłać zapytania. Napisz proszę bezpośrednio na typodwnetrz@gmail.com - odpowiem tak samo szybko.");
+        showError("Nie udało się wysłać zapytania. Napisz proszę bezpośrednio na typodwnetrz@gmail.com – odpowiem tak samo szybko.");
       }
     });
   }
