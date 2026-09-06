@@ -250,14 +250,21 @@
       <div class="wrap">
         <div class="shead" data-reveal>
           <h2 class="display">Osiem typów projektu</h2>
-          <p class="lead">Od samego układu funkcjonalnego po pełny projekt wykonawczy.</p>
+          <p class="lead offer__lead">Od samych układów funkcjonalnych po kompleksowy projekt. Możesz łączyć typy projektów.</p>
         </div>
         <div class="offer__grid" id="offerGrid"></div>
         <div class="offer__note" data-reveal data-reveal-stagger>
-          <div><h4>Łączenie typów</h4><p>Każde pomieszczenie może mieć inny zakres. Płacisz tylko za to, czego naprawdę potrzebujesz.</p></div>
-          <div><h4>Małe pomieszczenia</h4><p>Pomieszczenia poniżej 10 m² wyceniam indywidualnie - napisz, co chcesz zaprojektować.</p></div>
-          <div><h4>Szkic Projektu / konsultacja</h4><p>Wynikową jest PDF z podsumowaniem rozmowy.</p></div>
+          <!-- Ten kafelek NIE powtarza „możesz łączyć typy" ze zdania nad tabelą -
+               tłumaczy, jak to policzyć. Próg rabatu wstrzykuje app.js z
+               window.PRICING (tak samo jak #rushPct), żeby liczba nie
+               rozjechała się z kalkulatorem. -->
+          <div><h4>Łączenie typów</h4><p>Każde pomieszczenie liczę własną stawką za m² – np. salon w Typie 8, sypialnie w lżejszym zakresie. Przy większych metrażach dochodzi rabat, już od <span id="discFrom">100</span> m².</p></div>
+          <div><h4>Małe pomieszczenia</h4><p>Pomieszczenia poniżej 10 m² wyceniam indywidualnie – napisz, co chcesz zaprojektować.</p></div>
         </div>
+        <!-- Szkic Projektu wyszedł z rzędu notek do własnego bloku: to nie jest
+             już jednozdaniowy przypis, tylko osobna usługa z dwoma pakietami
+             i cenami. Treść i ceny renderuje app.js z window.SKETCH. -->
+        <div class="sketch" id="sketch" data-reveal></div>
       </div>
     </section>
 

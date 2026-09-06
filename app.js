@@ -225,6 +225,26 @@
       </div>`).join("");
   }
 
+  /* ---------------- Szkic Projektu ----------------
+     Osobna usługa obok ośmiu typów. Ceny są ryczałtowe (zł za całość),
+     dlatego jednostka to samo „zł", a nie „zł / m²" jak w kaflach typów. */
+  const sketchBox = $("#sketch");
+  const sketch = window.SKETCH;
+  if (sketchBox && sketch) {
+    sketchBox.innerHTML = `
+      <h4 class="sketch__title">${sketch.title}</h4>
+      <div class="sketch__pkgs">
+        ${(sketch.packages || []).map((p) => `
+          <div class="sketch__pkg">
+            <h5>${p.name}</h5>
+            <p>${p.scope}</p>
+            <div class="sketch__price"><b>${PLN(p.price)}</b><span>zł</span></div>
+          </div>`).join("")}
+      </div>
+      ${sketch.note ? `<p class="sketch__note">${sketch.note}</p>` : ""}
+      ${(window.SAMPLES || []).length ? `<a class="btn btn--solid sketch__link" href="przykladowy-projekt.html">Zobacz przykładowe składowe projektu <span class="arr">→</span></a>` : ""}`;
+  }
+
   /* =======================================================================
      KALKULATOR
      ===================================================================== */
@@ -297,6 +317,13 @@
   // etykieta dopłaty zawsze zgodna z PRICING (bez zaszytego procentu w HTML)
   const rushPct = $("#rushPct");
   if (rushPct) rushPct.textContent = Math.round(P.rushSurcharge * 100);
+
+  // Próg najniższego rabatu w notce pod tabelą typów - też z PRICING, żeby
+  // liczba w treści nie rozjechała się z tym, co liczy kalkulator.
+  const discFrom = $("#discFrom");
+  if (discFrom && P.discounts && P.discounts.length) {
+    discFrom.textContent = Math.min(...P.discounts.map((d) => d.min));
+  }
 
   rushToggle.addEventListener("click", () => {
     state.rush = !state.rush;
@@ -482,10 +509,19 @@
   if (form) {
     // populate type select from offer
     const typeSel = $("#f-type");
+    // Szkic Projektu jest osobną, płatną pozycją w ofercie, więc musi dać się
+    // wybrać także tutaj - inaczej sekcja oferty obiecuje coś, czego formularz
+    // zgłoszeniowy w ogóle nie przewiduje. Cena ryczałtowa, stąd samo „zł".
+    ((window.SKETCH && window.SKETCH.packages) || []).forEach((p) => {
+      const o = document.createElement("option");
+      o.value = `Szkic Projektu – ${p.name}`;
+      o.textContent = `Szkic Projektu – ${p.name} (${PLN(p.price)} zł)`;
+      typeSel.appendChild(o);
+    });
     offer.forEach((t) => {
       const o = document.createElement("option");
       o.value = `Typ ${t.n}`;
-      o.textContent = `Typ ${t.n} - ${t.name} (${t.price} zł/m²)`;
+      o.textContent = `Typ ${t.n} – ${t.name} (${t.price} zł/m²)`;
       typeSel.appendChild(o);
     });
 
