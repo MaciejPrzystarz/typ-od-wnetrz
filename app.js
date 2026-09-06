@@ -560,12 +560,13 @@
     const btnLabel = submitBtn ? submitBtn.innerHTML : "";
 
     // Zgłoszenia lecą na typodwnetrz@gmail.com przez Formspree.
-    // ⬇ WKLEJ TU swój endpoint z formspree.io (Forms → New form → skopiuj URL).
-    // Dopóki jest pusty, formularz działa jak wcześniej: waliduje i pokazuje ekran
-    // „dziękuję", ale NIC nie wysyła.
-    const FORMSPREE_ENDPOINT = "";
+    // Zmiana adresu = podmiana tej jednej stałej (panel formspree.io → Forms).
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/mnpqbgwy";
 
-    if (FORMSPREE_ENDPOINT) form.setAttribute("action", FORMSPREE_ENDPOINT);
+    // W HTML `action` jest puste, żeby adres był w jednym miejscu. Ustawiamy je
+    // tutaj, bo gdyby handler submit poleciał wyjątkiem, przeglądarka wysłałaby
+    // formularz natywnie pod ten adres, a nie przeładowała strony gubiąc dane.
+    form.setAttribute("action", FORMSPREE_ENDPOINT);
 
     const showSent = () => {
       form.querySelectorAll(".form__row, .form__field, .form__check, .form__estimate, .form__error, button[type=submit]")
@@ -597,15 +598,8 @@
         return;
       }
 
-      if (!FORMSPREE_ENDPOINT) {
-        // brak skonfigurowanego endpointu - zachowanie prototypu
-        console.warn("[kontakt] FORMSPREE_ENDPOINT jest pusty - zapytanie NIE zostało wysłane.");
-        showSent();
-        return;
-      }
-
       const data = new FormData(form);
-      data.set("_subject", `Zapytanie ze strony - ${data.get("name") || "bez imienia"}`);
+      data.set("_subject", `Zapytanie ze strony – ${data.get("name") || "bez imienia"}`);
       // czytelna wycena w treści maila zamiast samego "on" z checkboxa
       data.delete("attachEstimate");
       if (attachCb.checked) data.set("Wycena z kalkulatora", estimateVal.textContent);
