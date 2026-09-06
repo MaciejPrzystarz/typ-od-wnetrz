@@ -983,7 +983,6 @@ html[data-theme="dark"] .calc__form {
 }
 /* gałka suwaka/przełącznika znów jasna (jak w wersji beżowej) */
 html[data-theme="dark"] .calc__form .toggle__sw::after { background: #F5F0E8; }
-html[data-theme="dark"] .calc__form .toggle__sw::after { background: #F5F0E8; }
 
 /* =========================================================================
    WERSJA MOBILNA / DOTYK
