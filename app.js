@@ -127,23 +127,71 @@
   const projects = window.PROJECTS || [];
   const phVariants = ["ph", "ph v2", "ph v3"];
 
+  // Lokalizacja i rok bywają puste (patrz data/projects.js) - sklejamy tylko to,
+  // co faktycznie jest, żeby nie zostało wiszące "·" ani pusty wiersz.
+  const metaOf = (p) => [p.location, p.year].filter(Boolean).join(" · ");
+  // `photos` przyjmuje obiekt {src, orient} albo samą ścieżkę.
+  const srcOf = (ph) => (typeof ph === "string" ? ph : (ph && ph.src) || "");
+
+  /**
+   * Kafel = pojedyncze ZDJĘCIE, nie projekt. Sekcja pokazuje cały materiał
+   * (2 kuchnie, 2 łazienki, 2 sypialnie, 4 salony), a nie po jednej okładce
+   * na projekt. Każdy kafel prowadzi do swojego projektu na podstronie.
+   *
+   * Kolejność: przeplatamy pionowe z poziomymi. Siatka ma 12 kolumn, kafel
+   * pionowy zajmuje 4, poziomy 8 - rząd domyka się więc tylko jako
+   * pionowy+poziomy albo 3x pionowy. Bez przeplotu (czyli w kolejności
+   * projektów) po każdym niedopasowanym rzędzie zostawała dziura.
+   */
+  function tilesOf(list) {
+    const flat = [];
+    list.forEach((p) => (p.photos || []).forEach((ph, i) => {
+      const src = srcOf(ph);
+      if (!src) return;
+      flat.push({
+        src,
+        orient: (typeof ph === "object" && ph.orient) || "tall",
+        id: `${p.slot}-${i + 1}`,
+        project: p,
+      });
+    }));
+    const tall = flat.filter((t) => t.orient !== "wide");
+    const wide = flat.filter((t) => t.orient === "wide");
+    const out = [];
+    while (tall.length || wide.length) {
+      if (tall.length) out.push(tall.shift());
+      if (wide.length) out.push(wide.shift());
+    }
+    return out;
+  }
+
   function renderPortfolio(filter) {
     const list = filter && filter !== "Wszystkie" ? projects.filter((p) => p.category === filter) : projects;
-    pfGrid.innerHTML = list.map((p, i) => `
-      <a class="pf__item ${p.orient}" href="#kontakt" data-reveal aria-label="${p.title}">
-        <image-slot id="${p.slot}" class="ph ${phVariants[i % 3]}" shape="rect" placeholder="Wgraj rendering - ${p.title}"></image-slot>
+    const tiles = tilesOf(list);
+    // Rząd siatki mieszczą dopiero trzy kafle pionowe. Po filtrze kategorii
+    // zostaje zwykle jeden i dwie trzecie rzędu stały puste - wyglądało to na
+    // brakującą treść. Przy mniej niż trzech kaflach siatka przechodzi na
+    // wyśrodkowany rząd (patrz .pf__grid.is-sparse w styles.css).
+    pfGrid.classList.toggle("is-sparse", tiles.length < 3);
+    pfGrid.innerHTML = tiles.map((t, i) => {
+      const p = t.project;
+      const meta = metaOf(p);
+      return `
+      <a class="pf__item ${t.orient}" href="portfolio.html#${p.slug}" data-reveal aria-label="${p.title}">
+        <image-slot id="${t.id}" class="ph ${phVariants[i % 3]}" shape="rect" fit="cover" src="${t.src}" placeholder="Wgraj rendering – ${p.title}"></image-slot>
         <div class="pf__shade"></div>
         <span class="pf__cat">${p.category}</span>
         <div class="pf__meta">
           <div>
             <h3>${p.title}</h3>
-            <p>${p.location} · ${p.year}</p>
+            ${meta ? `<p>${meta}</p>` : ""}
           </div>
           <span class="pf__arrow" aria-hidden="true">
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" stroke-width="1.3"/></svg>
           </span>
         </div>
-      </a>`).join("");
+      </a>`;
+    }).join("");
     observeReveals();
   }
 

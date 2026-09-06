@@ -444,19 +444,25 @@ html.js .hero.is-in [data-anim] {
 .chip.is-on { background: var(--graphite); color: var(--bone); border-color: var(--graphite); }
 
 .pf__grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(14px, 1.6vw, 26px); }
+/* Za mało kafli, żeby domknąć rząd (po filtrze kategorii zwykle jeden) -
+   wtedy zamiast zostawiać dwie trzecie pustego rzędu po prawej, ustawiamy
+   je na środku. Klasę dokłada app.js; proporcje kafli zostają te same,
+   bo aspect-ratio z .tall / .wide działa też we flexie. */
+.pf__grid.is-sparse { display: flex; flex-wrap: wrap; justify-content: center; }
+.pf__grid.is-sparse .pf__item { flex: 0 1 clamp(260px, 31%, 430px); }
 .pf__item { position: relative; overflow: hidden; background: var(--ink); border-radius: 2px; }
 .pf__item.tall { grid-column: span 4; aspect-ratio: 4 / 5.2; }
 .pf__item.wide { grid-column: span 8; aspect-ratio: 16 / 10.4; }
 .pf__item image-slot, .pf__item .ph { width: 100%; height: 100%; }
 .pf__item .ph { transition: transform 1.1s var(--ease); }
 .pf__item:hover .ph { transform: scale(1.05); }
-.pf__shade { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 38%, rgba(23,20,15,0.0) 50%, rgba(23,20,15,0.74) 100%); opacity: 0; transition: opacity 0.6s var(--ease); pointer-events: none; }
+.pf__shade { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 38%, rgb(var(--ink-rgb) / 0.0) 50%, rgb(var(--ink-rgb) / 0.74) 100%); opacity: 0; transition: opacity 0.6s var(--ease); pointer-events: none; }
 .pf__item:hover .pf__shade { opacity: 1; }
 .pf__meta { position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(18px, 2vw, 30px); color: var(--bone); display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; transform: translateY(12px); opacity: 0; transition: all 0.55s var(--ease); pointer-events: none; }
 .pf__item:hover .pf__meta { transform: none; opacity: 1; }
 .pf__meta h3 { font-family: var(--display); font-size: clamp(1.4rem, 2.2vw, 2.1rem); font-weight: 500; line-height: 1; }
 .pf__meta p { font-size: 0.82rem; color: var(--cream-on-dark); opacity: 0.85; margin-top: 6px; }
-.pf__cat { position: absolute; top: clamp(16px,1.6vw,22px); left: clamp(16px,1.6vw,22px); font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bone); background: rgba(23,20,15,0.34); backdrop-filter: blur(6px); padding: 0.5em 0.9em; border-radius: 999px; opacity: 0; transition: opacity 0.5s var(--ease); }
+.pf__cat { position: absolute; top: clamp(16px,1.6vw,22px); left: clamp(16px,1.6vw,22px); font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bone); background: rgb(var(--ink-rgb) / 0.34); backdrop-filter: blur(6px); padding: 0.5em 0.9em; border-radius: 999px; opacity: 0; transition: opacity 0.5s var(--ease); }
 .pf__item:hover .pf__cat { opacity: 1; }
 .pf__arrow { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(245,240,232,0.5); display: grid; place-items: center; flex: none; }
 @media (max-width: 760px){
@@ -1420,5 +1426,149 @@ html { scroll-padding-top: 84px; }
   .hero h1 { font-size: 1.6rem; }
   .hero__actions { flex-direction: row; width: auto; }
   .mobile__nav a { font-size: clamp(1.5rem, 5vw, 2.2rem); }
+}
+
+/* =========================================================================
+   PODSTRONA PORTFOLIO (portfolio.html)
+   Ta sama paleta co strona główna, ale trzymana w jasnych beżach: podstrona
+   nie ma ciemnego hero ani ciemnych kafli, więc zdjęcia są jedynym mocnym
+   akcentem, a tło (bone / beige / sand) tylko je oprawia.
+   ========================================================================= */
+
+/* Nagłówek: bez filmu pod spodem jasny tekst byłby niewidoczny, więc na
+   podstronie header od startu wygląda tak, jak na stronie głównej po
+   przewinięciu (.is-stuck robi już tylko zmianę wysokości). */
+.page-sub .hdr { color: var(--graphite); }
+.page-sub .hdr::after { opacity: 1; }
+.page-sub .logo__mark { border-color: var(--brass); color: var(--brass); }
+.page-sub .nav a[aria-current="page"] { color: var(--brass); }
+.page-sub .nav a[aria-current="page"]::after { left: 0; right: 0; }
+
+/* ------------------------------- Nagłówek podstrony ------------------------------- */
+.pghead {
+  background: var(--beige);
+  border-bottom: var(--hair);
+  /* górny padding musi zmieścić przyklejony header (ok. 70 px) */
+  padding-block: clamp(112px, 13vw, 176px) clamp(48px, 6vw, 84px);
+}
+.crumbs {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.76rem; letter-spacing: 0.04em; color: var(--warm-gray);
+  margin-bottom: clamp(22px, 3vw, 36px);
+}
+.crumbs a { border-bottom: 1px solid transparent; transition: border-color 0.35s var(--ease), color 0.35s var(--ease); }
+.crumbs a:hover { color: var(--graphite); border-bottom-color: var(--brass); }
+.crumbs span[aria-current] { color: var(--graphite); }
+.pghead__h { font-size: clamp(2.6rem, 7vw, 5.6rem); margin-top: 18px; }
+.pghead__lead { max-width: 56ch; margin-top: clamp(16px, 2vw, 24px); }
+
+.pghead__stats {
+  display: flex; flex-wrap: wrap; gap: clamp(24px, 4vw, 64px);
+  margin-top: clamp(32px, 4vw, 52px);
+  padding-top: clamp(24px, 3vw, 34px);
+  border-top: var(--hair);
+}
+.pghead__stats div { display: flex; flex-direction: column; gap: 4px; }
+.pghead__stats b {
+  font-family: var(--num); font-variant-numeric: tabular-nums;
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 600; line-height: 1;
+  color: var(--brass);
+}
+.pghead__stats span { font-size: 0.76rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-gray); }
+
+/* ------------------------------- Lista projektów ------------------------------- */
+.pfp__section { background: var(--bone); padding-block: clamp(52px, 7vw, 96px) clamp(20px, 3vw, 44px); }
+.pfp__section .pf__filter { margin-bottom: clamp(40px, 5vw, 64px); }
+
+.pfp { padding-block: clamp(48px, 6vw, 88px); border-top: var(--hair); }
+/* .is-first, a nie :first-child: po odfiltrowaniu kategorii pierwszy WIDOCZNY
+   projekt nie może zaczynać się kreską i wcięciem wiszącymi w pustce. */
+.pfp.is-first { padding-top: 0; border-top: 0; }
+/* wejście z linku „zobacz projekt" - delikatne podświetlenie celu */
+.pfp.is-linked > .pfp__head { position: relative; }
+.pfp.is-linked > .pfp__head::before {
+  content: ""; position: absolute; left: calc(var(--gut) * -0.4); top: -6px; bottom: -6px;
+  width: 2px; background: var(--brass);
+}
+
+.pfp__head {
+  display: grid; grid-template-columns: 1.35fr 0.65fr;
+  gap: clamp(24px, 4vw, 64px); align-items: start;
+  margin-bottom: clamp(26px, 3.4vw, 46px);
+}
+.pfp__idx {
+  display: block; font-family: var(--num); font-variant-numeric: tabular-nums;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.24em;
+  color: var(--brass); margin-bottom: 12px;
+}
+.pfp__head h2 { font-size: clamp(1.9rem, 4vw, 3.4rem); }
+.pfp__excerpt { margin-top: 12px; max-width: 48ch; color: var(--warm-gray); font-size: clamp(1rem, 1.3vw, 1.12rem); }
+
+.pfp__facts { display: grid; gap: 14px; padding-top: 6px; }
+.pfp__facts > div { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 12px; border-bottom: var(--hair); }
+.pfp__facts dt { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm-gray); }
+.pfp__facts dd { font-size: 0.92rem; text-align: right; }
+
+/* Galeria: kadr dostaje kształt swojego zdjęcia.
+   Poziome idą przez całą szerokość, pionowe stają parami w dwóch kolumnach.
+   Orientację dopisuje portfolio.js (data-orient) po odczytaniu proporcji
+   pliku - dopóki nie wiadomo, kadr trzyma neutralne 4:3, więc nic nie skacze. */
+.pfp__gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(12px, 1.6vw, 24px); }
+.pfp__shot {
+  position: relative; overflow: hidden; border-radius: 2px;
+  background: var(--sand); aspect-ratio: 4 / 3;
+  grid-column: 1 / -1;
+  /* Bez `transition` na aspect-ratio. Kiedy portfolio.js dopisuje data-span
+     zaraz po wstawieniu galerii, Chrome zostawia przejście na wartości
+     startowej i kadr NA STAŁE zostaje w 4:3 - zdjęcia dostawały złe
+     proporcje, a „solo" znikało. Skok proporcji i tak jest niewidoczny,
+     bo dzieje się przed pierwszym wyświetleniem sekcji. */
+}
+.pfp__shot[data-span="full"] { grid-column: 1 / -1; aspect-ratio: 16 / 9; }
+.pfp__shot[data-span="half"] { grid-column: span 1; aspect-ratio: 4 / 5; }
+/* Pionowy kadr bez pary - węższa kolumna na środku zamiast pustki obok.
+   Szerokość MUSI być podana wprost (width, nie max-width): auto-marginesy
+   wyłączają rozciąganie elementu siatki, więc przy samym max-width kadr
+   zwężał się do zera i znikał razem ze zdjęciem. */
+.pfp__shot[data-span="solo"] {
+  grid-column: 1 / -1; aspect-ratio: 4 / 5;
+  width: 58%; margin-inline: auto;
+}
+.pfp__shot image-slot, .pfp__shot .ph { width: 100%; height: 100%; }
+.pfp__shot::after {
+  /* cienka ramka na zdjęciu - trzyma jasne kadry przy jasnym tle */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--taupe) 45%, transparent);
+  border-radius: 2px;
+}
+
+/* Beżowe placeholdery - jaśniejsza wersja gradientów ze strony głównej,
+   żeby pusta galeria nie robiła brązowych plam na jasnym tle. */
+.ph--sand { background: linear-gradient(150deg, #EFE6D6 0%, #E3D6C0 45%, #D3C2A6 100%); }
+.ph--sand.v2 { background: linear-gradient(150deg, #F2EADC 0%, #E7DAC5 50%, #D8C7AB 100%); }
+.ph--sand.v3 { background: linear-gradient(150deg, #EAE0CD 0%, #DCCDB2 55%, #CBB89C 100%); }
+
+.pfp__empty { color: var(--warm-gray); padding-block: clamp(30px, 5vw, 60px); }
+
+.pfp__cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(18px, 3vw, 34px); }
+
+/* ------------------------------- Responsywność ------------------------------- */
+@media (max-width: 900px) {
+  .pfp__head { grid-template-columns: 1fr; gap: 22px; }
+  .pfp__facts { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .pfp__facts > div { flex-direction: column; justify-content: flex-start; gap: 4px; }
+  .pfp__facts dd { text-align: left; }
+}
+@media (max-width: 620px) {
+  .pfp__gallery { grid-template-columns: 1fr; }
+  /* Na telefonie jedna kolumna na kadr, ale proporcje zdjęcia zostają -
+     inaczej pionowe ujęcia byłyby przycinane do poziomego paska.
+     „solo" traci zwężenie: w jednej kolumnie nie ma już pustki do wypełnienia. */
+  .pfp__shot { grid-column: 1 / -1; }
+  .pfp__shot[data-span="half"], .pfp__shot[data-span="solo"] { aspect-ratio: 4 / 5; width: auto; }
+  .pfp__shot[data-span="full"] { aspect-ratio: 3 / 2; }
+  .pfp__facts { grid-template-columns: 1fr 1fr; }
+  .pghead__stats { gap: 20px 32px; }
+  .pfp.is-linked > .pfp__head::before { display: none; }
 }
 
