@@ -2,7 +2,9 @@
 <html lang="pl" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- viewport-fit=cover -> na telefonach z „wcięciem" (iPhone) możemy korzystać
+       z env(safe-area-inset-*) i nie chować treści pod notchem ani paskiem gestów. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <script>
     (function () {
       var d = document.documentElement;
@@ -91,14 +93,14 @@
         </div>
         <a href="#wycena" class="btn btn--ghost">Oblicz wycenę</a>
       </div>
-      <button class="burger" aria-label="Otwórz menu" aria-controls="mobileMenu">
+      <button class="burger" type="button" aria-label="Otwórz menu" aria-controls="mobileMenu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
   </header>
 
   <!-- mobile overlay -->
-  <div class="mobile" id="mobileMenu">
+  <div class="mobile" id="mobileMenu" aria-hidden="true">
     <nav class="mobile__nav" aria-label="Menu mobilne">
       <a href="#o-mnie" style="--i:0"><span>01</span> O mnie</a>
       <a href="#projekty" style="--i:1"><span>02</span> Projekty</a>
@@ -121,9 +123,27 @@
     <!-- ============================ HERO ============================ -->
     <section class="hero" aria-label="Wprowadzenie">
       <div class="hero__media">
-        <video class="hero__video" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true" tabindex="-1">
-          <source src="images/hero-video.mp4" type="video/mp4" />
-        </video>
+        <video class="hero__video" id="heroVideo" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true" tabindex="-1"
+               data-src="images/hero-video.mp4"
+               data-src-mobile="images/hero-video-phone-resolution.mp4"></video>
+        <script>
+          /* Telefon dostaje lżejszy plik (hero-video-phone-resolution.mp4, ~8 MB)
+             zamiast desktopowego (~27 MB). Wybór robimy TUTAJ, tuż za elementem
+             <video> i przed jakimkolwiek innym skryptem – dzięki temu przeglądarka
+             pobiera od razu właściwy plik, a nie dwa.
+             Nie używamy <source media="...">, bo część przeglądarek ignoruje ten
+             atrybut przy wideo i i tak ściągnęłaby wersję desktopową. */
+          (function () {
+            var v = document.getElementById("heroVideo");
+            if (!v) return;
+            // Wąski ekran ALBO telefon obrócony na bok (niski ekran + palec zamiast
+            // myszy) – w obu przypadkach nie chcemy zrzucać na komórkę 27 MB.
+            var phone = window.matchMedia(
+              "(max-width: 820px), (orientation: landscape) and (max-height: 560px) and (pointer: coarse)"
+            ).matches;
+            v.src = phone ? v.dataset.srcMobile : v.dataset.src;
+          })();
+        </script>
       </div>
       <div class="hero__inner wrap">
         <span class="kicker hero__kicker" data-anim style="--d:0.1">Studio projektowe · Wrocław &amp; online</span>
@@ -400,7 +420,7 @@
               <div class="form__field"><label for="f-city">Miasto</label><input id="f-city" name="city" type="text" /></div>
             </div>
             <div class="form__row">
-              <div class="form__field"><label for="f-area">Metraż</label><input id="f-area" name="area" type="number" min="0" placeholder="m²" /></div>
+              <div class="form__field"><label for="f-area">Metraż</label><input id="f-area" name="area" type="number" inputmode="numeric" min="0" placeholder="m²" /></div>
               <div class="form__field"><label for="f-type">Typ projektu</label>
                 <select id="f-type" name="type"><option value="">Nie wiem jeszcze</option></select>
               </div>

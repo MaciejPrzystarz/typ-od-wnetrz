@@ -253,26 +253,61 @@ body.menu-open .burger span:nth-child(1) { top: 50%; transform: translateY(-50%)
 body.menu-open .burger span:nth-child(2) { opacity: 0; }
 body.menu-open .burger span:nth-child(3) { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
 
-/* mobile overlay */
+/* mobile overlay
+   Tło to nie płaski --ink, tylko ta sama „ciepła ciemność", którą ma hero
+   i stopka: mosiężna poświata w lewym górnym rogu + delikatne rozjaśnienie
+   ku górze. Dzięki temu menu czyta się jak część strony, a nie jak czarna
+   plansza doklejona na wierzch. */
 .mobile {
   position: fixed; inset: 0; z-index: 99;
-  background: var(--ink); color: var(--cream-on-dark);
+  background:
+    radial-gradient(118% 82% at 8% -6%, rgba(169,136,94,0.20), transparent 58%),
+    linear-gradient(180deg, var(--ink-2) 0%, var(--ink) 62%);
+  color: var(--cream-on-dark);
   display: flex; flex-direction: column; justify-content: center;
   padding: var(--gut);
   clip-path: inset(0 0 100% 0);
   transition: clip-path 0.7s var(--ease);
   pointer-events: none;
 }
+/* mosiężny włos pod nagłówkiem - domyka menu od góry */
+.mobile::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(169,136,94,0.55) 24%, rgba(169,136,94,0.55) 72%, transparent);
+  opacity: 0; transition: opacity 0.5s var(--ease) 0.25s;
+}
 body.menu-open .mobile { clip-path: inset(0 0 0 0); pointer-events: auto; }
-.mobile__nav { display: flex; flex-direction: column; gap: 4px; }
+body.menu-open .mobile::before { opacity: 1; }
+
+/* Pozycje menu to indeks - numer w osobnej, wąskiej kolumnie, nazwa obok,
+   włos pod spodem. Numer jest celowo drobny i uniesiony do wysokości
+   wersalika: ma być sygnaturą, nie drugim napisem. */
+.mobile__nav { display: flex; flex-direction: column; gap: 0; }
 .mobile__nav a {
+  position: relative;
+  display: grid; grid-template-columns: 1.85em 1fr; align-items: baseline;
   font-family: var(--display); font-size: clamp(2.4rem, 11vw, 4.6rem); font-weight: 500; line-height: 1.06;
-  display: flex; align-items: baseline; gap: 0.4em;
+  padding-block: 0.16em;
   opacity: 0; transform: translateY(28px);
   transition: opacity 0.6s var(--ease), color 0.4s var(--ease);
 }
-.mobile__nav a span { font-family: var(--ui); font-size: 0.8rem; letter-spacing: 0.2em; color: var(--brass); }
-.mobile__nav a:hover { color: var(--brass-soft); }
+.mobile__nav a span {
+  font-family: var(--num); font-size: 0.56rem; font-weight: 600;
+  letter-spacing: 0.2em; color: var(--brass);
+  font-variant-numeric: tabular-nums lining-nums;
+  transform: translateY(-0.72em);
+  transition: color 0.4s var(--ease);
+}
+/* włos rozjeżdżający się w prawo razem z pojawieniem się pozycji */
+.mobile__nav a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, rgba(169,136,94,0.42), rgba(169,136,94,0.07) 58%, transparent);
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform 0.9s var(--ease);
+}
+body.menu-open .mobile__nav a::after { transform: scaleX(1); transition-delay: calc(var(--i) * 0.06s + 0.34s); }
+.mobile__nav a:hover, .mobile__nav a:focus-visible { color: var(--brass-soft); }
+.mobile__nav a:hover span, .mobile__nav a:focus-visible span { color: var(--brass-soft); }
 body.menu-open .mobile__nav a { opacity: 1; transform: translateY(0); transition: opacity 0.6s var(--ease) calc(var(--i) * 0.06s + 0.2s), transform 0.6s var(--ease) calc(var(--i) * 0.06s + 0.2s); }
 .mobile__foot { margin-top: clamp(36px, 6vh, 64px); display: flex; flex-wrap: wrap; gap: 28px; color: var(--muted-on-dark); font-size: 0.86rem; }
 .mobile__foot a { color: var(--cream-on-dark); }
@@ -464,13 +499,41 @@ html.js .hero.is-in [data-anim] {
 }
 .banner__inner h2 em { font-style: italic; color: var(--brass-soft); }
 .banner__inner h2 .indent { display: inline-block; margin-left: clamp(14px, 2.6vw, 46px); }
-/* Na wąskich ekranach kadr jest za niski, żeby zmieścić na nim napis -
-   zdjęcie zostaje w całości u góry, a tekst schodzi pod nie, na ciemne tło. */
+/* Na telefonie napis ZOSTAJE NA ZDJĘCIU, tak samo jak na desktopie.
+   Wcześniej banner rozpadał się tu na dwa bloki - kadr u góry, tekst pod nim
+   na czarnym tle - i wyglądał jak osobny kafelek doklejony do fotografii.
+   Powód był techniczny: zdjęcie ma 2000×845, więc przy 390 px szerokości
+   schodzi do 158 px wysokości i napis nie ma na czym usiąść.
+   Rozwiązanie: nadajemy sekcji własną wysokość i przycinamy kadr przez
+   object-fit: cover (panorama traci boki, zostaje środek - kanapy, stolik
+   i jadalnia w głębi). Tekst wraca na swoje miejsce, w lewy dolny róg. */
 @media (max-width: 900px){
-  .banner { display: block; }
-  .banner__img { width: 100%; height: auto; }
-  .banner::after { display: none; }
-  .banner__inner { padding-block: clamp(28px, 6vw, 44px); }
+  /* Wysokość dobrana tak, żeby górne ~38% kadru zostało czystym zdjęciem,
+     a blok tekstu (ok. 220 px) zmieścił się poniżej, w strefie przyciemnienia. */
+  .banner { min-height: clamp(400px, 112vw, 540px); grid-template-rows: 1fr; }
+  .banner__img {
+    align-self: stretch;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 50%;
+  }
+  .banner__inner { padding-block: clamp(30px, 7vw, 46px); }
+  /* Progi gradientu nie są „na oko" - policzone przez złożenie tego gradientu
+     z realnymi pikselami zdjęcia w tym kadrze. Górne 42% kadru zostaje
+     praktycznie czyste (alpha ≤ 0.05), potem 61-pikselowa rampa do 0.66 -
+     na tyle długa, żeby nie było widać krawędzi, i na tyle mocna, żeby
+     kremowy napis trzymał kontrast. Najciaśniej jest pod kickerem (drobny
+     tekst, wymóg 4.5:1) - wychodzi 5.6:1 przy 320 px i 6.3:1 przy 390 px.
+     Jeśli podmienisz zdjęcie na jaśniejsze, te progi trzeba przeliczyć. */
+  .banner::after {
+    background: linear-gradient(180deg,
+      rgb(var(--ink-rgb) / 0.28) 0%,
+      rgb(var(--ink-rgb) / 0.03) 20%,
+      rgb(var(--ink-rgb) / 0.05) 42%,
+      rgb(var(--ink-rgb) / 0.66) 56%,
+      rgb(var(--ink-rgb) / 0.80) 76%,
+      rgb(var(--ink-rgb) / 0.91) 100%);
+  }
 }
 
 /* =========================================================================
@@ -528,7 +591,9 @@ html.js .hero.is-in [data-anim] {
 .types__name { margin-top: 12px; font-size: 0.9rem; color: var(--warm-gray); min-height: 1.4em; }
 .types__name b { color: var(--graphite); font-weight: 600; }
 
-.toggle { display: flex; align-items: center; gap: 14px; cursor: pointer; padding: 16px 0; border-top: var(--hair); margin-top: 6px; }
+/* text-align: left, bo <button> dziedziczy z UA wyśrodkowanie - widać to
+   dopiero, gdy opis łamie się na dwa wiersze (czyli na telefonie). */
+.toggle { display: flex; align-items: center; gap: 14px; cursor: pointer; padding: 16px 0; border-top: var(--hair); margin-top: 6px; text-align: left; }
 .toggle__sw { width: 48px; height: 26px; border-radius: 999px; background: var(--taupe); position: relative; flex: none; transition: background 0.35s var(--ease); }
 .toggle__sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--bone); transition: transform 0.35s var(--ease); }
 .toggle.is-on .toggle__sw { background: var(--brass); }
@@ -877,3 +942,483 @@ html[data-theme="dark"] .calc__form {
 }
 /* gałka suwaka/przełącznika znów jasna (jak w wersji beżowej) */
 html[data-theme="dark"] .calc__form .toggle__sw::after { background: #F5F0E8; }
+html[data-theme="dark"] .calc__form .toggle__sw::after { background: #F5F0E8; }
+
+/* =========================================================================
+   WERSJA MOBILNA / DOTYK
+   Jedno miejsce na wszystko, co dotyczy telefonów i tabletów - dopisane na
+   końcu pliku, więc nadpisuje reguły bazowe bez podbijania specyficzności.
+
+   Trzy grupy:
+     1. (hover: none)     - urządzenia dotykowe, niezależnie od szerokości
+     2. (pointer: coarse) - palec zamiast myszy, więc większe cele dotykowe
+     3. breakpointy szerokości - układ
+   ========================================================================= */
+
+/* ----------------------------- 1. DOTYK ----------------------------- */
+/* Na telefonie nie ma "najechania kursorem", więc wszystko, co w wersji
+   desktopowej pokazuje się dopiero na hover, musi być widoczne od razu -
+   inaczej na kafelkach portfolio nie widać ani tytułu, ani kategorii. */
+@media (hover: none) {
+  .pf__shade { opacity: 1; }
+  .pf__meta { opacity: 1; transform: none; }
+  .pf__cat { opacity: 1; }
+  /* podkreślenie linków tekstowych na stałe - inaczej wyglądają jak zwykły tekst */
+  .tlink::after { transform: scaleX(1); transform-origin: left; }
+  /* efekty "na hover", które na dotyku tylko zostają zablokowane po tapnięciu */
+  .pf__item:hover .ph { transform: none; }
+  .timeline__row:hover { padding-left: 0; }
+  .social a:hover { transform: none; }
+}
+
+/* Brak szarego prostokąta po tapnięciu (domyślny highlight w Chrome/Safari). */
+body { -webkit-tap-highlight-color: transparent; }
+
+/* Elementy siatki i flexa mają domyślnie min-width:auto, czyli "nie zwężaj
+   mnie poniżej najszerszej treści". Na wąskim ekranie to właśnie ono wypychało
+   oba panele kalkulatora poza kontener - a .calc ma overflow:hidden, więc
+   prawa krawędź (m², przycisk CTA) była po prostu ucinana.
+   Winowajcy to <input type="number"> (ma własną szerokość domyślną ~20 znaków)
+   i .btn z white-space:nowrap. Zerowy min-width pozwala im się zwęzić. */
+.calc__form, .calc__out, .tcard, .proc__step, .cs__body, .contact__aside, .form { min-width: 0; }
+.area-input input { min-width: 0; }
+
+/* Kotwice (#oferta, #wycena…) nie mogą chować się pod przyklejonym nagłówkiem. */
+html { scroll-padding-top: 84px; }
+
+/* Ekrany z "wcięciem" - treść nie wchodzi pod notch ani pasek gestów. */
+@supports (padding: max(0px)) {
+  .wrap {
+    padding-left: max(var(--gut), env(safe-area-inset-left));
+    padding-right: max(var(--gut), env(safe-area-inset-right));
+  }
+  .foot { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+}
+
+/* ------------------------ 2. WIĘKSZE CELE DOTYKOWE ------------------------ */
+/* Warunek jest podwójny celowo: palec zamiast myszy ALBO po prostu wąski
+   ekran. Dzięki temu powiększone cele dostaje zarówno telefon, jak i wąskie
+   okno na desktopie - a nie tylko urządzenia, które zgłaszają (pointer: coarse).
+   Próg 1080px jest ten sam, przy którym nawigacja zamienia się w burgera.  */
+@media (pointer: coarse), (max-width: 1080px) {
+  /* Suwak metrażu: sam <input> ma raptem 2 px wysokości, więc palcem trafia
+     się w niego przypadkiem. Wyściółka podnosi pole dotyku do 32 px, a
+     background-clip: content-box zostawia tor tak samo cienki jak wcześniej. */
+  .range {
+    height: 32px;
+    padding-block: 15px;
+    background-color: var(--taupe);
+    background-clip: content-box;
+    margin-top: 8px;
+  }
+  .range::-webkit-slider-thumb { width: 28px; height: 28px; }
+  .range::-moz-range-thumb { width: 28px; height: 28px; }
+  /* checkboxy w formularzu */
+  .form__check { margin-bottom: 22px; }
+  .form__check .box { width: 24px; height: 24px; }
+  /* chipy filtra portfolio */
+  .chip { padding: 0.72em 1.3em; }
+  /* linki tekstowe i te w stopce miały ~21-24 px wysokości - za mało na palec */
+  .tlink { padding-block: 7px; }
+  /* podkreślenie liczone od tekstu, nie od powiększonego pola dotyku */
+  .tlink::after { bottom: 3px; }
+  .foot__col a { padding-block: 6px; margin-bottom: 3px; }
+  .contact__chan a { padding-block: 18px; }
+}
+
+/* ---------------------- 2b. TYPOGRAFIA NA TELEFONIE ---------------------- */
+/* Skala z desktopu przeniesiona 1:1 na 390 px robi się krzykliwa: nagłówek
+   sekcji ma tam 38 px, a mikro-etykiety są rozstrzelone na 0.26em i zajmują
+   po dwa wiersze. Tutaj wszystko schodzi o klasę w dół - mniejszy stopień,
+   lżejsza waga kroju, ciaśniejszy trakting. Treść bez zmian, tylko spokojniej.
+   Blok stoi PRZED regułami układu, żeby sekcje mogły go u siebie nadpisać. */
+@media (max-width: 640px) {
+  .shead h2 { font-size: clamp(1.95rem, 8vw, 2.6rem); }
+  .shead { margin-bottom: clamp(30px, 7vw, 48px); gap: 16px; }
+  .about__body h2, .contact__aside h2 { font-size: clamp(1.9rem, 7.6vw, 2.6rem); }
+  .foot__big { font-size: clamp(1.7rem, 7vw, 2.4rem); }
+
+  /* duże nagłówki w lżejszej wadze - drobniejsze zostają na 500,
+     bo przy 20 px Cormorant 400 robi się już za cienki */
+  .hero h1, .shead h2, .about__body h2, .contact__aside h2,
+  .banner__inner h2, .foot__big { font-weight: 400; }
+
+  .lead { font-size: 1rem; line-height: 1.6; }
+  .kicker { font-size: 0.66rem; letter-spacing: 0.2em; gap: 0.7em; }
+  .kicker::before { width: 18px; }
+}
+
+/* =========================== 3. UKŁAD - BREAKPOINTY =========================== */
+
+/* --------------------------- Nagłówek + menu --------------------------- */
+@media (max-width: 1080px) {
+  .hdr__row { gap: 14px; }
+  /* burger dostaje pełne 44×44 px pola dotyku - same kreski zostają 30×18 */
+  .burger { width: 44px; height: 44px; margin-right: -9px; }
+  .burger span { left: 7px; width: 30px; }
+  .burger span:nth-child(1) { top: 13px; }
+  .burger span:nth-child(3) { bottom: 13px; }
+
+  /* strona pod otwartym menu nie może się przewijać "w tle" */
+  body.menu-open { overflow: hidden; }
+
+  .mobile {
+    /* justify-content:center przy dłuższej treści ucina górę i nie da się do
+       niej doscrollować - dlatego centrujemy marginesami auto, które przy
+       przepełnieniu same znikają. */
+    justify-content: flex-start;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-top: calc(var(--gut) + env(safe-area-inset-top, 0px) + 56px);
+    padding-bottom: calc(var(--gut) + env(safe-area-inset-bottom, 0px));
+  }
+  /* Bez tego flex ściska dzieci, gdy menu jest wyższe niż ekran - przycisk
+     CTA gubił wtedy wyściółkę i robił się płaski (29 px zamiast 50 px).
+     Od przewijania jest overflow-y wyżej, nie kurczenie się elementów. */
+  .mobile > * { flex: none; }
+  .mobile__nav { margin-top: auto; }
+  .mobile__nav a { font-size: clamp(1.6rem, 6.6vw, 3rem); }
+  /* Numer (01-07) ma stały rozmiar w rem, a kolumna pod niego była podana
+     w `em` - czyli skalowała się razem z nazwą pozycji. Po zmniejszeniu
+     nazwy kolumna dalej miała 1.85em (~70 px), a sam numer tylko ~14 px:
+     zostawało ~56 px martwej dziury i numery wisiały samotnie przy lewej
+     krawędzi. Na telefonie kolumna idzie więc na rem - tak jak numer. */
+  .mobile__nav a {
+    grid-template-columns: 2.15rem 1fr;
+    /* wysokość pozycji nie może zależeć od stopnia pisma, bo przy mniejszej
+       czcionce wiersz spadał poniżej 44 px pola dotyku */
+    padding-block: 9px;
+  }
+  /* mniejsza nazwa = niższy wersalik, więc dawne uniesienie o -0.72em
+     wypychało numer prawie do włosa nad wierszem */
+  .mobile__nav a span { transform: translateY(-0.3em); }
+  .mobile__cta { align-self: flex-start; margin-top: clamp(26px, 4vh, 44px); }
+  .mobile__foot {
+    margin-bottom: auto;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: clamp(26px, 4vh, 48px);
+  }
+  /* linki w stopce menu miały 22 px wysokości - za mało, żeby trafić palcem */
+  .mobile__foot a { padding-block: 7px; }
+}
+
+@media (max-width: 420px) {
+  .logo__mark { width: 30px; height: 30px; font-size: 1.02rem; }
+  .logo__txt { font-size: 1.14rem; }
+  .logo__txt small { font-size: 0.54rem; letter-spacing: 0.24em; }
+}
+
+/* ------------------------------- HERO ------------------------------- */
+@media (max-width: 820px) {
+  /* Telefon dostaje pionowy plik 720×1280 (patrz skrypt przy <video>), więc
+     kadr niemal dokładnie pokrywa ekran - nie potrzeba już zapasu 116%
+     na paralaksę, która na dotyku i tak jest wyłączona. */
+  .hero__video, .hero__media image-slot { height: 100%; }
+
+  /* --- Napisy: minimalistycznie, żeby zostawić kadr filmowi ---------------
+     Na telefonie blok tekstowy zasłaniał połowę wideo. Cała typografia
+     schodzi o klasę w dół: lżejsza waga kroju, mniej rozstrzelona
+     mikro-etykieta, węższy akapit i ciaśniejsze odstępy. Treść zostaje
+     ta sama - zmienia się tylko jej „głośność". */
+  .hero__inner { padding-top: clamp(84px, 16vh, 128px); padding-bottom: clamp(28px, 4.5vh, 56px); }
+
+  /* Cały blok tekstowy hero zszedł 1,5x w dół (kicker 9,6 -> 6,4 px,
+     nagłówek 25,6 -> 17 px, akapit 14,1 -> 9,4 px na ekranie 390 px).
+     Każda wartość podzielona przez 1,5, łącznie z całą trójką clamp
+     w nagłówku - żeby proporcja trzymała się na każdej szerokości. */
+  .hero__kicker { font-size: 0.4rem; letter-spacing: 0.2em; opacity: 0.8; }
+  .hero__kicker::before { width: 11px; }
+
+  /* max-width w `ch` kurczy się razem z pismem, więc po zejściu o 1,5x
+     druga linia („zaczyna się od Typa") zaczęła się łamać na dwie.
+     17ch x 1,5 = ~26ch trzyma tę samą SZEROKOŚĆ w pikselach co wcześniej,
+     czyli podział wiersza zaprojektowany w HTML zostaje nienaruszony. */
+  .hero h1 { font-size: clamp(1.07rem, 4.13vw, 1.53rem); font-weight: 400; line-height: 1.16; margin-top: 0.5em; max-width: 26ch; }
+
+  /* twarde łamanie wiersza z desktopu psuje akapit na wąskim ekranie */
+  .hero__sub br { display: none; }
+  .hero__sub { font-size: 0.59rem; line-height: 1.5; max-width: 30ch; opacity: 0.74; }
+
+  .hero__bottom { gap: clamp(13px, 2vh, 20px); margin-top: 3px; }
+
+  /* strzałka "Przewiń" siedzi w prawym dolnym rogu - na telefonie wchodzi
+     w przyciski, a podpowiedź i tak jest zbędna */
+  .hero__scroll { display: none; }
+
+  /* Cień tylko tam, gdzie naprawdę leży tekst: góra prawie czysta, ciemnienie
+     zaczyna się dopiero w dolnej jednej trzeciej kadru. */
+  .hero__media::after {
+    background:
+      linear-gradient(180deg, rgb(var(--ink-rgb) / 0.4) 0%, rgb(var(--ink-rgb) / 0.03) 20%, rgb(var(--ink-rgb) / 0.08) 46%, rgb(var(--ink-rgb) / 0.66) 84%, rgb(var(--ink-rgb) / 0.86) 100%);
+  }
+}
+@media (max-width: 560px) {
+  /* Dwa pasy przycisków na całą szerokość ciążyły na kadrze - pigułki wracają
+     do swojej naturalnej szerokości i drobniejszego stopnia pisma. */
+  .hero__actions { width: auto; flex-direction: column; align-items: flex-start; gap: 6px; }
+  /* Przyciski 2x mniejsze (0.68 -> 0.34rem, czyli 10,9 -> 5,4 px napisu).
+     Padding i trakting są w `em`, więc skalują się razem z pismem i cała
+     pigułka schodzi do połowy - nie tylko sam tekst. */
+  .hero__actions .btn { font-size: 0.34rem; letter-spacing: 0.16em; padding: 0.88em 1.5em; white-space: nowrap; }
+  .hero__bottom { max-width: none; }
+}
+
+/* Dłuższe etykiety CTA ("Wyślij zapytanie z tą wyceną") nie mieszczą się na
+   telefonie w jednym wierszu - pozwalamy im się złamać zamiast wystawać. */
+@media (max-width: 560px) {
+  .btn { white-space: normal; flex-wrap: wrap; justify-content: center; text-align: center; padding-inline: 1.4em; }
+}
+
+/* --------------------------- Pasek zaufania --------------------------- */
+@media (max-width: 760px) {
+  .trust .wrap { flex-direction: column; align-items: stretch; gap: 0; padding-block: 2px; }
+  .trust span { justify-content: flex-start; padding-block: 15px; border-bottom: var(--hair); }
+  .trust span:last-child { border-bottom: none; }
+  .trust span b { font-size: 1.35rem; }
+}
+
+/* ------------------------------ Portfolio ------------------------------ */
+@media (max-width: 760px) {
+  /* Filtry na telefonie: siatka 3 x 2 (6 kategorii) zamiast poziomego paska -
+     wszystkie kategorie widoczne od razu, bez przewijania w bok. */
+  .pf__filter {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .chip {
+    padding: 0.65em 0.4em;
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  .pf__more { justify-content: flex-start; }
+  /* Opis kafelka na stałe widoczny - nie tylko na urządzeniach dotykowych
+     (blok @media (hover: none) wyżej), ale na każdym wąskim ekranie: przy
+     jednej kolumnie kafelków hover i tak nie jest tu sposobem na czytanie. */
+  .pf__shade, .pf__cat { opacity: 1; }
+  .pf__meta { opacity: 1; transform: none; }
+  .pf__shade { background: linear-gradient(180deg, transparent 40%, rgb(var(--ink-rgb) / 0.16) 58%, rgb(var(--ink-rgb) / 0.86) 100%); }
+}
+@media (max-width: 480px) {
+  .pf__item.wide { aspect-ratio: 16/12; }
+  .pf__item.tall { aspect-ratio: 4/4.8; }
+  .pf__meta h3 { font-size: 1.45rem; }
+  .pf__arrow { width: 38px; height: 38px; }
+}
+
+/* ------------------------------- Banner ------------------------------- */
+@media (max-width: 640px) {
+  /* „Każdy detal ma znaczenie – / od fugi po klamkę."
+     Ograniczenie max-width: 20ch dusiło ten napis do 238 px, mimo że w kolumnie
+     było 335 px – przez co zdanie łamało się w przypadkowym miejscu na trzy
+     wiersze, a myślnik zostawał sam na końcu drugiego. Bez limitu szerokości
+     wraca podział zaprojektowany w HTML: zdanie, <br>, kursywna klauzula. */
+  .banner__inner h2 {
+    /* Dwa razy mniej niż poprzednio (5.6vw → 2.8vw, czyli ~22 px → ~11 px na
+       telefonie 390 px). Napis zajmował ćwiartkę kadru i z nim konkurował;
+       teraz jest podpisem pod zdjęciem. Cała trójka clamp poszła na połowę,
+       żeby proporcja trzymała się na każdej szerokości. */
+    font-size: clamp(0.59rem, 2.8vw, 0.97rem);
+    max-width: none;
+    line-height: 1.3;
+  }
+  .banner__inner h2 .indent { margin-left: 8px; }
+  /* przycisk jak w hero - naturalna szerokość zamiast pasa na całą kolumnę */
+  .banner__inner .btn { width: auto; font-size: 0.68rem; letter-spacing: 0.16em; padding: 0.88em 1.5em; white-space: nowrap; }
+}
+
+/* ------------------------------ Oferta ------------------------------ */
+/* Na telefonie osiem ciemnych kafli jedno pod drugim robiło z tej sekcji
+   czarną ścianę na 8 ekranów - w środku jasnej, beżowej strony.
+   Zamiast tego składamy je jak CENNIK: jasne tło strony, włosowe linie,
+   numer typu w lewej kolumnie, cena po prawej w tej samej linii co nazwa.
+   Ten sam zestaw kolorów co reszta strony (bone / graphite / brass),
+   ta sama typografia - zmienia się tylko forma. Kafle wracają od 641 px. */
+@media (max-width: 640px) {
+  .offer__grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    background: none;
+    border: none;
+    border-radius: 0;
+    border-top: 1px solid color-mix(in srgb, var(--taupe) 62%, transparent);
+  }
+  .tcard {
+    min-height: 0;
+    background: transparent;
+    color: var(--graphite);
+    padding: 17px 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--taupe) 62%, transparent);
+    /* num | nazwa | cena  (opis idzie pod nazwą, przez dwie kolumny)
+       row-gap = 0 celowo: wiersz na plakietkę jest pusty w 7 z 8 typów
+       i nie ma zostawiać po sobie dziury - odstępy dają marginesy. */
+    display: grid;
+    grid-template-columns: 2.3rem minmax(0, 1fr) auto;
+    column-gap: 12px;
+    row-gap: 0;
+    align-items: baseline;
+  }
+  .tcard:hover { background: transparent; }
+  .tcard__top { grid-column: 1; grid-row: 1 / span 3; display: block; }
+  .tcard__n {
+    font-size: 1.24rem; font-weight: 600; line-height: 1; color: var(--brass);
+  }
+  .tcard__n small {
+    font-size: 0.5rem; letter-spacing: 0.22em; color: var(--warm-gray); margin-bottom: 5px;
+  }
+  .tcard h3 { grid-column: 2; grid-row: 2; font-size: 1.06rem; line-height: 1.16; color: var(--graphite); }
+  .tcard p { grid-column: 2 / -1; grid-row: 3; margin-top: 6px; font-size: 0.82rem; line-height: 1.5; color: var(--warm-gray); }
+  .tcard__price {
+    grid-column: 3; grid-row: 2; justify-self: end;
+    border-top: none; padding-top: 0; gap: 0.28em; white-space: nowrap;
+  }
+  .tcard__price b { font-size: 1.06rem; color: var(--brass); }
+  .tcard__price span { font-size: 0.62rem; color: var(--warm-gray); }
+
+  /* „Najczęściej wybierany" - jedyny wiersz z podświetleniem: ciepły panel
+     wypuszczony w gutter, żeby wyglądał jak wyróżnienie w cenniku, a nie
+     jak obce pudełko. */
+  .tcard.is-featured {
+    background: color-mix(in srgb, var(--beige) 70%, transparent);
+    box-shadow: none;
+    border-radius: 3px;
+    padding-inline: 13px;
+    margin-inline: -13px;
+    border-bottom-color: transparent;
+  }
+  /* .tcard.is-featured:hover z wersji desktopowej jest bardziej szczegółowy
+     niż reguła wyżej - w wąskim oknie na myszy przemalowałby wiersz na ciemny */
+  .tcard.is-featured:hover { background: color-mix(in srgb, var(--beige) 70%, transparent); }
+  .tcard.is-featured .badge {
+    position: static; display: block;
+    grid-column: 2 / -1; grid-row: 1;
+    margin-bottom: 7px;
+    font-size: 0.56rem; letter-spacing: 0.2em; color: var(--brass);
+  }
+}
+
+/* ----------------------------- Kalkulator ----------------------------- */
+@media (max-width: 560px) {
+  /* mniej wewnętrznego marginesu = więcej miejsca na kwadraty typów */
+  .calc__form, .calc__out { padding: 24px 18px; }
+  .types { gap: 6px; }
+  /* grotesk jest szerszy od Cormoranta w tym samym stopniu, więc cyfry
+     w kwadratach typów i wielka kwota schodzą o oczko niżej */
+  .types button .tn { font-size: 1.02rem; }
+  .types button .tp { font-size: 0.58rem; letter-spacing: -0.02em; }
+  .out__price .val { font-size: clamp(2rem, 10vw, 2.9rem); }
+  .out__rows .r { font-size: 0.85rem; gap: 12px; }
+  .toggle__txt span { font-size: 0.78rem; }
+  /* opis łamie się tu na 2-3 wiersze - przełącznik ma stać przy pierwszym,
+     a nie dryfować na środek bloku tekstu */
+  .toggle { align-items: flex-start; }
+  .toggle__sw { margin-top: 3px; }
+}
+@media (max-width: 380px) {
+  /* na najwęższych ekranach kwadraty typów robią się bardzo ciasne */
+  .types { gap: 5px; }
+  .types button .tn { font-size: 0.94rem; }
+  .types button .tp { font-size: 0.54rem; }
+}
+
+/* ------------------------------- Proces ------------------------------- */
+@media (max-width: 560px) {
+  .proc__step { padding: 24px 20px; gap: 14px; }
+}
+
+/* ---------------------------- Czas realizacji ---------------------------- */
+@media (max-width: 600px) {
+  .timeline__row { padding-block: 18px; }
+  .timeline__row .time { color: var(--brass); font-size: 0.95rem; }
+}
+
+/* ------------------------------- Opinie ------------------------------- */
+.rev__hint {
+  display: none;
+  margin-top: 14px;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-on-dark);
+}
+/* Poniżej tego progu spis nadawców nie mieści się obok wiadomości - schodzi
+   pod nią i zamienia się w listwę znaczników (nazwiska zostają w aria-label
+   przycisków, więc czytnik ekranu nadal wie, w co się klika). */
+@media (max-width: 980px) {
+  .rev { grid-template-columns: 1fr; gap: 26px; }
+  /* jedna kolumna: wiadomość, pod nią strzałki, na końcu listwa znaczników -
+     stąd column-reverse (w kodzie spis stoi przed strzałkami) */
+  .rev__side { flex-direction: column-reverse; gap: 22px; }
+  .rev__nav { margin-top: 0; }
+  .rev__index { display: flex; flex-wrap: wrap; gap: 6px; border-top: none; }
+  .rev__index li { border-bottom: none; }
+  /* 26 px na znacznik: przy dziesięciu opiniach listwa mieści się w jednym
+     rzędzie nawet na 360-pikselowym ekranie. */
+  .rev__pick { width: 26px; height: 34px; padding: 0; gap: 0; }
+  .rev__pick .nm, .rev__pick .mt { display: none; }
+  /* zakres projektu wraca pod podpis - spis go tu już nie pokazuje */
+  .rev__who .mt { display: inline; }
+  .rev__pick::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: color-mix(in srgb, var(--brass) 38%, transparent); transition: background 0.4s var(--ease), height 0.4s var(--ease); }
+  .rev__pick:hover::before { background: var(--cream-on-dark); }
+  .rev__pick.is-on { padding-left: 0; }
+  .rev__pick.is-on::before { width: auto; height: 2px; background: var(--brass-soft); }
+}
+@media (max-width: 760px) {
+  /* slider przesuwa się palcem (obsługa w app.js) - blokujemy tylko poziome
+     przewijanie strony, pionowe ma działać normalnie */
+  .rev__track { touch-action: pan-y; }
+  .rev__lead { font-size: clamp(1.4rem, 5.6vw, 1.9rem); }
+  .rev__body { font-size: 0.98rem; }
+  .rev__nav { margin-top: 28px; gap: 10px; }
+  .rev__nav button { width: 48px; height: 48px; }
+  /* delikatna podpowiedź, że kartę można przesunąć palcem */
+  .rev__hint { display: block; }
+}
+
+/* ---------------------------- Case studies ---------------------------- */
+@media (max-width: 560px) {
+  .cs__media { min-height: 220px; }
+  .cs__body { padding: 26px 20px; }
+  /* etykieta (Problem / Założenia…) nad tekstem - 92 px kolumny zjadałoby
+     połowę szerokości telefonu */
+  .cs__block { flex-direction: column; gap: 6px; }
+  .cs__block .k { width: auto; padding-top: 0; }
+}
+
+/* -------------------------------- FAQ -------------------------------- */
+@media (max-width: 560px) {
+  .faq__q { gap: 16px; padding-block: 22px; }
+  .faq__ic { width: 22px; height: 22px; }
+  .faq__a p { font-size: 0.96rem; }
+}
+
+/* ------------------------------- Kontakt ------------------------------- */
+@media (max-width: 560px) {
+  .form { padding: 24px 18px; }
+  /* adres e-mail jest dłuższy niż pół ekranu - etykieta idzie nad wartość */
+  .contact__chan a, .contact__chan p { flex-direction: column; align-items: flex-start; gap: 5px; }
+  .contact__chan a .v { font-size: 1.16rem; overflow-wrap: anywhere; }
+  .form__sent h3 { font-size: 1.6rem; }
+}
+
+/* ------------------------------- Stopka ------------------------------- */
+@media (max-width: 760px) {
+  .foot__top { gap: 34px; }
+  .foot__big { max-width: none; }
+  .foot__bottom { flex-direction: column; gap: 8px; }
+}
+
+/* --------------------- Telefon w poziomie (landscape) --------------------- */
+/* Niski i szeroki ekran: hero na 100svh zostawiłby na tekst kilkadziesiąt
+   pikseli, więc oddajemy mu tyle, ile faktycznie potrzebuje. */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero { min-height: auto; }
+  .hero__inner { padding-top: 104px; padding-bottom: 34px; }
+  .hero h1 { font-size: 1.6rem; }
+  .hero__actions { flex-direction: row; width: auto; }
+  .mobile__nav a { font-size: clamp(1.5rem, 5vw, 2.2rem); }
+}
+

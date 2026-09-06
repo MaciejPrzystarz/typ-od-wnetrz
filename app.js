@@ -15,10 +15,25 @@
 
   /* ---------------- Mobile menu ---------------- */
   const burger = $(".burger");
-  const closeMenu = () => document.body.classList.remove("menu-open");
-  burger.addEventListener("click", () => document.body.classList.toggle("menu-open"));
-  $$(".mobile__nav a").forEach((a) => a.addEventListener("click", closeMenu));
+  const mobileMenu = $("#mobileMenu");
+  const isMenuOpen = () => document.body.classList.contains("menu-open");
+  // Jeden punkt prawdy o stanie menu: klasa na <body> (blokuje przewijanie tła
+  // i animuje overlay) plus stan dla czytników ekranu na burgerze i overlayu.
+  const setMenu = (open) => {
+    document.body.classList.toggle("menu-open", open);
+    burger.setAttribute("aria-expanded", String(open));
+    burger.setAttribute("aria-label", open ? "Zamknij menu" : "Otwórz menu");
+    mobileMenu?.setAttribute("aria-hidden", String(!open));
+  };
+  const closeMenu = () => setMenu(false);
+  burger.addEventListener("click", () => setMenu(!isMenuOpen()));
+  $$(".mobile a").forEach((a) => a.addEventListener("click", closeMenu));
   document.addEventListener("keydown", (e) => e.key === "Escape" && closeMenu());
+  // Powrót na desktop z otwartym menu zostawiłby <body> z overflow:hidden -
+  // czyli stronę, której nie da się przewinąć. Zamykamy je przy zmianie progu.
+  const wide = window.matchMedia("(min-width: 1081px)");
+  const onWide = () => { if (wide.matches && isMenuOpen()) closeMenu(); };
+  wide.addEventListener ? wide.addEventListener("change", onWide) : wide.addListener(onWide);
 
   /* ---------------- Hero entrance ---------------- */
   requestAnimationFrame(() => $(".hero")?.classList.add("is-in"));
@@ -55,12 +70,18 @@
   }
 
   /* ---------------- Parallax (hero media + portfolio) ---------------- */
+  // Na telefonie paralaksa jest wyłączona: pionowy kadr i tak wypełnia ekran
+  // (CSS ustawia tam height:100% zamiast 116%), a przesuwanie wideo przy
+  // chowającym się pasku adresu kosztuje tylko płynność przewijania.
+  const noParallax = window.matchMedia("(max-width: 820px), (pointer: coarse)");
   let ticking = false;
   const parallax = () => {
-    const y = window.scrollY;
-    const m = $(".hero__media .hero__video, .hero__media image-slot, .hero__media .ph");
-    if (m && y < window.innerHeight) m.style.transform = `translateY(${y * 0.18}px) scale(1.02)`;
     ticking = false;
+    const m = $(".hero__media .hero__video, .hero__media image-slot, .hero__media .ph");
+    if (!m) return;
+    if (noParallax.matches) { m.style.transform = ""; return; }
+    const y = window.scrollY;
+    if (y < window.innerHeight) m.style.transform = `translateY(${y * 0.18}px) scale(1.02)`;
   };
   window.addEventListener("scroll", () => { if (!ticking) { requestAnimationFrame(parallax); ticking = true; } }, { passive: true });
 
