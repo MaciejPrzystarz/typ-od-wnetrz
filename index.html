@@ -128,23 +128,45 @@
       <div class="hero__media">
         <video class="hero__video" id="heroVideo" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true" tabindex="-1"
                data-src="images/hero-video.mp4"
-               data-src-mobile="images/hero-video-phone-resolution.mp4"></video>
+               data-src-mobile="images/hero-video-phone-resolution.mp4"
+               data-src-av1="images/hero-video-av1.mp4"
+               data-src-mobile-av1="images/hero-video-phone-resolution-av1.mp4"></video>
         <script>
-          /* Telefon dostaje lżejszy plik (hero-video-phone-resolution.mp4, ~8 MB)
-             zamiast desktopowego (~27 MB). Wybór robimy TUTAJ, tuż za elementem
-             <video> i przed jakimkolwiek innym skryptem – dzięki temu przeglądarka
-             pobiera od razu właściwy plik, a nie dwa.
-             Nie używamy <source media="...">, bo część przeglądarek ignoruje ten
-             atrybut przy wideo i i tak ściągnęłaby wersję desktopową. */
+          /* Cztery pliki, POBIERANY JEST DOKŁADNIE JEDEN. Wybór ma dwie osie:
+
+             1. EKRAN – telefon dostaje lżejszy kadr (720x1280) zamiast 2560x1440.
+             2. KODEK – AV1 waży przy tej samej jakości kilka razy mniej niż H.264
+                (26 MB -> 2,95 MB na desktopie, 7,5 MB -> 1,35 MB na telefonie;
+                VMAF ~97), ale nie każda przeglądarka go zna. Kto nie zna, dostaje
+                nietknięty plik H.264 – ten sam, co zawsze, bit w bit.
+
+                                     H.264                AV1
+               desktop            25,90 MB              2,95 MB
+               telefon             7,46 MB              1,35 MB
+
+             Wybór robimy TUTAJ, tuż za elementem <video> i przed jakimkolwiek
+             innym skryptem – dzięki temu przeglądarka pobiera od razu właściwy
+             plik, a nie dwa. Nie używamy <source>, bo przy wyborze po rozmiarze
+             ekranu część przeglądarek ignoruje atrybut media i tak czy owak
+             ściągnęłaby wersję desktopową; skoro i tak wybieramy w JS, kodek
+             dokładamy w tym samym miejscu. */
           (function () {
             var v = document.getElementById("heroVideo");
             if (!v) return;
             // Wąski ekran ALBO telefon obrócony na bok (niski ekran + palec zamiast
-            // myszy) – w obu przypadkach nie chcemy zrzucać na komórkę 27 MB.
+            // myszy) – w obu przypadkach nie chcemy zrzucać na komórkę 26 MB.
             var phone = window.matchMedia(
               "(max-width: 820px), (orientation: landscape) and (max-height: 560px) and (pointer: coarse)"
             ).matches;
-            v.src = phone ? v.dataset.srcMobile : v.dataset.src;
+            // Ciąg kodeka: av01.<profil>.<poziom><tier>.<bity>. Poziom różni się
+            // między plikami (5.0 na desktopie, 3.1 na telefonie), więc pytamy
+            // o ten, który faktycznie zamierzamy pobrać. Pusta odpowiedź = nie umie.
+            var av1 = v.canPlayType(
+              'video/mp4; codecs="' + (phone ? "av01.0.05M.08" : "av01.0.12M.08") + '"'
+            ) !== "";
+            v.src = phone
+              ? (av1 ? v.dataset.srcMobileAv1 : v.dataset.srcMobile)
+              : (av1 ? v.dataset.srcAv1 : v.dataset.src);
           })();
         </script>
       </div>
