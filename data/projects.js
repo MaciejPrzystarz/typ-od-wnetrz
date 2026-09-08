@@ -40,7 +40,7 @@ window.PROJECTS = [
     excerpt: "Ryflowany front wyspy, drewniana zabudowa górna i kamienna lamperia. Czarna szyna oświetleniowa pod sufitem.",
     slot: "pf-kuchnia",
     photos: [
-      { src: "images/home-images/kitchen.png", orient: "tall" },
+      { src: "images/home-images/kitchen.webp", orient: "tall" },
     ],
   },
   {
@@ -52,7 +52,7 @@ window.PROJECTS = [
     excerpt: "Kamień na ścianie i blacie, ciemna zabudowa do sufitu i faliste lampy przy lustrze. Łukowe wejście do strefy prysznica.",
     slot: "pf-lazienka",
     photos: [
-      { src: "images/home-images/bathroom01.png", orient: "tall" },
+      { src: "images/home-images/bathroom01.webp", orient: "tall" },
     ],
   },
   {
@@ -64,7 +64,7 @@ window.PROJECTS = [
     excerpt: "Skośny strop z drewnianych desek, kominek w jasnej obudowie i oliwkowa sofa modułowa przy stalowym przeszkleniu.",
     slot: "pf-salon",
     photos: [
-      { src: "images/home-images/living-room01.png", orient: "tall" },
+      { src: "images/home-images/living-room01.webp", orient: "tall" },
     ],
   },
   {
@@ -76,7 +76,7 @@ window.PROJECTS = [
     excerpt: "Tapicerowane łóżko w terakocie, artystyczny tynk na ścianie i podświetlana lamperia. W rogu wydzielone miejsce do pracy.",
     slot: "pf-sypialnia",
     photos: [
-      { src: "images/home-images/bedroom01.png", orient: "tall" },
+      { src: "images/home-images/bedroom01.webp", orient: "tall" },
     ],
   },
   {
@@ -88,7 +88,7 @@ window.PROJECTS = [
     excerpt: "Antresola ze schodkami-szufladami i siatką do wspinania, girlanda świetlna i stolik z pastelowymi krzesełkami.",
     slot: "pf-pokoj-dzieciecy",
     photos: [
-      { src: "images/home-images/children-room01.png", orient: "tall" },
+      { src: "images/home-images/children-room01.webp", orient: "tall" },
     ],
   },
   {
@@ -100,7 +100,7 @@ window.PROJECTS = [
     excerpt: "Przeszklone drzwi w czarnej stalowej ramie, drewniana zabudowa po całej ścianie i lampa z obręczy nad konsolą.",
     slot: "pf-hol",
     photos: [
-      { src: "images/home-images/communication01.png", orient: "tall" },
+      { src: "images/home-images/communication01.webp", orient: "tall" },
     ],
   },
 ];
