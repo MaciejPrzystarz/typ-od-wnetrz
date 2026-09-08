@@ -17,3 +17,7 @@ images/detal-photo.jpg
 # Zrzuty robocze i oryginały w pełnej rozdzielczości (about-me.jpg ma 4672x7008).
 # Nigdy nie były podlinkowane ze strony, a jechały do deployu - 14 MB.
 screenshots/
+
+# Konfiguracja IntelliJ - lokalna dla mojego środowiska, nie dla strony.
+# Pliki zostają na dysku, IDE działa dalej; git ich po prostu nie śledzi.
+.idea/
