@@ -227,6 +227,29 @@
       </div>`).join("");
   }
 
+  /* Odnośnik do przykładowych plików - tuż pod kaflami typów, bo pokazuje
+     ich składowe. Renderowany tylko przy niepustym window.SAMPLES, żeby
+     nigdy nie prowadził do pustej podstrony. */
+  const offerSamples = $("#offerSamples");
+  if (offerSamples && (window.SAMPLES || []).length) {
+    offerSamples.innerHTML = `<a class="btn btn--solid" href="przykladowy-projekt.html">Zobacz przykładowe składowe projektu <span class="arr">→</span></a>`;
+  }
+
+  /* ---------------- Moodboard ----------------
+     Notka w rzędzie pod tabelą typów, ale z cenami: dwa warianty, ryczałt
+     za całość (jak Szkic Projektu), więc jednostka to „zł", nie „zł / m²". */
+  const moodboardBox = $("#moodboard");
+  const moodboard = window.MOODBOARD;
+  if (moodboardBox && moodboard) {
+    moodboardBox.innerHTML = `
+      <h4>${moodboard.title}</h4>
+      <p>${moodboard.desc}</p>
+      <ul class="note__prices">
+        ${(moodboard.packages || []).map((p) => `
+          <li><span>${p.name}</span><b>${PLN(p.price)} zł</b></li>`).join("")}
+      </ul>`;
+  }
+
   /* ---------------- Szkic Projektu ----------------
      Osobna usługa obok ośmiu typów. Ceny są ryczałtowe (zł za całość),
      dlatego jednostka to samo „zł", a nie „zł / m²" jak w kaflach typów. */
@@ -243,8 +266,7 @@
             <div class="sketch__price"><b>${PLN(p.price)}</b><span>zł</span></div>
           </div>`).join("")}
       </div>
-      ${sketch.note ? `<p class="sketch__note">${sketch.note}</p>` : ""}
-      ${(window.SAMPLES || []).length ? `<a class="btn btn--solid sketch__link" href="przykladowy-projekt.html">Zobacz przykładowe składowe projektu <span class="arr">→</span></a>` : ""}`;
+      ${sketch.note ? `<p class="sketch__note">${sketch.note}</p>` : ""}`;
   }
 
   /* =======================================================================

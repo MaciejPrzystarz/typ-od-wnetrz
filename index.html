@@ -279,6 +279,13 @@
           <p class="lead offer__lead">Od samych układów funkcjonalnych po kompleksowy projekt. Możesz łączyć typy projektów.</p>
         </div>
         <div class="offer__grid" id="offerGrid"></div>
+        <!-- Odnośnik do podstrony z przykładowymi plikami stoi tuż pod kaflami
+             typów, bo to ich składowe pokazuje. Dokłada go app.js i tylko
+             wtedy, gdy window.SAMPLES coś zawiera - inaczej wiódłby w pustkę. -->
+        <div class="offer__more" id="offerSamples"></div>
+        <!-- Trzy notki w jednym rzędzie: Łączenie typów | Małe pomieszczenia |
+             Moodboard. Szkic Projektu ma własny panel niżej, więc nie wchodzi
+             do tego rzędu (inaczej robiłyby się dwa rzędy po dwa). -->
         <div class="offer__note" data-reveal data-reveal-stagger>
           <!-- Ten kafelek NIE powtarza „możesz łączyć typy" ze zdania nad tabelą -
                tłumaczy, jak to policzyć. Próg rabatu wstrzykuje app.js z
@@ -286,6 +293,10 @@
                rozjechała się z kalkulatorem. -->
           <div><h4>Łączenie typów</h4><p>Każde pomieszczenie liczę własną stawką za m² – np. salon w Typie 8, sypialnie w lżejszym zakresie. Przy większych metrażach dochodzi rabat, już od <span id="discFrom">100</span> m².</p></div>
           <div><h4>Małe pomieszczenia</h4><p>Pomieszczenia poniżej 10 m² wyceniam indywidualnie – napisz, co chcesz zaprojektować.</p></div>
+          <!-- Moodboard: osobna usługa ryczałtowa, ale na tyle krótka, że
+               mieści się w notce - treść i ceny renderuje app.js z
+               window.MOODBOARD. -->
+          <div id="moodboard"></div>
         </div>
         <!-- Szkic Projektu wyszedł z rzędu notek do własnego bloku: to nie jest
              już jednozdaniowy przypis, tylko osobna usługa z dwoma pakietami

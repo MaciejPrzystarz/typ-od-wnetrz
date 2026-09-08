@@ -96,6 +96,21 @@ window.SKETCH = {
   note: "Wynikiem prac jest opracowanie w formacie PDF zawierające zestawienie rekomendacji i listę produktów. Usługa nie obejmuje rysunków wykonawczych ani wizualizacji 3D.",
 };
 
+/**
+ * Moodboard - druga usługa ryczałtowa obok Szkicu Projektu, ale krótsza,
+ * więc nie dostaje własnego panelu: renderuje się do #moodboard jako trzecia
+ * notka pod tabelą typów, obok „Łączenia typów" i „Małych pomieszczeń".
+ * Ceny za całość, nie za m² - poza PRICING i kalkulatorem.
+ */
+window.MOODBOARD = {
+  title: "Moodboard",
+  desc: "Gdy nie wiesz, jakie kolory, materiały i meble do siebie pasują. Zestawienie graficzne inspiracji produktowych dla Twojego wnętrza.",
+  packages: [
+    { name: "Sam moodboard", price: 290 },
+    { name: "Moodboard ze spisem użytych materiałów", price: 390 },
+  ],
+};
+
 // Wspólne źródło dla kalkulatora
 window.PRICING = {
   perType: window.OFFER_TYPES.reduce((acc, t) => ((acc[t.n] = t.price), acc), {}),
