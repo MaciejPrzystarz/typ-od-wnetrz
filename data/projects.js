@@ -13,7 +13,7 @@
  *              Podstrona jest ułożona kategoriami, nie projektami, więc kafel
  *              ze strony głównej prowadzi do galerii swojego rodzaju wnętrz.
  *              Wartości muszą się zgadzać ze `slug` w data/gallery.js.
- *   slot     - id dla <image-slot> (stałe, nie zmieniaj po wgraniu zdjęć)
+ *   photos   - lista zdjęć; każde daje osobny kafel na stronie głównej
  *   photos   - lista zdjęć; pierwsze jest kadrem otwierającym galerię
  *   location / year - MOGĄ być puste; puste pola po prostu się nie renderują
  *
@@ -23,16 +23,13 @@
  *              lub "wide" (poziomy, 2/3). Dobieraj do orientacji zdjęcia.
  *              Rząd domyka się jako 3x tall albo tall+wide - app.js sam przeplata
  *              kafle, ale liczby muszą się zgadzać, inaczej zostaje dziura.
- *              Na podstronie portfolio to pole nie ma znaczenia: galeria czyta
- *              prawdziwe proporcje z pliku.
  *
- * DODAWANIE ZDJĘĆ DO PROJEKTU: dopisz kolejne pozycje do `photos`. Podstrona
- * portfolio pokaże je wszystkie w galerii; strona główna zrobi z każdego
- * osobny kafel, więc pilnuj wtedy bilansu tall/wide.
+ * DODAWANIE ZDJĘĆ DO PROJEKTU: dopisz kolejne pozycje do `photos`. Strona główna
+ * zrobi z każdego osobny kafel, więc pilnuj wtedy bilansu tall/wide.
  *
  * TODO (Mateusz): uzupełnić `location` i `year` prawdziwymi danymi - zostawiam
  * je puste, żeby nie wpisywać zmyślonych miast i lat pod prawdziwe realizacje.
- * Tytuły i opisy są opisem tego, co widać na zdjęciach - śmiało zmień na własne.
+ * Tytuły są opisem tego, co widać na zdjęciach - śmiało zmień na własne.
  */
 window.PROJECTS = [
   {
@@ -42,7 +39,6 @@ window.PROJECTS = [
     category: "Kuchnie",
     location: "",
     year: "",
-    excerpt: "Ryflowany front wyspy, drewniana zabudowa górna i kamienna lamperia. Czarna szyna oświetleniowa pod sufitem.",
     slot: "pf-kuchnia",
     photos: [
       { src: "images/home-images/kitchen.webp", orient: "tall" },
@@ -55,7 +51,6 @@ window.PROJECTS = [
     category: "Łazienki",
     location: "",
     year: "",
-    excerpt: "Kamień na ścianie i blacie, ciemna zabudowa do sufitu i faliste lampy przy lustrze. Łukowe wejście do strefy prysznica.",
     slot: "pf-lazienka",
     photos: [
       { src: "images/home-images/bathroom01.webp", orient: "tall" },
@@ -68,7 +63,6 @@ window.PROJECTS = [
     category: "Salony",
     location: "",
     year: "",
-    excerpt: "Skośny strop z drewnianych desek, kominek w jasnej obudowie i oliwkowa sofa modułowa przy stalowym przeszkleniu.",
     slot: "pf-salon",
     photos: [
       { src: "images/home-images/living-room01.webp", orient: "tall" },
@@ -81,7 +75,6 @@ window.PROJECTS = [
     category: "Sypialnie",
     location: "",
     year: "",
-    excerpt: "Tapicerowane łóżko w terakocie, artystyczny tynk na ścianie i podświetlana lamperia. W rogu wydzielone miejsce do pracy.",
     slot: "pf-sypialnia",
     photos: [
       { src: "images/home-images/bedroom01.webp", orient: "tall" },
@@ -94,7 +87,6 @@ window.PROJECTS = [
     category: "Pokoje dziecięce",
     location: "",
     year: "",
-    excerpt: "Antresola ze schodkami-szufladami i siatką do wspinania, girlanda świetlna i stolik z pastelowymi krzesełkami.",
     slot: "pf-pokoj-dzieciecy",
     photos: [
       { src: "images/home-images/children-room01.webp", orient: "tall" },
@@ -107,7 +99,6 @@ window.PROJECTS = [
     category: "Komunikacja / Hole",
     location: "",
     year: "",
-    excerpt: "Przeszklone drzwi w czarnej stalowej ramie, drewniana zabudowa po całej ścianie i lampa z obręczy nad konsolą.",
     slot: "pf-hol",
     photos: [
       { src: "images/home-images/communication01.webp", orient: "tall" },

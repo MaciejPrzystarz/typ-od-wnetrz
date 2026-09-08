@@ -82,8 +82,6 @@ public class GalleryIndex {
          *   cat    - etykieta kategorii (ta sama, co w filtrze i w PROJECT_CATEGORIES)
          *   slug   - kotwica sekcji: portfolio.html#slug
          *   dir    - katalog zdjęć
-         *   covers - ile pierwszych zdjęć to osobne pokoje (reszta to kolejne
-         *            ujęcia tych samych wnętrz)
          *   photos - [{ f: nazwa pliku, w, h }] - wymiary z nagłówków plików,
          *            żeby przeglądarka znała proporcje kadru przed pobraniem
          *
@@ -114,7 +112,6 @@ public class GalleryIndex {
         .append("    slug: \"").append(room[2]).append("\",\n")
         .append("    alt: \"").append(room[3]).append("\",\n")
         .append("    dir: \"").append(SRC.toString().replace('\\', '/')).append("/").append(room[0]).append("\",\n")
-        .append("    covers: ").append(covers).append(",\n")
         .append("    photos: [\n");
       for (Photo p : ordered) {
         js.append("      { f: \"").append(p.file().replace("\\", "\\\\").replace("\"", "\\\""))

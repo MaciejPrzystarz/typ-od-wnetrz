@@ -8,8 +8,6 @@
  *   cat    - etykieta kategorii (ta sama, co w filtrze i w PROJECT_CATEGORIES)
  *   slug   - kotwica sekcji: portfolio.html#slug
  *   dir    - katalog zdjęć
- *   covers - ile pierwszych zdjęć to osobne pokoje (reszta to kolejne
- *            ujęcia tych samych wnętrz)
  *   photos - [{ f: nazwa pliku, w, h }] - wymiary z nagłówków plików,
  *            żeby przeglądarka znała proporcje kadru przed pobraniem
  *
@@ -22,7 +20,6 @@ window.GALLERY = [
     slug: "kuchnie",
     alt: "Projekt kuchni",
     dir: "images/portfolio-web/kitchen",
-    covers: 10,
     photos: [
       { f: "1.webp", w: 1120, h: 1400 },
       { f: "2.webp", w: 1120, h: 1400 },
@@ -82,7 +79,6 @@ window.GALLERY = [
     slug: "lazienki",
     alt: "Projekt łazienki",
     dir: "images/portfolio-web/bathroom",
-    covers: 62,
     photos: [
       { f: "1.webp", w: 1120, h: 1400 },
       { f: "2.webp", w: 980, h: 1400 },
@@ -230,7 +226,6 @@ window.GALLERY = [
     slug: "salony",
     alt: "Projekt salonu",
     dir: "images/portfolio-web/living-room",
-    covers: 10,
     photos: [
       { f: "1.webp", w: 1400, h: 910 },
       { f: "2.webp", w: 1260, h: 1400 },
@@ -290,7 +285,6 @@ window.GALLERY = [
     slug: "sypialnie",
     alt: "Projekt sypialni",
     dir: "images/portfolio-web/bedroom",
-    covers: 41,
     photos: [
       { f: "16.webp", w: 1400, h: 1120 },
       { f: "17.webp", w: 1120, h: 1400 },
@@ -351,7 +345,6 @@ window.GALLERY = [
     slug: "pokoje-dzieciece",
     alt: "Projekt pokoju dziecięcego",
     dir: "images/portfolio-web/children-room",
-    covers: 22,
     photos: [
       { f: "7.webp", w: 1120, h: 1400 },
       { f: "8.webp", w: 1120, h: 1400 },
@@ -388,7 +381,6 @@ window.GALLERY = [
     slug: "gabinety",
     alt: "Projekt gabinetu",
     dir: "images/portfolio-web/home-office",
-    covers: 22,
     photos: [
       { f: "20.webp", w: 1120, h: 1400 },
       { f: "22.webp", w: 1120, h: 1400 },
@@ -427,7 +419,6 @@ window.GALLERY = [
     slug: "komunikacja",
     alt: "Projekt holu",
     dir: "images/portfolio-web/communication",
-    covers: 19,
     photos: [
       { f: "1.webp", w: 980, h: 1400 },
       { f: "3.webp", w: 980, h: 1400 },
