@@ -1,0 +1,19 @@
+# Oryginalne zdjęcia portfolio - ~1,4 GB PNG-ów prosto z renderów.
+# Do repozytorium (i na serwer) idą TYLKO kopie webowe z images/portfolio-web/,
+# które robi `java tools/GalleryOptimize.java`. Oryginały zostają na dysku
+# jako materiał źródłowy - trzymaj ich kopię zapasową poza projektem.
+images/portfolio/
+
+# Materiał źródłowy zdjęć strony głównej. Na serwer idą kopie .webp obok
+# (images/home-images/*.webp, images/about-me.webp, images/detal-photo.webp),
+# zrobione ffmpeg-iem - patrz CLAUDE.md, sekcja "Obrazy". PNG-i i JPG-i
+# zostają na dysku jako materiał wyjściowy, ale nie są serwowane: to one
+# ważyły 24 MB na jedno wejście na stronę główną.
+# Jak wyżej - trzymaj ich kopię zapasową poza projektem, git nią nie jest.
+images/home-images/*.png
+images/about-me.jpg
+images/detal-photo.jpg
+
+# Zrzuty robocze i oryginały w pełnej rozdzielczości (about-me.jpg ma 4672x7008).
+# Nigdy nie były podlinkowane ze strony, a jechały do deployu - 14 MB.
+screenshots/
