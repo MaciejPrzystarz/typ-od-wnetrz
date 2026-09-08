@@ -7,7 +7,6 @@
 :root {
   /* -- Color roles -- */
   --bone: #F5F0E8;          /* złamana biel - main light bg */
-  --bone-2: #EFE7DA;        /* slightly deeper light */
   --beige: #E9DFCF;         /* warm panels / cards */
   --sand: #DECDB4;          /* deeper warm panel */
   --taupe: #C9B79E;         /* hairlines, soft borders */
@@ -99,7 +98,6 @@ input, select, textarea { font: inherit; color: inherit; }
   background: currentColor;
   opacity: 0.65;
 }
-.kicker.no-rule::before { display: none; }
 .lead { font-size: clamp(1.06rem, 1.6vw, 1.3rem); line-height: 1.55; color: var(--warm-gray); text-wrap: pretty; }
 
 /* ------------------------------- Layout ------------------------------- */
@@ -108,7 +106,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .section--dark { background: var(--ink); color: var(--cream-on-dark); }
 /* Rytm strony: sekcje idą na zmianę złamana biel / cieplejszy beż, aż do
    stopki. Beż to --beige (ten sam panel co karty w kontakcie), a nie
-   subtelniejszy --bone-2 - przy tak długiej stronie słabszy odcień gubił
+   subtelniejszy odcień pośredni - przy tak długiej stronie słabszy kontrast gubił
    się i sąsiednie sekcje zlewały się w jedną płaszczyznę.
    .section--dark (opinie) stoi poza tym rytmem: to celowa przerwa, po
    której naprzemienność startuje od jasnej. */
@@ -162,18 +160,6 @@ input, select, textarea { font: inherit; color: inherit; }
 .btn--on-dark { --c: var(--cream-on-dark); }
 .btn--on-dark::before { background: var(--brass); }
 .btn--on-dark:hover { color: var(--ink); border-color: var(--brass); }
-
-/* text link with animated underline */
-.tlink {
-  position: relative; display: inline-flex; align-items: center; gap: 0.5em;
-  font-weight: 600; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase;
-}
-.tlink::after {
-  content: ""; position: absolute; left: 0; bottom: -4px; height: 1px; width: 100%;
-  background: currentColor; transform: scaleX(0); transform-origin: right;
-  transition: transform 0.5s var(--ease);
-}
-.tlink:hover::after { transform: scaleX(1); transform-origin: left; }
 
 /* =========================================================================
    HEADER
@@ -809,8 +795,6 @@ html.js .hero.is-in [data-anim] {
 .contact__chan a .v { font-family: var(--display); font-size: 1.3rem; transition: color 0.3s; }
 .contact__chan a:hover .v { color: var(--brass); }
 .contact__chan .k { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--warm-gray); }
-.contact__loc { margin-top: clamp(24px, 3vw, 36px); padding: 22px; background: var(--beige); border-radius: 4px; font-size: 0.94rem; color: var(--graphite); }
-.contact__loc b { font-family: var(--display); font-weight: 600; }
 
 .form { background: var(--bone); border: var(--hair); border-radius: 4px; padding: clamp(26px, 3.2vw, 48px); }
 .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2vw, 26px); }
@@ -928,77 +912,6 @@ html.js [data-reveal][data-reveal-stagger].is-in > * {
 .contact__note { margin-top: clamp(18px, 2.4vw, 26px); padding-left: 16px; border-left: 1px solid var(--brass); font-size: 0.92rem; color: var(--warm-gray); line-height: 1.55; }
 
 /* =========================================================================
-   MOTYW CIEMNY - domyślny (czerń / ciepły grafit + kaszmirowa biel + mosiądz)
-   Włączany przez html[data-theme="dark"]. Wersja jasna (oryginał powyżej)
-   pozostaje nietknięta i wraca po ustawieniu data-theme="light".
-   ========================================================================= */
-html[data-theme="dark"] {
-  --bone: #15110B;          /* tło strony / jasne powierzchnie → ciemne */
-  --bone-2: #1A1610;        /* panele sekcji */
-  --beige: #201B14;         /* karty / ciepłe panele */
-  --sand: #262017;
-  --taupe: #463D2E;         /* hairline'y, subtelne obramowania */
-  --warm-gray: #A99E8A;     /* tekst drugorzędny → jasny */
-  --graphite: #ECE5D5;      /* tekst główny → jasny */
-  --ink: #0F0C07;           /* najciemniejsze - hero / stopka / sekcje dark */
-  --ink-2: #13100A;
-  --cream-on-dark: #ECE3D2;
-  --muted-on-dark: #A69C89;
-  --pale: #F3ECDE;          /* kaszmirowa biel - jasny pierwszy plan */
-  color-scheme: dark;
-}
-
-/* - pierwszy plan, który MUSI zostać jasny (w oryginale był var(--bone)=biel) - */
-html[data-theme="dark"] .hdr { color: var(--pale); }
-html[data-theme="dark"] .hero h1,
-html[data-theme="dark"] .hero__kicker,
-html[data-theme="dark"] .hero__scroll { color: var(--pale); }
-html[data-theme="dark"] .hero__scroll i { background: linear-gradient(var(--pale), transparent); }
-html[data-theme="dark"] .pf__meta,
-html[data-theme="dark"] .pf__cat { color: var(--pale); }
-html[data-theme="dark"] .toggle__sw::after { background: var(--pale); }
-html[data-theme="dark"] .out__price { color: var(--pale); }
-html[data-theme="dark"] .calc__small b { color: var(--pale); }
-html[data-theme="dark"] .proc__step h3 { color: var(--pale); }
-html[data-theme="dark"] .section--dark .rev__lead { color: var(--pale); }
-
-/* - karta wyróżniona w ofercie: podniesione tło + jasny tytuł - */
-html[data-theme="dark"] .tcard.is-featured { background: #241E13; }
-html[data-theme="dark"] .tcard.is-featured .tcard__n,
-html[data-theme="dark"] .tcard.is-featured h3 { color: var(--pale); }
-
-/* - checkbox: jasny „ptaszek” na mosiężnym tle - */
-html[data-theme="dark"] .form__check input:checked + .box { background: var(--brass); border-color: var(--brass); }
-
-/* - subtelna etykieta „(opcjonalnie)” - */
-html[data-theme="dark"] .form__field label .opt { color: var(--warm-gray); opacity: 0.7; }
-
-/* - placeholdery zdjęć: ciemne, nastrojowe (do czasu wgrania materiałów) - */
-html[data-theme="dark"] .ph   { background: linear-gradient(150deg, #2b2318 0%, #1c1710 60%, #14100A 100%); }
-html[data-theme="dark"] .ph.v2 { background: linear-gradient(150deg, #302819 0%, #201A11 55%, #17120B 100%); }
-html[data-theme="dark"] .ph.v3 { background: linear-gradient(150deg, #272015 0%, #1A1610 60%, #120F09 100%); }
-
-/* - KALKULATOR: przywrócony kontrast beż / czerń --------------------------
-   Na ciemnej stronie lewy panel formularza wraca do ciepłego beżu (jasny
-   „moment" na czerni), a prawy panel wyceny zostaje czarny. Zaznaczony
-   kwadrat typu jest ciemny - „koresponduje" z czarnym panelem po prawej.
-   Robimy to lokalnie: przywracamy jasne wartości tokenów tylko wewnątrz
-   .calc__form, więc cała jego zawartość renderuje się jak w wersji jasnej. */
-html[data-theme="dark"] .calc__form {
-  --bone: #F5F0E8;
-  --bone-2: #EFE7DA;
-  --beige: #E9DFCF;
-  --sand: #DECDB4;
-  --taupe: #C9B79E;
-  --warm-gray: #8A8073;
-  --graphite: #2A2723;
-  background: #F5F0E8;
-  color: #2A2723;
-}
-/* gałka suwaka/przełącznika znów jasna (jak w wersji beżowej) */
-html[data-theme="dark"] .calc__form .toggle__sw::after { background: #F5F0E8; }
-
-/* =========================================================================
    WERSJA MOBILNA / DOTYK
    Jedno miejsce na wszystko, co dotyczy telefonów i tabletów - dopisane na
    końcu pliku, więc nadpisuje reguły bazowe bez podbijania specyficzności.
@@ -1017,8 +930,6 @@ html[data-theme="dark"] .calc__form .toggle__sw::after { background: #F5F0E8; }
   .pf__shade { opacity: 1; }
   .pf__meta { opacity: 1; transform: none; }
   .pf__cat { opacity: 1; }
-  /* podkreślenie linków tekstowych na stałe - inaczej wyglądają jak zwykły tekst */
-  .tlink::after { transform: scaleX(1); transform-origin: left; }
   /* efekty "na hover", które na dotyku tylko zostają zablokowane po tapnięciu */
   .pf__item:hover .ph { transform: none; }
   .timeline__row:hover { padding-left: 0; }
@@ -1072,10 +983,6 @@ html { scroll-padding-top: 84px; }
   .form__check .box { width: 24px; height: 24px; }
   /* chipy filtra portfolio */
   .chip { padding: 0.72em 1.3em; }
-  /* linki tekstowe i te w stopce miały ~21-24 px wysokości - za mało na palec */
-  .tlink { padding-block: 7px; }
-  /* podkreślenie liczone od tekstu, nie od powiększonego pola dotyku */
-  .tlink::after { bottom: 3px; }
   .foot__col a { padding-block: 6px; margin-bottom: 3px; }
   .contact__chan a { padding-block: 18px; }
 }
@@ -1555,7 +1462,6 @@ html { scroll-padding-top: 84px; }
   color: var(--brass); margin-bottom: 12px;
 }
 .pfp__head h2 { font-size: clamp(1.9rem, 4vw, 3.4rem); }
-.pfp__excerpt { margin-top: 12px; max-width: 48ch; color: var(--warm-gray); font-size: clamp(1rem, 1.3vw, 1.12rem); }
 
 .pfp__facts { display: grid; gap: 14px; padding-top: 6px; }
 .pfp__facts > div { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 12px; border-bottom: var(--hair); }
@@ -1611,12 +1517,6 @@ html { scroll-padding-top: 84px; }
 .pfp__more-btn .arr { transition: transform 0.4s var(--ease); }
 .pfp__more-btn[aria-expanded="true"] .arr { transform: rotate(180deg); }
 .pfp.is-open .pfp__more-note { display: none; }
-
-/* Beżowe placeholdery - jaśniejsza wersja gradientów ze strony głównej,
-   żeby pusta galeria nie robiła brązowych plam na jasnym tle. */
-.ph--sand { background: linear-gradient(150deg, #EFE6D6 0%, #E3D6C0 45%, #D3C2A6 100%); }
-.ph--sand.v2 { background: linear-gradient(150deg, #F2EADC 0%, #E7DAC5 50%, #D8C7AB 100%); }
-.ph--sand.v3 { background: linear-gradient(150deg, #EAE0CD 0%, #DCCDB2 55%, #CBB89C 100%); }
 
 .pfp__empty { color: var(--warm-gray); padding-block: clamp(30px, 5vw, 60px); }
 
@@ -1692,8 +1592,6 @@ body.lb-open { overflow: hidden; }
   .pfp__facts { grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .pfp__facts > div { flex-direction: column; justify-content: flex-start; gap: 4px; }
   .pfp__facts dd { text-align: left; }
-}
-@media (max-width: 900px) {
   .pfp__gallery { columns: 2; }
 }
 @media (max-width: 620px) {
