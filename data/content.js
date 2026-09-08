@@ -51,7 +51,7 @@ window.REVIEWS = [
       "Realizator nie miał żadnych wątpliwości i problemów podczas remontu mieszkania, dzięki skrupulatnym zapisom projektanta, co wpłynęło na znaczące usprawnienie procesu i szybszą przeprowadzkę – na czym nam bardzo zależało.",
       "Gorąco polecam",
     ],
-    name: "Michalina",
+    name: "Michalina G.",
     meta: "Mieszkanie · Wrocław",
   },
   {
@@ -60,7 +60,7 @@ window.REVIEWS = [
       "Bardzo dziękuję za wszystkie wskazówki i współpracę. Mam nadzieję, że w przyszłości będziemy wykonywać jeszcze jakiś projekt.",
       "Jeszcze raz bardzo dziękuję i trzymam kciuki za Twoją dalszą karierę! Robisz naprawdę świetną robotę.",
     ],
-    name: "Kasia",
+    name: "Katarzyna R.",
     meta: "Mieszkanie · Warszawa",
   },
   {
@@ -80,7 +80,7 @@ window.REVIEWS = [
       "Wszystkie moje wymagania zostały uwzględnione. Projekt został wykonany idealnie nie tylko dla mnie, ale również dla stolarza, który nie miał żadnego problemu z odczytaniem wszystkich ważnych dla niego informacji. Poprosiłam o kilka wersji kolorystycznych i wszystkie były tak extra, że nie mogłam się zdecydować, którą finalnie wybrać 😅",
       "Jestem pod wrażeniem, naprawdę. Każdemu, kto zdecyduje się na skorzystanie z usług projektanta wnętrz, z ręką na sercu będę polecać pana Mateusza! 😊",
     ],
-    name: "Klientka",
+    name: "Dominika S.",
     meta: "Duża kuchnia",
   },
   {
@@ -100,7 +100,7 @@ window.REVIEWS = [
       "Współpraca z Tobą, Mati, układała nam się bardzo dobrze. Mieliśmy cały czas płynny kontakt, zawsze trzymałeś się ustalonych terminów, uwzględniałeś wszystkie nasze uwagi i dbałeś o to, aby wnętrza wpisywały się w nasze gusta. To dzięki Twoim pomysłom i sugestiom w kwestii układu funkcjonalnego przestrzeń dzienna i kuchnia w naszym domu nabrały formy, która bardzo nam pasuje, świetnie wygląda i super wykorzystuje otwartą przestrzeń na parterze. Jesteśmy naprawdę zadowoleni.",
       "Współpraca z Tobą zaoszczędziła nam mnóstwo czasu, który musielibyśmy poświęcić na wybór m.in. płytek, podłóg, drzwi, armatury, kolorów, dodatków i wiele innych. Nie wspominając już o znacznym ułatwieniu podczas rozmów z wykonawcami. Na pewno zdecydowalibyśmy się na współpracę ponownie.",
     ],
-    name: "Klienci",
+    name: "Katarzyna P.",
     meta: "Dom · Ostrów Wielkopolski",
   },
   {
@@ -110,7 +110,7 @@ window.REVIEWS = [
       "Dziękujemy też za otwartość na nasze uwagi – każda sugestia była brana pod uwagę i uwzględniana w kolejnych wizualizacjach, co dało nam poczucie realnego wpływu na projekt. Do tego Pana własne propozycje i warianty okazały się bardzo trafione i wzbogaciły cały pomysł.",
       "Jeszcze raz wielkie dzięki – z czystym sumieniem możemy polecić Pana każdemu, kto szuka dobrego i rzetelnego projektanta wnętrz! 😊",
     ],
-    name: "Klienci",
+    name: "Dominika T.",
     meta: "Projekt kuchni",
   },
   {
@@ -122,7 +122,7 @@ window.REVIEWS = [
       "Na sam koniec otrzymaliśmy informację od naszego podwykonawcy, że może wejść z pracami w ciągu kilku dni, a my nie mieliśmy na tamten moment skończonego projektu. Mateusz stanął na rzęsach, podjął rękawicę i udało nam się zrealizować ostatnie poprawki w ciągu kilku godzin.",
       "Jesteśmy bardzo wdzięczni za piękny projekt, który przerósł nasze oczekiwania i już nie możemy się doczekać, aż zobaczymy naszą wymarzoną łazienkę po zakończeniu prac remontowych. Polecamy i polecać będziemy!",
     ],
-    name: "Klienci",
+    name: "Maja W.",
     meta: "Łazienka · 5 m²",
   },
   {
@@ -130,7 +130,7 @@ window.REVIEWS = [
     quote: [
       "Dbałość o detale, umiejętność łączenia funkcjonalności z estetyką i profesjonalizm sprawiły, że pracowanie z Tobą nad tym projektem było wyjątkowo łatwe i przyjemne. Jesteśmy pewni, że dzięki temu z łatwością przejdziemy przez każdy etap remontu mieszkania. Dziękujemy za otwartość na nasze potrzeby i styl życia, nie możemy się już doczekać przebywania w tych wnętrzach.",
     ],
-    name: "Klienci",
+    name: "Joanna Z.",
     meta: "Mieszkanie · 48 m²",
   },
   {
@@ -140,7 +140,7 @@ window.REVIEWS = [
       "Bardzo doceniamy Pana zaangażowanie, profesjonalizm, terminowość oraz świetny kontakt na każdym etapie współpracy. Czuliśmy się zaopiekowani i spokojni o efekt, a jednocześnie mieliśmy poczucie, że nasza wizja jest w pełni rozumiana i realizowana. Sporo rzeczy nam Pan również podpowiedział, za co także bardzo dziękujemy.",
       "Z całego serca polecamy współpracę z Panem każdemu, kto jest na etapie projektowania wnętrz!",
     ],
-    name: "Klienci",
+    name: "Magdalena S.",
     meta: "Dom · 113,82 m²",
   },
 ];
@@ -169,7 +169,7 @@ window.CASE_STUDIES = [
 window.FAQ = [
   { q: "Czy projektowanie zdalne ma sens?", a: "Tak. Większość projektów może być realizowana zdalnie. Komunikacja odbywa się przez e-mail i Dysk Google, gdzie masz dostęp do materiałów, ankiet, inspiracji i kolejnych etapów projektu." },
   { q: "Ile kosztuje projekt wnętrza?", a: "Cena zależy od metrażu i zakresu. Możesz wybrać od samych układów funkcjonalnych po pełny projekt z wizualizacjami, listą zakupów, rzutami technicznymi i widokami ścian. Przy większych metrażach obowiązują rabaty." },
-  { q: "Czy muszę od razu decydować się na pełny projekt?", a: "Nie. Można zacząć od Szkicu Projektu w formie online. Jeśli zdecydujesz się później na projekt powyżej 10 m², koszt Szkicu Projektu może zostać odliczony od ceny projektu." },
+  { q: "Czy muszę od razu decydować się na pełny projekt?", a: "Nie. Można zacząć od Szkicu Projektu w formie online. Jeśli zdecydujesz się później na projekt powyżej 10 m², koszt Szkicu Projektu zostanie odliczony od ceny projektu." },
   { q: "Co jeśli nie spodobają mi się wizualizacje?", a: "Projekt nie powstaje w ciemno. Najpierw ustalamy układ funkcjonalny, ankietę, inspiracje i kierunek. W projektach z wizualizacjami masz 2 rundy poprawek." },
   { q: "Czy robisz nadzór nad ekipą remontową?", a: "Działam głównie zdalnie, więc nie prowadzę klasycznego nadzoru autorskiego. Możliwe są jednak spotkania na budowie lub inwentaryzacja we Wrocławiu i okolicach." },
   { q: "Czy lista zakupów uwzględnia budżet?", a: "Tak. Projekt powstaje w oparciu o Twój budżet. Lista zakupów zawiera konkretne produkty, dzięki czemu nie musisz samodzielnie szukać wszystkiego od zera." },

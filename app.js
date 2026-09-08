@@ -408,10 +408,10 @@
     // Spis nadawców = nawigacja. Bez numerów: to nie jest sekwencja ani ranking,
     // tylko lista osób. Kolejność w spisie to kolejność slajdów.
     //
-    // Wiadomości bez podpisu mają w `name` „Klienci" / „Klientka" - w spisie
-    // pięć takich wierszy pod sobą nie odróżniałoby niczego od niczego, więc
-    // tam etykietą jest zakres projektu (to on je rozróżnia). Pod samą
-    // wiadomością podpis zostaje pełny: „Klienci · Dom · Ostrów Wielkopolski".
+    // Wszystkie opinie są dziś podpisane imieniem. Gdyby wróciła wiadomość bez
+    // podpisu („Klienci" / „Klientka" w `name`), w spisie etykietą jest zakres
+    // projektu - kilka identycznych wierszy nie odróżniałoby niczego od niczego.
+    // Pod samą wiadomością podpis zostaje pełny.
     const revIndex = $("#revIndex");
     if (revIndex) {
       revIndex.innerHTML = reviews.map((r, i) => {
