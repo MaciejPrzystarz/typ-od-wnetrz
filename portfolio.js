@@ -1,6 +1,8 @@
 /* =========================================================================
    TYP OD WNĘTRZ - podstrona portfolio
-   Renderuje pełną listę projektów z window.PROJECTS (data/projects.js).
+   Ściana zdjęć: jedna sekcja na rodzaj wnętrza, w każdej 12 kadrów
+   i przycisk „pokaż wszystkie". Dane: window.GALLERY z data/gallery.js -
+   pliku GENEROWANEGO przez tools/GalleryIndex.java (nie edytuj go ręcznie).
    Osobny plik od app.js: podstrona nie ma hero, kalkulatora ani formularza,
    więc ładuje tylko to, czego naprawdę używa.
    ========================================================================= */
@@ -61,172 +63,23 @@
   }, { passive: true });
 
   /* =======================================================================
-     LISTA PROJEKTÓW
+     GALERIA - jedna sekcja na rodzaj wnętrza
+     Dane: window.GALLERY z data/gallery.js (plik GENEROWANY przez
+     tools/GalleryIndex.java - patrz komentarz na jego górze).
      ===================================================================== */
-  const projects = window.PROJECTS || [];
-  const cats = window.PROJECT_CATEGORIES || ["Wszystkie"];
+  const gallery = window.GALLERY || [];
   const list = $("#pfpList");
   const empty = $("#pfpEmpty");
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const pad = (n) => String(n).padStart(2, "0");
-  // Beżowe warianty placeholdera - jaśniejsze niż na stronie głównej, żeby
-  // pusta galeria trzymała się palety podstrony, a nie robiła ciemnych plam.
-  const phVariants = ["ph ph--sand", "ph ph--sand v2", "ph ph--sand v3"];
+  // Nazwy plików są takie, jak je wgrał autor - zmienia się tylko rozszerzenie
+  // na .webp: nawiasy, polskie znaki, kropki (Łaz_31.webp, 1(2).webp,
+  // Pok_p.Kasi_4.webp). W adresie muszą być zakodowane, inaczej serwer dostaje
+  // inną ścieżkę, niż widać w danych.
+  const enc = (f) => encodeURIComponent(f);
 
-  /**
-   * Kadry projektu: tyle sztuk, ile podaje `shots` (albo ile jest zdjęć).
-   * Zdjęcie ze `photos[i]` ląduje w <image-slot src>; pusta pozycja zostaje
-   * placeholderem do wgrania. Id kadru jest stałe (`slot-1`, `slot-2`, ...),
-   * więc wgrane obrazy przeżywają kolejne wejścia na stronę.
-   */
-  function shotsOf(p) {
-    const photos = Array.isArray(p.photos) ? p.photos : [];
-    const n = Math.max(photos.length, Number(p.shots) || 0, 1);
-    return Array.from({ length: n }, (_, i) => {
-      // `photos` przyjmuje obiekt {src, orient} albo samą ścieżkę. `orient`
-      // dotyczy tylko kafla na stronie głównej - tu proporcje i tak czytamy
-      // z pliku, żeby galeria nie kadrowała zdjęć wbrew ich kształtowi.
-      const ph = photos[i];
-      return {
-        id: `${p.slot}-${i + 1}`,
-        src: typeof ph === "string" ? ph : (ph && ph.src) || "",
-        n: i + 1,
-      };
-    });
-  }
-
-  function galleryHTML(p) {
-    return shotsOf(p).map((s, i) => {
-      const alt = `${p.title} – kadr ${s.n}`;
-      return `
-        <figure class="pfp__shot"${s.src ? ` data-src="${esc(s.src)}"` : ""}>
-          <image-slot id="${esc(s.id)}" class="${phVariants[i % 3]}" shape="rect" fit="cover"
-                      ${s.src ? `src="${esc(s.src)}"` : ""}
-                      role="img" aria-label="${esc(alt)}"
-                      placeholder="Wgraj zdjęcie – ${esc(p.title)} (${s.n})"></image-slot>
-        </figure>`;
-    }).join("");
-  }
-
-  /**
-   * Kadr dostaje kształt swojego zdjęcia, a nie odwrotnie.
-   * Proporcje czytamy z pliku, więc dorzucenie nowego zdjęcia do `photos`
-   * nie wymaga dopisywania niczego w danych.
-   *
-   * Układ rzędu wynika z orientacji:
-   *   full - zdjęcie poziome, przez całą szerokość (16:9),
-   *   half - dwa pionowe obok siebie (4:5),
-   *   solo - pionowe, któremu zabrakło pary: zamiast wisieć w połowie rzędu
-   *          z pustką obok (wyglądało jak brakujący kadr), staje na środku
-   *          w węższej kolumnie.
-   */
-  function layoutGallery(gallery) {
-    const figs = $$(".pfp__shot", gallery);
-    for (let i = 0; i < figs.length; ) {
-      const a = figs[i], b = figs[i + 1];
-      if (a.dataset.orient === "tall") {
-        if (b && b.dataset.orient === "tall") {
-          a.dataset.span = b.dataset.span = "half";
-          i += 2;
-        } else {
-          a.dataset.span = "solo";
-          i += 1;
-        }
-      } else {
-        a.dataset.span = "full";
-        i += 1;
-      }
-    }
-  }
-
-  function applyShotOrientation(root) {
-    $$(".pfp__gallery", root).forEach((gallery) => {
-      const figs = $$(".pfp__shot[data-src]", gallery);
-      if (!figs.length) return;
-      let pending = figs.length;
-      const done = () => { if (--pending === 0) layoutGallery(gallery); };
-      figs.forEach((fig) => {
-        const probe = new Image();
-        // Nawet jeśli zdjęcie się nie wczyta, układ musi się domknąć -
-        // inaczej cała galeria zostałaby w stanie przejściowym 4:3.
-        probe.onerror = done;
-        probe.onload = () => {
-          fig.dataset.orient = probe.naturalWidth >= probe.naturalHeight ? "wide" : "tall";
-          done();
-        };
-        probe.src = fig.dataset.src;
-      });
-    });
-  }
-
-  function projectHTML(p, i) {
-    // Lokalizacja i rok bywają puste (patrz data/projects.js). Pusty wiersz
-    // z samą etykietą i kreską wygląda jak błąd, więc go po prostu nie ma.
-    const facts = [
-      ["Kategoria", p.category],
-      ["Lokalizacja", p.location],
-      ["Rok", p.year],
-    ].filter(([, v]) => v);
-
-    return `
-      <article class="pfp" id="${esc(p.slug)}" data-cat="${esc(p.category)}">
-        <header class="pfp__head" data-reveal>
-          <div class="pfp__title">
-            <span class="pfp__idx">${pad(i + 1)}</span>
-            <h2 class="display">${esc(p.title)}</h2>
-            ${p.excerpt ? `<p class="pfp__excerpt">${esc(p.excerpt)}</p>` : ""}
-          </div>
-          <dl class="pfp__facts">
-            ${facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}
-          </dl>
-        </header>
-        <div class="pfp__gallery" data-reveal>${galleryHTML(p)}</div>
-      </article>`;
-  }
-
-  if (list) {
-    list.innerHTML = projects.map(projectHTML).join("");
-    applyShotOrientation(list);
-  }
-
-  /* ---------------- Filtr kategorii ----------------
-     Filtrujemy przez ukrywanie, a nie przez ponowne renderowanie: <image-slot>
-     trzyma wgrane zdjęcie w sobie, więc przebudowa listy gasiłaby galerię. */
-  const chipWrap = $("#pfFilter");
-  if (chipWrap) {
-    chipWrap.innerHTML = cats
-      .map((c, i) => `<button class="chip ${i === 0 ? "is-on" : ""}" data-cat="${esc(c)}">${esc(c)}</button>`)
-      .join("");
-
-    const applyFilter = (cat) => {
-      let shown = 0;
-      $$(".pfp", list).forEach((el) => {
-        const on = !cat || cat === "Wszystkie" || el.dataset.cat === cat;
-        el.hidden = !on;
-        // .is-first zdejmuje górną kreskę i wcięcie z pierwszego WIDOCZNEGO
-        // projektu - po filtrowaniu :first-child wskazywałby ukryty kafel.
-        el.classList.toggle("is-first", on && shown === 0);
-        if (on) shown++;
-      });
-      if (empty) empty.hidden = shown > 0;
-    };
-
-    chipWrap.addEventListener("click", (e) => {
-      const b = e.target.closest(".chip");
-      if (!b) return;
-      $$(".chip", chipWrap).forEach((c) => c.classList.remove("is-on"));
-      b.classList.add("is-on");
-      applyFilter(b.dataset.cat);
-      observeReveals();
-      revealInView();
-    });
-
-    applyFilter("Wszystkie");
-  }
-
-  /* ---------------- Liczby w nagłówku ----------------
-     Polska odmiana przez przypadki: 1 projekt / 2-4 projekty / 5+ projektów.
-     Bez tego przy siódmym projekcie w danych zrobiłby się "7 projekty". */
+  /* Polska odmiana przez przypadki: 1 zdjęcie / 2-4 zdjęcia / 5+ zdjęć.
+     Bez tego przycisk mówiłby „Pokaż wszystkie 22 zdjęć". */
   const plural = (n, one, few, many) => {
     const d10 = n % 10, d100 = n % 100;
     if (n === 1) return one;
@@ -234,33 +87,324 @@
     return many;
   };
 
+  /**
+   * Ile kadrów widać, zanim ktoś kliknie „pokaż wszystkie".
+   * Reszta jest w HTML-u OD RAZU (wyszukiwarki i Ctrl+F ją widzą), ale
+   * schowana przez display:none - a ukrytych zdjęć przeglądarka nie pobiera.
+   * Razem z loading="lazy" znaczy to, że wejście na podstronę kosztuje
+   * kilkanaście miniatur, a nie czterysta.
+   */
+  const PREVIEW = 12;
+
+  /**
+   * Kadr. Wymiary idą do atrybutów width/height - przeglądarka zna kształt
+   * zdjęcia zanim je pobierze, więc rezerwuje na nie miejsce i nic nie skacze
+   * przy doczytywaniu (żadnego mierzenia przez new Image(), jak w poprzedniej
+   * wersji - przy 395 plikach oznaczałoby to pobranie ich wszystkich).
+   */
+  function shotHTML(sec, p, i, eager, secIdx) {
+    const extra = i >= PREVIEW ? " is-extra" : "";
+    const alt = `${sec.alt} – kadr ${i + 1}`;
+    // <button>, a nie samo <figure>: kadr otwiera podgląd, więc musi dać się
+    // kliknąć TABem i Enterem, a nie tylko myszką. data-sec/data-i to adres
+    // zdjęcia w window.GALLERY - podgląd czyta dane, nie DOM.
+    return `
+      <figure class="pfp__shot${extra}">
+        <button type="button" class="pfp__open" data-sec="${secIdx}" data-i="${i}"
+                aria-label="Powiększ: ${esc(alt)}">
+          <img src="${esc(sec.dir)}/${esc(enc(p.f))}" width="${p.w}" height="${p.h}"
+               loading="${eager ? "eager" : "lazy"}" decoding="async"
+               alt="${esc(alt)}" />
+        </button>
+      </figure>`;
+  }
+
+  function sectionHTML(sec, idx) {
+    const n = sec.photos.length;
+    const rest = n - PREVIEW;
+    const galId = `gal-${sec.slug}`;
+    return `
+      <section class="pfp" id="${esc(sec.slug)}" data-cat="${esc(sec.cat)}">
+        <header class="pfp__head" data-reveal>
+          <div class="pfp__title">
+            <span class="pfp__idx">${pad(idx + 1)}</span>
+            <h2 class="display">${esc(sec.cat)}</h2>
+          </div>
+          <dl class="pfp__facts">
+            <div><dt>Zdjęcia</dt><dd>${n}</dd></div>
+          </dl>
+        </header>
+        <div class="pfp__gallery" id="${galId}" data-reveal>
+          ${sec.photos.map((p, i) => shotHTML(sec, p, i, idx === 0 && i < 3, idx)).join("")}
+        </div>
+        ${rest > 0 ? `
+        <div class="pfp__more">
+          <button class="btn btn--ghost pfp__more-btn" type="button" aria-expanded="false" aria-controls="${galId}"
+                  data-all="Pokaż wszystkie ${n} ${plural(n, "zdjęcie", "zdjęcia", "zdjęć")}"
+                  data-less="Pokaż mniej">
+            <span class="pfp__more-txt">Pokaż wszystkie ${n} ${plural(n, "zdjęcie", "zdjęcia", "zdjęć")}</span>
+            <span class="arr" aria-hidden="true">↓</span>
+          </button>
+          <span class="pfp__more-note">Widocznych ${PREVIEW} z ${n}</span>
+        </div>` : ""}
+      </section>`;
+  }
+
+  if (list && gallery.length) {
+    list.innerHTML = gallery.map(sectionHTML).join("");
+  }
+
+  /* ---------------- „Pokaż wszystkie" ----------------
+     Rozwijamy klasą na sekcji, a nie dorysowywaniem kadrów: zdjęcia już są
+     w DOM-ie, więc nie ma czego renderować, a zwinięcie z powrotem nie
+     kasuje niczego, co przeglądarka zdążyła pobrać. */
+  list?.addEventListener("click", (e) => {
+    const btn = e.target.closest(".pfp__more-btn");
+    if (!btn) return;
+    const sec = btn.closest(".pfp");
+    // Gdzie na ekranie stoi teraz przycisk - patrz niżej.
+    const btnY = btn.getBoundingClientRect().top;
+    const open = sec.classList.toggle("is-open");
+    btn.setAttribute("aria-expanded", String(open));
+    $(".pfp__more-txt", btn).textContent = open ? btn.dataset.less : btn.dataset.all;
+
+    // Zwinięcie kasuje kilkadziesiąt ekranów treści NAD przyciskiem, więc
+    // czytający zostałby nagle gdzieś w następnej sekcji. Przyklejamy więc
+    // przycisk do tego samego miejsca na ekranie, w którym był w chwili
+    // kliknięcia - to jest ta sama zasada, co w każdym „pokaż mniej".
+    //
+    // Dwa szczegóły, oba wyszły w testach:
+    //   - korekta jest SYNCHRONICZNA, bez requestAnimationFrame. rAF nie
+    //     odpala się, kiedy karta się nie maluje (ta sama pułapka, co przy
+    //     IntersectionObserver na tej stronie), więc poprawka potrafiła nie
+    //     wykonać się w ogóle. getBoundingClientRect i tak wymusza tu
+    //     przeliczenie układu, więc pomiar po zmianie klasy jest już aktualny.
+    //     Przed nadpisaniem przez Chrome broni nas overflow-anchor: none
+    //     na #pfpList (styles.css),
+    //   - „instant", a nie „auto": strona ma scroll-behavior: smooth, więc
+    //     „auto" animowałoby przewijanie o kilkanaście tysięcy pikseli.
+    if (!open) {
+      const dy = btn.getBoundingClientRect().top - btnY;
+      if (Math.abs(dy) > 1) window.scrollBy({ top: dy, behavior: "instant" });
+    }
+  });
+
+  /* ---------------- Przełącznik kategorii ----------------
+     Podstrona pokazuje JEDNĄ kategorię naraz. Siedmiu sekcji pod sobą to
+     ~20 000 px przewijania, więc chipy nie filtrują listy, tylko ją
+     przełączają - jak zakładki. Nie ma chipa „Wszystkie": znaczyłby dokładnie
+     tę jedną długą stronę, od której uciekamy.
+
+     Przełączamy przez ukrywanie sekcji, nie przez ponowne renderowanie -
+     inaczej rozwinięta galeria zwijałaby się przy każdym kliknięciu, a
+     przeglądarka pobierałaby te same zdjęcia od nowa.
+
+     Adres nadaje się do wysłania: wybór kategorii wpisuje się w #slug przez
+     replaceState (a nie pushState - inaczej po siedmiu kliknięciach trzeba by
+     siedem razy cofnąć, żeby wyjść ze strony). */
+  const chipWrap = $("#pfFilter");
+  const slugIndex = (slug) => gallery.findIndex((s) => s.slug === slug);
+
+  if (chipWrap && gallery.length) {
+    chipWrap.innerHTML = gallery
+      .map((s) => `<button class="chip" type="button" data-slug="${esc(s.slug)}" aria-pressed="false">${esc(s.cat)}</button>`)
+      .join("");
+
+    const showCat = (slug, opts = {}) => {
+      const sec = gallery[Math.max(0, slugIndex(slug))];
+      let node = null;
+      $$(".pfp", list).forEach((el) => {
+        const on = el.id === sec.slug;
+        el.hidden = !on;
+        // .is-first zdejmuje górną kreskę - widoczna sekcja jest zawsze
+        // pierwsza, więc nie ma nad czym rysować linii podziału.
+        el.classList.toggle("is-first", on);
+        if (on) node = el;
+      });
+      $$(".chip", chipWrap).forEach((c) => {
+        const on = c.dataset.slug === sec.slug;
+        c.classList.toggle("is-on", on);
+        c.setAttribute("aria-pressed", String(on));
+      });
+      if (empty) empty.hidden = true;
+      if (opts.url !== false) history.replaceState(null, "", "#" + sec.slug);
+
+      observeReveals();
+      revealInView();
+
+      // Po przełączeniu z rozwiniętej (długiej) kategorii można wylądować
+      // pod całą treścią nowej - wtedy wracamy na jej początek. Synchronicznie
+      // i „instant" - z tych samych powodów, co przy zwijaniu galerii wyżej.
+      if (opts.scroll && node) {
+        const top = node.getBoundingClientRect().top + window.scrollY - 90;
+        if (window.scrollY > top) window.scrollTo({ top, behavior: "instant" });
+      }
+    };
+
+    chipWrap.addEventListener("click", (e) => {
+      const b = e.target.closest(".chip");
+      if (!b) return;
+      showCat(b.dataset.slug, { scroll: true });
+    });
+
+    // Wejście: kategoria z adresu (#lazienki - tak prowadzą kafle ze strony
+    // głównej), a bez adresu pierwsza z brzegu. Adresu przy starcie NIE
+    // dopisujemy - wejście na czyste portfolio.html ma zostać czyste.
+    const start = decodeURIComponent(window.location.hash || "").slice(1);
+    showCat(slugIndex(start) >= 0 ? start : gallery[0].slug, { url: false });
+  }
+
+  /* =======================================================================
+     PODGLĄD ZDJĘCIA (lightbox)
+     Kafle w siatce mają najwyżej ~500 px szerokości, więc muszą dać się
+     obejrzeć w pełnym kadrze. Podgląd jest ZAMKNIĘTY W SEKCJI: strzałki
+     chodzą po zdjęciach jednej kategorii, nie po wszystkich 395 - inaczej
+     przewijanie z kuchni wjeżdżałoby w łazienki bez ostrzeżenia.
+     Chodzi też po kadrach jeszcze nierozwiniętych w siatce, więc „resztę
+     zdjęć" można obejrzeć także tędy, bez klikania „pokaż wszystkie".
+     ===================================================================== */
+  const lb = {
+    root: null, img: null, count: null, cat: null,
+    sec: 0, i: 0, lastFocus: null,
+  };
+
+  function buildLightbox() {
+    const el = document.createElement("div");
+    el.className = "lb";
+    el.id = "lb";
+    el.hidden = true;
+    el.setAttribute("role", "dialog");
+    el.setAttribute("aria-modal", "true");
+    el.setAttribute("aria-label", "Podgląd zdjęcia");
+    el.innerHTML = `
+      <button type="button" class="lb__btn lb__close" aria-label="Zamknij podgląd (Esc)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <button type="button" class="lb__btn lb__nav lb__prev" aria-label="Poprzednie zdjęcie">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 4L7 12l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="lb__stage"><img class="lb__img" alt="" /></div>
+      <button type="button" class="lb__btn lb__nav lb__next" aria-label="Następne zdjęcie">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 4l8 8-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="lb__bar">
+        <span class="lb__cat"></span>
+        <span class="lb__count" aria-live="polite"></span>
+      </div>`;
+    document.body.appendChild(el);
+
+    lb.root = el;
+    lb.img = $(".lb__img", el);
+    lb.count = $(".lb__count", el);
+    lb.cat = $(".lb__cat", el);
+
+    $(".lb__close", el).addEventListener("click", closeLB);
+    $(".lb__prev", el).addEventListener("click", () => step(-1));
+    $(".lb__next", el).addEventListener("click", () => step(1));
+    // Kliknięcie w tło zamyka, kliknięcie w samo zdjęcie nie.
+    el.addEventListener("click", (e) => { if (e.target === el || e.target.classList.contains("lb__stage")) closeLB(); });
+
+    // Przesunięcie palcem w bok = następne / poprzednie zdjęcie.
+    let x0 = null, y0 = null;
+    el.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    el.addEventListener("touchend", (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      const dy = e.changedTouches[0].clientY - y0;
+      // Tylko wyraźny ruch poziomy - inaczej każde muśnięcie przy przewijaniu
+      // przeskakiwałoby zdjęcie.
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
+      x0 = y0 = null;
+    }, { passive: true });
+    return el;
+  }
+
+  function show(secIdx, i) {
+    const sec = gallery[secIdx];
+    if (!sec) return;
+    const n = sec.photos.length;
+    // Zawijanie: z ostatniego zdjęcia strzałka w prawo wraca na pierwsze.
+    lb.sec = secIdx;
+    lb.i = (i + n) % n;
+    const p = sec.photos[lb.i];
+
+    lb.img.src = `${sec.dir}/${enc(p.f)}`;
+    lb.img.width = p.w;
+    lb.img.height = p.h;
+    lb.img.alt = `${sec.alt} – kadr ${lb.i + 1}`;
+    lb.cat.textContent = sec.cat;
+    lb.count.textContent = `${lb.i + 1} / ${n}`;
+    lb.root.classList.toggle("is-single", n < 2);
+
+    // Sąsiadów pobieramy z wyprzedzeniem, żeby strzałka nie mrugała pustką.
+    [1, -1].forEach((d) => {
+      const nb = sec.photos[(lb.i + d + n) % n];
+      if (nb) new Image().src = `${sec.dir}/${enc(nb.f)}`;
+    });
+  }
+
+  function step(d) { show(lb.sec, lb.i + d); }
+
+  function openLB(secIdx, i, trigger) {
+    if (!lb.root) buildLightbox();
+    lb.lastFocus = trigger || document.activeElement;
+    show(secIdx, i);
+    lb.root.hidden = false;
+    // Blokada przewijania tła: bez tego kółko myszy przewija stronę POD
+    // podglądem i po zamknięciu ląduje się gdzie indziej.
+    document.body.classList.add("lb-open");
+    $(".lb__close", lb.root).focus();
+  }
+
+  function closeLB() {
+    if (!lb.root || lb.root.hidden) return;
+    lb.root.hidden = true;
+    document.body.classList.remove("lb-open");
+    lb.img.removeAttribute("src");
+    lb.lastFocus?.focus();
+  }
+
+  list?.addEventListener("click", (e) => {
+    const btn = e.target.closest(".pfp__open");
+    if (!btn) return;
+    openLB(+btn.dataset.sec, +btn.dataset.i, btn);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (!lb.root || lb.root.hidden) return;
+    if (e.key === "Escape") { closeLB(); return; }
+    if (e.key === "ArrowLeft") { e.preventDefault(); step(-1); }
+    if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
+    // Podgląd jest oknem modalnym - TAB nie ma z niego wychodzić na stronę
+    // pod spodem. Pętla po trzech przyciskach wystarczy, bo tylko one są
+    // klikalne.
+    if (e.key === "Tab") {
+      const btns = $$(".lb__btn", lb.root).filter((b) => b.offsetParent !== null);
+      if (!btns.length) return;
+      const at = btns.indexOf(document.activeElement);
+      const next = e.shiftKey ? at - 1 : at + 1;
+      e.preventDefault();
+      btns[(next + btns.length) % btns.length].focus();
+    }
+  });
+
+  /* ---------------- Liczby w nagłówku podstrony ---------------- */
   const stats = $("#pgStats");
-  if (stats && projects.length) {
-    const years = projects.map((p) => String(p.year)).filter(Boolean).sort();
-    const span = years.length > 1 && years[years.length - 1] !== years[0]
-      ? `${years[0]}–${years[years.length - 1]}`
-      : years[0] || "";
-    const kinds = new Set(projects.map((p) => p.category)).size;
-    const shots = projects.reduce((n, p) => n + ((p.photos && p.photos.length) || 0), 0);
-
+  if (stats && gallery.length) {
+    const shots = gallery.reduce((n, s) => n + s.photos.length, 0);
     const tiles = [
-      [projects.length, plural(projects.length, "projekt w portfolio", "projekty w portfolio", "projektów w portfolio")],
-      [kinds, plural(kinds, "kategoria wnętrz", "kategorie wnętrz", "kategorii wnętrz")],
+      [shots, plural(shots, "zdjęcie w galerii", "zdjęcia w galerii", "zdjęć w galerii")],
+      [gallery.length, plural(gallery.length, "kategoria wnętrz", "kategorie wnętrz", "kategorii wnętrz")],
     ];
-    // Lata pokazujemy tylko, jeśli w danych faktycznie są (patrz TODO
-    // w data/projects.js). Bez tego kafel wyświetlał pustą wartość z podpisem.
-    if (span) tiles.push([span, span.includes("–") ? "lata realizacji" : "rok realizacji"]);
-    else if (shots) tiles.push([shots, plural(shots, "zdjęcie w galerii", "zdjęcia w galerii", "zdjęć w galerii")]);
-
     stats.innerHTML = tiles.map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join("");
   }
 
   /* ---------------- Wejście z linku #slug ----------------
-     Projekty są renderowane po wczytaniu skryptu, więc natywny skok do
+     Sekcje są renderowane po wczytaniu skryptu, więc natywny skok do
      kotwicy z adresu już się nie uda - dojeżdżamy tu ręcznie. Dojazd
-     powtarzamy po `load` i chwilę później, bo fonty i <image-slot> ustalają
-     ostateczne wysokości dopiero po pierwszym renderze - ale tylko dopóki
-     użytkownik sam nie ruszy stroną, żeby mu jej nie wyrywać spod palca. */
+     powtarzamy po `load` i chwilę później, bo fonty ustalają ostateczne
+     wysokości dopiero po pierwszym renderze - ale tylko dopóki użytkownik
+     sam nie ruszy stroną, żeby mu jej nie wyrywać spod palca. */
   const hash = decodeURIComponent(window.location.hash || "").slice(1);
   const target = hash ? document.getElementById(hash) : null;
   if (target) {
@@ -268,9 +412,14 @@
     ["wheel", "touchstart", "keydown", "pointerdown"].forEach((ev) =>
       window.addEventListener(ev, () => { userMoved = true; }, { once: true, passive: true })
     );
+    // „instant" jest tu KONIECZNE. Strona ma scroll-behavior: smooth, a przy
+    // „auto" decyduje CSS - wejście z kotwicą animowałoby się przez kilkanaście
+    // tysięcy pikseli galerii, a każde kolejne wywołanie (po `load` i chwilę
+    // później) zaczynałoby tę animację od nowa. Efekt: strona zostawała na
+    // górze i nie dojeżdżała do sekcji w ogóle.
     const goToTarget = () => {
       if (userMoved) return;
-      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 90, behavior: "auto" });
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 90, behavior: "instant" });
     };
     target.classList.add("is-linked");
     requestAnimationFrame(goToTarget);

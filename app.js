@@ -136,7 +136,9 @@
   /**
    * Kafel = pojedyncze ZDJĘCIE, nie projekt. Sekcja pokazuje cały materiał
    * (2 kuchnie, 2 łazienki, 2 sypialnie, 4 salony), a nie po jednej okładce
-   * na projekt. Każdy kafel prowadzi do swojego projektu na podstronie.
+   * na projekt. Każdy kafel prowadzi do galerii SWOJEJ KATEGORII na
+   * podstronie portfolio (catSlug) - pełne portfolio jest ułożone rodzajami
+   * wnętrz, bo zdjęć są setki i pojedynczy projekt nie jest tam jednostką.
    *
    * Kolejność: przeplatamy pionowe z poziomymi. Siatka ma 12 kolumn, kafel
    * pionowy zajmuje 4, poziomy 8 - rząd domyka się więc tylko jako
@@ -177,7 +179,7 @@
       const p = t.project;
       const meta = metaOf(p);
       return `
-      <a class="pf__item ${t.orient}" href="portfolio.html#${p.slug}" data-reveal aria-label="${p.title}">
+      <a class="pf__item ${t.orient}" href="portfolio.html#${p.catSlug || p.slug}" data-reveal aria-label="${p.title}">
         <image-slot id="${t.id}" class="ph ${phVariants[i % 3]}" shape="rect" fit="cover" src="${t.src}" placeholder="Wgraj rendering – ${p.title}"></image-slot>
         <div class="pf__shade"></div>
         <span class="pf__cat">${p.category}</span>

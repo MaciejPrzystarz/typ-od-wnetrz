@@ -8,7 +8,11 @@
  * kafel pionowy zajmuje 4, więc sześć kafli układa się w dwa równe rzędy po trzy.
  *
  * Pola projektu:
- *   slug     - id sekcji na podstronie portfolio.html (adres: portfolio.html#slug)
+ *   slug     - identyfikator projektu (używany w id kafla i w danych)
+ *   catSlug  - kotwica SEKCJI na podstronie portfolio (portfolio.html#catSlug).
+ *              Podstrona jest ułożona kategoriami, nie projektami, więc kafel
+ *              ze strony głównej prowadzi do galerii swojego rodzaju wnętrz.
+ *              Wartości muszą się zgadzać ze `slug` w data/gallery.js.
  *   slot     - id dla <image-slot> (stałe, nie zmieniaj po wgraniu zdjęć)
  *   photos   - lista zdjęć; pierwsze jest kadrem otwierającym galerię
  *   location / year - MOGĄ być puste; puste pola po prostu się nie renderują
@@ -33,6 +37,7 @@
 window.PROJECTS = [
   {
     slug: "kuchnia-z-ryflowana-wyspa",
+    catSlug: "kuchnie",
     title: "Kuchnia z ryflowaną wyspą",
     category: "Kuchnie",
     location: "",
@@ -45,6 +50,7 @@ window.PROJECTS = [
   },
   {
     slug: "lazienka-w-kamieniu-i-drewnie",
+    catSlug: "lazienki",
     title: "Łazienka w kamieniu i drewnie",
     category: "Łazienki",
     location: "",
@@ -57,6 +63,7 @@ window.PROJECTS = [
   },
   {
     slug: "salon-pod-drewnianym-stropem",
+    catSlug: "salony",
     title: "Salon pod drewnianym stropem",
     category: "Salony",
     location: "",
@@ -69,6 +76,7 @@ window.PROJECTS = [
   },
   {
     slug: "sypialnia-w-kolorze-terakoty",
+    catSlug: "sypialnie",
     title: "Sypialnia w kolorze terakoty",
     category: "Sypialnie",
     location: "",
@@ -81,6 +89,7 @@ window.PROJECTS = [
   },
   {
     slug: "pokoj-dzieciecy-z-antresola",
+    catSlug: "pokoje-dzieciece",
     title: "Pokój dziecięcy z antresolą",
     category: "Pokoje dziecięce",
     location: "",
@@ -93,6 +102,7 @@ window.PROJECTS = [
   },
   {
     slug: "hol-z-przeszklonymi-drzwiami",
+    catSlug: "komunikacja",
     title: "Hol z przeszklonymi drzwiami",
     category: "Komunikacja / Hole",
     location: "",
