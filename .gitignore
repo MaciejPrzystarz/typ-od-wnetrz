@@ -21,3 +21,8 @@ screenshots/
 # Konfiguracja IntelliJ - lokalna dla mojego środowiska, nie dla strony.
 # Pliki zostają na dysku, IDE działa dalej; git ich po prostu nie śledzi.
 .idea/
+
+# Materiał źródłowy kadrów „przed / po" z case studies. Jak wyżej: na serwer
+# idą tylko kopie .webp obok (7,1 MB PNG-ów → 474 kB), zrobione ffmpeg-iem
+# tymi samymi ustawieniami co galeria (libwebp, quality 90, preset photo).
+images/case-studies/*.png

@@ -489,9 +489,56 @@
      ===================================================================== */
   const csList = $("#csList");
   if (csList && window.CASE_STUDIES) {
-    csList.innerHTML = window.CASE_STUDIES.map((c, i) => `
-      <article class="cs__item" data-reveal>
-        <div class="cs__media"><image-slot id="${c.slot}" class="ph ${i % 2 ? "v2" : "v3"}" shape="rect" placeholder="Rendering – ${c.title}"></image-slot></div>
+    const ARW = (d) => `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="${d}" stroke="currentColor" stroke-width="1.4"/></svg>`;
+
+    /* Karuzela „przed / po": wszystkie kadry leżą na sobie w .csx__stage,
+       widoczny jest ten z .is-on. Przenikanie w miejscu (a nie przesuwanie
+       taśmy) jest tu celem, nie ozdobą: zdjęcie sprzed remontu i render są
+       robione z tego samego punktu, więc jedno zmienia się w drugie. */
+    const shotsHtml = (c) => `
+      <div class="csx" role="group" aria-roledescription="karuzela" aria-label="Przed i po – ${c.title}">
+        <div class="csx__stage">
+          ${c.shots.map((s, i) => `
+            <figure class="csx__slide${i ? "" : " is-on"}" aria-hidden="${i !== 0}">
+              <img src="${s.src}" loading="lazy" decoding="async" alt="${s.alt || c.title}" />
+              <figcaption class="csx__badge">${s.label}</figcaption>
+            </figure>`).join("")}
+        </div>
+        <button class="csx__arw csx__arw--p" type="button" aria-label="Poprzedni kadr">${ARW("M12 4l-6 6 6 6")}</button>
+        <button class="csx__arw csx__arw--n" type="button" aria-label="Następny kadr">${ARW("M8 4l6 6-6 6")}</button>
+        <div class="csx__dots">
+          ${c.shots.map((s, i) => `<button class="csx__dot${i ? "" : " is-on"}" type="button" aria-label="${s.label}, kadr ${i + 1} z ${c.shots.length}"></button>`).join("")}
+        </div>
+      </div>`;
+
+    // Opinia klientki mieszka w window.REVIEWS - tu tylko po nią sięgamy po
+    // imieniu (`reviewFrom`), żeby ten sam cytat nie istniał w dwóch miejscach.
+    const reviewOf = (c) => (window.REVIEWS || []).find((r) => r.name === c.reviewFrom);
+    const quoteHtml = (r) => `
+      <figure class="cs__block cs__quote">
+        <span class="k">Opinia</span>
+        <div class="cs__qbody">
+          <blockquote>
+            <p class="cs__qlead">${r.lead}</p>
+            ${(r.quote || []).map((p) => `<p>${p}</p>`).join("")}
+          </blockquote>
+          <figcaption>${r.name}</figcaption>
+        </div>
+      </figure>`;
+
+    // Kadry są OPCJONALNE. Bez `shots` (i bez starego pojedynczego `img`)
+    // karta renderuje się jako sam tekst (.is-textonly w styles.css) -
+    // wcześniej stał tu pusty <image-slot>, który każdemu odwiedzającemu
+    // pokazywał placeholder „Rendering – ...".
+    csList.innerHTML = window.CASE_STUDIES.map((c) => {
+      const shots = Array.isArray(c.shots) && c.shots.length ? c.shots : null;
+      const media = shots
+        ? `<div class="cs__media cs__media--x">${shotsHtml(c)}</div>`
+        : (c.img ? `<div class="cs__media"><img class="cs__img" src="${c.img}" loading="lazy" decoding="async" alt="${c.alt || c.title}" /></div>` : "");
+      const rev = reviewOf(c);
+      return `
+      <article class="cs__item${media ? "" : " is-textonly"}" data-reveal>
+        ${media}
         <div class="cs__body">
           <span class="cs__tag">${c.tag}</span>
           <h3>${c.title}</h3>
@@ -499,8 +546,72 @@
           <div class="cs__block"><span class="k">Założenia</span><p>${c.approach}</p></div>
           <div class="cs__block"><span class="k">Rozwiązanie</span><p>${c.solution}</p></div>
           <div class="cs__block"><span class="k">Efekt</span><p>${c.result}</p></div>
+          ${rev ? quoteHtml(rev) : ""}
         </div>
-      </article>`).join("");
+      </article>`;
+    }).join("");
+
+    /* ------- karuzela: 4 s automatu + strzałki, kropki i swipe ------- */
+    const CSX_MS = 4000;
+    const csxRM = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    $$(".csx", csList).forEach((root) => {
+      const slides = $$(".csx__slide", root);
+      const dots = $$(".csx__dot", root);
+      if (slides.length < 2) return;
+
+      let i = 0;
+      let held = false;   // kursor na kadrze albo fokus w środku
+      let timer = 0;
+
+      const show = (n) => {
+        i = (n + slides.length) % slides.length;
+        slides.forEach((s, k) => {
+          s.classList.toggle("is-on", k === i);
+          s.setAttribute("aria-hidden", String(k !== i));
+        });
+        dots.forEach((d, k) => {
+          d.classList.toggle("is-on", k === i);
+          if (k === i) d.setAttribute("aria-current", "true"); else d.removeAttribute("aria-current");
+        });
+      };
+
+      // Czy kadr jest na ekranie. Świadomie BEZ IntersectionObserver-a:
+      // obserwator nie odpala się, gdy karta nie jest malowana, a tu i tak co
+      // 4 s budzi nas timer - jeden getBoundingClientRect() jest tańszy niż
+      // trzymanie obserwatora i nie ma pułapki z kartą w tle.
+      const onScreen = () => {
+        const r = root.getBoundingClientRect();
+        return r.bottom > 0 && r.top < (window.innerHeight || 0);
+      };
+
+      const tick = () => { if (!held && !document.hidden && onScreen()) show(i + 1); };
+      const arm = () => { if (!csxRM.matches) { clearInterval(timer); timer = setInterval(tick, CSX_MS); } };
+      // Ręczne przewinięcie zeruje fazę - inaczej automat mógłby przeskoczyć
+      // kadr ułamek sekundy po tym, jak ktoś sam go wybrał.
+      const go = (n) => { show(n); arm(); };
+
+      $(".csx__arw--p", root).addEventListener("click", () => go(i - 1));
+      $(".csx__arw--n", root).addEventListener("click", () => go(i + 1));
+      dots.forEach((d, k) => d.addEventListener("click", () => go(k)));
+
+      root.addEventListener("mouseenter", () => { held = true; });
+      root.addEventListener("mouseleave", () => { held = false; });
+      root.addEventListener("focusin", () => { held = true; });
+      root.addEventListener("focusout", () => { held = false; });
+
+      let sx = 0, sy = 0;
+      root.addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+      root.addEventListener("touchend", (e) => {
+        const t = e.changedTouches[0];
+        const dx = t.clientX - sx;
+        const dy = t.clientY - sy;
+        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.4) go(dx < 0 ? i + 1 : i - 1);
+      }, { passive: true });
+
+      arm();
+      csxRM.addEventListener?.("change", () => { clearInterval(timer); timer = 0; arm(); });
+    });
   }
 
   /* =======================================================================
