@@ -439,9 +439,23 @@ html.js .hero.is-in [data-anim] {
 .pf__item { position: relative; overflow: hidden; background: var(--ink); border-radius: 2px; }
 .pf__item.tall { grid-column: span 4; aspect-ratio: 4 / 5.2; }
 .pf__item.wide { grid-column: span 8; aspect-ratio: 16 / 10.4; }
-.pf__item image-slot, .pf__item .ph { width: 100%; height: 100%; }
-.pf__item .ph { transition: transform 1.1s var(--ease); }
-.pf__item:hover .ph { transform: scale(1.05); }
+/* Widok jednej kategorii (klasa .is-cat dokładana przez app.js): osiem kafli,
+   cztery i cztery. Siatka ma 12 kolumn, więc kafel bierze 3, a wspólne
+   aspect-ratio daje im wszystkim dokładnie ten sam rozmiar - kadry z galerii
+   mają różne proporcje, dopasowuje je object-fit: cover na .pf__img.
+   Podpis jest mniejszy niż na dużych kaflach „Wszystkich", bo kafel jest
+   węższy i „Komunikacja / Hole" nie zmieściłoby się w jednym wierszu. */
+.pf__item.sq { grid-column: span 3; aspect-ratio: 4 / 5; }
+.pf__grid.is-cat .pf__meta { padding: clamp(12px, 1.2vw, 18px); }
+.pf__grid.is-cat .pf__meta h3 { font-size: clamp(1.02rem, 1.35vw, 1.4rem); }
+.pf__grid.is-cat .pf__arrow { width: 36px; height: 36px; }
+/* Kafle strony głównej to zwykłe <img>, nie <image-slot> - tak samo jak
+   galeria na podstronie. Powód jest podwójny: <image-slot> wstawiał obrazek
+   do shadow DOM z pustym alt i bez loading="lazy", więc sześć zdjęć spod
+   pierwszego ekranu (2,9 MB) pobierało się od razu, a Grafika Google nie
+   miała czego zaindeksować. */
+.pf__item .pf__img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.1s var(--ease); }
+.pf__item:hover .pf__img { transform: scale(1.05); }
 .pf__shade { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 38%, rgb(var(--ink-rgb) / 0.0) 50%, rgb(var(--ink-rgb) / 0.74) 100%); opacity: 0; transition: opacity 0.6s var(--ease); pointer-events: none; }
 .pf__item:hover .pf__shade { opacity: 1; }
 .pf__meta { position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(18px, 2vw, 30px); color: var(--bone); display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; transform: translateY(12px); opacity: 0; transition: all 0.55s var(--ease); pointer-events: none; }
@@ -451,6 +465,13 @@ html.js .hero.is-in [data-anim] {
 .pf__cat { position: absolute; top: clamp(16px,1.6vw,22px); left: clamp(16px,1.6vw,22px); font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bone); background: rgb(var(--ink-rgb) / 0.34); backdrop-filter: blur(6px); padding: 0.5em 0.9em; border-radius: 999px; opacity: 0; transition: opacity 0.5s var(--ease); }
 .pf__item:hover .pf__cat { opacity: 1; }
 .pf__arrow { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(245,240,232,0.5); display: grid; place-items: center; flex: none; }
+/* Kafle kategorii schodzą do dwóch w rzędzie wcześniej niż kafle „Wszystkich"
+   do jednego: przy czterech w rzędzie poniżej ~1000 px zdjęcie robi się
+   miniaturką. Ośmiu kafli nie stawiamy w jednej kolumnie nawet na telefonie -
+   to byłby ekran przewijania zamiast podglądu kategorii. */
+@media (max-width: 1000px){
+  .pf__item.sq { grid-column: span 6; }
+}
 @media (max-width: 760px){
   .pf__item.tall, .pf__item.wide { grid-column: span 12; }
   .pf__item.wide { aspect-ratio: 16/11; }

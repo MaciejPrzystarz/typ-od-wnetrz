@@ -125,7 +125,6 @@
   const pfGrid = $("#pfGrid");
   const cats = window.PROJECT_CATEGORIES || ["Wszystkie"];
   const projects = window.PROJECTS || [];
-  const phVariants = ["ph", "ph v2", "ph v3"];
 
   // Lokalizacja i rok bywają puste (patrz data/projects.js) - sklejamy tylko to,
   // co faktycznie jest, żeby nie zostało wiszące "·" ani pusty wiersz.
@@ -147,13 +146,12 @@
    */
   function tilesOf(list) {
     const flat = [];
-    list.forEach((p) => (p.photos || []).forEach((ph, i) => {
+    list.forEach((p) => (p.photos || []).forEach((ph) => {
       const src = srcOf(ph);
       if (!src) return;
       flat.push({
         src,
         orient: (typeof ph === "object" && ph.orient) || "tall",
-        id: `${p.slot}-${i + 1}`,
         project: p,
       });
     }));
@@ -167,8 +165,61 @@
     return out;
   }
 
+  /**
+   * Widok kategorii: 8 zdjęć (dwa rzędy po cztery) z galerii tej kategorii,
+   * czyli prosto z images/portfolio-web/. „Wszystkie" zostaje bez zmian -
+   * po jednym kadrze na kategorię z images/home-images/.
+   *
+   * Zdjęcia bierzemy z window.GALLERY (plik generowany, data/gallery.js),
+   * a nie z window.PROJECTS: to jedyne miejsce, które wie, co naprawdę leży
+   * w folderze i jakie ma wymiary. Kolejność w galerii nie jest alfabetyczna -
+   * najpierw idą okładki, po jednej na wnętrze, więc te osiem kafli to osiem
+   * różnych realizacji, a nie osiem ujęć tej samej kuchni.
+   */
+  const CAT_TILES = 8;
+
+  function galleryOf(cat) {
+    const secs = window.GALLERY || [];
+    const p = projects.find((x) => x.category === cat);
+    return secs.find((s) => s.cat === cat)
+        || (p && secs.find((s) => s.slug === p.catSlug))
+        || null;
+  }
+
+  function categoryTiles(cat) {
+    const sec = galleryOf(cat);
+    const photos = sec ? (sec.photos || []).slice(0, CAT_TILES) : [];
+    if (!photos.length) return "";
+    return photos.map((ph, i) => {
+      const alt = `${sec.alt} – kadr ${i + 1}`;
+      return `
+      <a class="pf__item sq" href="portfolio.html#${sec.slug}" data-reveal aria-label="${alt} – przejdź do galerii">
+        <img class="pf__img" src="${sec.dir}/${ph.f}" width="${ph.w}" height="${ph.h}" loading="lazy" decoding="async" alt="${alt}" />
+        <div class="pf__shade"></div>
+        <div class="pf__meta">
+          <div><h3>${sec.cat}</h3></div>
+          <span class="pf__arrow" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" stroke-width="1.3"/></svg>
+          </span>
+        </div>
+      </a>`;
+    }).join("");
+  }
+
   function renderPortfolio(filter) {
-    const list = filter && filter !== "Wszystkie" ? projects.filter((p) => p.category === filter) : projects;
+    const isCat = !!filter && filter !== "Wszystkie";
+    // Kategoria: osiem kadrów z galerii. Gdyby data/gallery.js nie doszedł
+    // (albo kategorii w nim nie było), zostaje stary widok po jednym kaflu.
+    const catHtml = isCat ? categoryTiles(filter) : "";
+    if (catHtml) {
+      pfGrid.classList.remove("is-sparse");
+      pfGrid.classList.add("is-cat");
+      pfGrid.innerHTML = catHtml;
+      observeReveals();
+      return;
+    }
+    pfGrid.classList.remove("is-cat");
+    const list = isCat ? projects.filter((p) => p.category === filter) : projects;
     const tiles = tilesOf(list);
     // Rząd siatki mieszczą dopiero trzy kafle pionowe. Po filtrze kategorii
     // zostaje zwykle jeden i dwie trzecie rzędu stały puste - wyglądało to na
@@ -180,7 +231,7 @@
       const meta = metaOf(p);
       return `
       <a class="pf__item ${t.orient}" href="portfolio.html#${p.catSlug || p.slug}" data-reveal aria-label="${p.title}">
-        <image-slot id="${t.id}" class="ph ${phVariants[i % 3]}" shape="rect" fit="cover" src="${t.src}" placeholder="Wgraj rendering – ${p.title}"></image-slot>
+        <img class="pf__img" src="${t.src}" width="1600" height="2000" loading="lazy" decoding="async" alt="${p.title} – ${p.category}" />
         <div class="pf__shade"></div>
         <span class="pf__cat">${p.category}</span>
         <div class="pf__meta">

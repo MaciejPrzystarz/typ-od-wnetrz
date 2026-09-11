@@ -576,13 +576,19 @@
     </div>
   </footer>
 
-  <script src="image-slot.js"></script>
-  <script src="data/projects.js?v=9"></script>
-  <script src="data/offer.js?v=7"></script>
-  <script src="data/content.js?v=9"></script>
+  <!-- image-slot.js już tu nie ma: kafle portfolio i case studies to zwykłe
+       <img loading="lazy">, tak samo jak galeria na podstronie. To 31 kB mniej
+       i sześć zdjęć, które widzi Grafika Google. -->
+  <script src="data/projects.js?v=11"></script>
+  <!-- spis zdjęć z images/portfolio-web/ (plik generowany): po kliknięciu
+       kategorii w „Wybranych projektach" siatka pokazuje osiem kadrów z jej
+       galerii, a nie jeden kafel. Bez tego pliku zostaje stary widok. -->
+  <script src="data/gallery.js?v=4"></script>
+  <script src="data/offer.js?v=8"></script>
+  <script src="data/content.js?v=13"></script>
   <!-- lista przykładowych PDF-ów: app.js sprawdza ją, żeby wiedzieć, czy
        pokazać odnośnik do podstrony przykladowy-projekt.html -->
-  <script src="data/samples.js?v=7"></script>
-  <script src="app.js?v=30"></script>
+  <script src="data/samples.js?v=8"></script>
+  <script src="app.js?v=34"></script>
 </body>
 </html>
