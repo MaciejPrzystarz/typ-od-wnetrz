@@ -1059,10 +1059,25 @@ html { scroll-padding-top: 84px; }
   /* checkboxy w formularzu */
   .form__check { margin-bottom: 22px; }
   .form__check .box { width: 24px; height: 24px; }
-  /* chipy filtra portfolio */
-  .chip { padding: 0.72em 1.3em; }
-  .foot__col a { padding-block: 6px; margin-bottom: 3px; }
+  /* Chipy filtra portfolio. Padding jest w `em`, a stopień pisma schodzi tu
+     razem z resztą typografii mobilnej, więc sama wyściółka zostawiała
+     pigułkę na 35 px - min-height trzyma pole dotyku niezależnie od pisma. */
+  .chip { padding: 0.72em 1.3em; min-height: 44px; }
+  .foot__col a { padding-block: 10px; margin-bottom: 0; }
   .contact__chan a { padding-block: 18px; }
+  /* Okruszki na podstronach: sam wiersz tekstu ma 20 px. Wyściółka rośnie
+     w górę i w dół, a ujemny margines oddaje te piksele układowi, więc
+     odstępy w nagłówku podstrony zostają takie, jak były. */
+  .crumbs a { display: inline-block; padding-block: 12px; margin-block: -12px; }
+  /* „Otwórz plik PDF" - podkreślenie jest tu linią bazową kompozycji,
+     więc pole dotyku rośnie wyłącznie w górę. */
+  .smp__open { padding-top: 18px; margin-top: -18px; }
+  /* Ikony społecznościowe: obwódka ma być kółkiem 36 px, bo tak wygląda
+     nagłówek - więc powiększamy samo pole dotyku, nie rysunek. Pseudoelement
+     rozpycha obszar klikalny do 44 px (prostokątem, nie kołem - w rogu
+     kółka palcem trafia się najczęściej) i nie widać go na oczy. */
+  .social a { position: relative; }
+  .social a::after { content: ""; position: absolute; inset: -4px; }
 }
 
 /* ---------------------- 2b. TYPOGRAFIA NA TELEFONIE ---------------------- */
@@ -1153,31 +1168,50 @@ html { scroll-padding-top: 84px; }
   /* Telefon dostaje pionowy plik 720×1280 (patrz skrypt przy <video>), więc
      kadr niemal dokładnie pokrywa ekran - nie potrzeba już zapasu 116%
      na paralaksę, która na dotyku i tak jest wyłączona. */
-  .hero__video, .hero__media image-slot { height: 100%; }
+  .hero__video { height: 100%; }
 
   /* --- Napisy: minimalistycznie, żeby zostawić kadr filmowi ---------------
      Na telefonie blok tekstowy zasłaniał połowę wideo. Cała typografia
      schodzi o klasę w dół: lżejsza waga kroju, mniej rozstrzelona
      mikro-etykieta, węższy akapit i ciaśniejsze odstępy. Treść zostaje
      ta sama - zmienia się tylko jej „głośność". */
-  .hero__inner { padding-top: clamp(84px, 16vh, 128px); padding-bottom: clamp(28px, 4.5vh, 56px); }
+  /* Jeden mnożnik na cały blok tekstowy hero: rusza mikro-etykietą,
+     nagłówkiem i akapitem naraz, więc ich wzajemne proporcje zostają
+     takie, jak zaprojektowane. 1 = stopnie sprzed powiększenia. */
+  .hero__inner {
+    --hero-txt: 1.6;
+    /* Bliżej lewej krawędzi niż wspólny gutter strony (16 -> 12 px): kolumna
+       tekstu jest tu wąska, więc ma się trzymać brzegu kadru. */
+    padding-inline: 12px;
+    padding-top: clamp(84px, 16vh, 128px); padding-bottom: clamp(28px, 4.5vh, 56px);
+  }
 
-  /* Cały blok tekstowy hero zszedł 1,5x w dół (kicker 9,6 -> 6,4 px,
-     nagłówek 25,6 -> 17 px, akapit 14,1 -> 9,4 px na ekranie 390 px).
-     Każda wartość podzielona przez 1,5, łącznie z całą trójką clamp
-     w nagłówku - żeby proporcja trzymała się na każdej szerokości. */
-  .hero__kicker { font-size: 0.4rem; letter-spacing: 0.2em; opacity: 0.8; }
-  .hero__kicker::before { width: 11px; }
+  /* Blok tekstowy hero był zjechany 1,5x w dół (kicker 9,6 -> 6,4 px,
+     akapit 14,1 -> 9,4 px na ekranie 390 px). Nagłówek został na 17 px,
+     ale dwa napisy wróciły do czytelnego stopnia: mikro-etykieta zrównana
+     z pozostałymi na stronie (`.kicker` w bloku typografii wyżej, 10,6 px),
+     a akapit podniesiony do 13,1 px. To pierwsze zdanie o studiu, jakie
+     ktoś czyta - przy 9,4 px trzeba je było przybliżać do oczu. */
+  /* Mikro-etykieta rośnie tylko do 1,1x, choć reszta bloku idzie dalej:
+     „Studio projektowe · Wrocław & online" to 36 wersalików i przy większym
+     stopniu nie mieści się w jednym wierszu na 360-390 px - a złamana na
+     dwa czyta się gorzej niż mniejsza. Ciaśniejszy trakt (0,06em zamiast
+     0,2em) kupuje dokładnie tyle miejsca, ile ten wzrost zjada. */
+  .hero__kicker { font-size: calc(0.66rem * min(var(--hero-txt), 1.1)); letter-spacing: 0.06em; opacity: 0.8; }
 
   /* max-width w `ch` kurczy się razem z pismem, więc po zejściu o 1,5x
      druga linia („zaczyna się od Typa") zaczęła się łamać na dwie.
      17ch x 1,5 = ~26ch trzyma tę samą SZEROKOŚĆ w pikselach co wcześniej,
      czyli podział wiersza zaprojektowany w HTML zostaje nienaruszony. */
-  .hero h1 { font-size: clamp(1.07rem, 4.13vw, 1.53rem); font-weight: 400; line-height: 1.16; margin-top: 0.5em; max-width: 26ch; }
+  .hero h1 { font-size: calc(clamp(1.07rem, 4.13vw, 1.53rem) * var(--hero-txt)); font-weight: 400; line-height: 1.16; margin-top: 0.5em; max-width: 26ch; }
 
   /* twarde łamanie wiersza z desktopu psuje akapit na wąskim ekranie */
   .hero__sub br { display: none; }
-  .hero__sub { font-size: 0.59rem; line-height: 1.5; max-width: 30ch; opacity: 0.74; }
+  /* Akapit trzyma LEWĄ POŁOWĘ kadru: limit w `vw`, nie w `ch`, bo ma zależeć
+     od szerokości ekranu, a nie od stopnia pisma - inaczej po powiększeniu
+     tekstu kolumna rosła razem z nim i wiersze rozłaziły się na całą
+     szerokość. Węziej = więcej wierszy, i o to tu chodzi. */
+  .hero__sub { font-size: calc(0.82rem * var(--hero-txt)); line-height: 1.5; max-width: 60vw; opacity: 0.74; }
 
   .hero__bottom { gap: clamp(13px, 2vh, 20px); margin-top: 3px; }
 
@@ -1196,10 +1230,12 @@ html { scroll-padding-top: 84px; }
   /* Dwa pasy przycisków na całą szerokość ciążyły na kadrze - pigułki wracają
      do swojej naturalnej szerokości i drobniejszego stopnia pisma. */
   .hero__actions { width: auto; flex-direction: column; align-items: flex-start; gap: 6px; }
-  /* Przyciski 2x mniejsze (0.68 -> 0.34rem, czyli 10,9 -> 5,4 px napisu).
-     Padding i trakting są w `em`, więc skalują się razem z pismem i cała
-     pigułka schodzi do połowy - nie tylko sam tekst. */
-  .hero__actions .btn { font-size: 0.34rem; letter-spacing: 0.16em; padding: 0.88em 1.5em; white-space: nowrap; }
+  /* Stopień pisma i pole dotyku: padding jest w `em`, więc sam font-size
+     ustawiał tu całą pigułkę. Przy 0.34rem napis miał 5,4 px, a przycisk
+     18 px wysokości - główne CTA strony było nieczytelne i za małe pod
+     palec. 0.66rem (10,6 px) to nadal drobna pigułka na kadrze, a
+     min-height: 44px daje wymagane pole dotyku niezależnie od pisma. */
+  .hero__actions .btn { font-size: 0.66rem; letter-spacing: 0.16em; padding: 0.9em 1.6em; min-height: 44px; white-space: nowrap; }
   .hero__bottom { max-width: none; }
 }
 
@@ -1223,7 +1259,7 @@ html { scroll-padding-top: 84px; }
      wszystkie kategorie widoczne od razu, bez przewijania w bok. */
   .pf__filter {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
   }
   .chip {
@@ -1232,6 +1268,12 @@ html { scroll-padding-top: 84px; }
     font-size: 0.72rem;
     letter-spacing: 0.03em;
     white-space: nowrap;
+  }
+  /* Na 320 px „Pokoje dziecięce" w jednej linii nie mieści się w trzeciej
+     kolumnie i rozpycha siatkę poza ekran - tam etykieta łamie się na dwa
+     wiersze (rzędy siatki i tak mają wspólną wysokość). */
+  @media (max-width: 400px) {
+    .chip { white-space: normal; }
   }
   .pf__more { justify-content: flex-start; }
   /* Opis kafelka na stałe widoczny - nie tylko na urządzeniach dotykowych
@@ -1256,17 +1298,21 @@ html { scroll-padding-top: 84px; }
      wiersze, a myślnik zostawał sam na końcu drugiego. Bez limitu szerokości
      wraca podział zaprojektowany w HTML: zdanie, <br>, kursywna klauzula. */
   .banner__inner h2 {
-    /* Dwa razy mniej niż poprzednio (5.6vw → 2.8vw, czyli ~22 px → ~11 px na
-       telefonie 390 px). Napis zajmował ćwiartkę kadru i z nim konkurował;
-       teraz jest podpisem pod zdjęciem. Cała trójka clamp poszła na połowę,
-       żeby proporcja trzymała się na każdej szerokości. */
-    font-size: clamp(0.59rem, 2.8vw, 0.97rem);
+    /* Napis zajmował ćwiartkę kadru i konkurował ze zdjęciem, więc zszedł
+       z 5.6vw na 2.8vw - ale ~11 px to na telefonie podpis, a nie hasło
+       sekcji (pozostałe nagłówki mają tam 31 px). 3.85vw daje 15 px:
+       nadal spokojniej niż kadr, już czytelnie. Cała trójka clamp idzie
+       tym samym mnożnikiem, żeby proporcja trzymała się na każdej
+       szerokości; wcięcie drugiego wiersza skaluje się razem z pismem. */
+    font-size: clamp(0.81rem, 3.85vw, 1.33rem);
     max-width: none;
     line-height: 1.3;
   }
-  .banner__inner h2 .indent { margin-left: 8px; }
+  .banner__inner h2 .indent { margin-left: 11px; }
   /* przycisk jak w hero - naturalna szerokość zamiast pasa na całą kolumnę */
-  .banner__inner .btn { width: auto; font-size: 0.68rem; letter-spacing: 0.16em; padding: 0.88em 1.5em; white-space: nowrap; }
+  /* min-height jak w hero: padding w `em` jedzie za stopniem pisma, a sam
+     nie dowozi pola dotyku - pigułka miała 38 px wysokości. */
+  .banner__inner .btn { width: auto; font-size: 0.68rem; letter-spacing: 0.16em; padding: 0.88em 1.5em; min-height: 44px; white-space: nowrap; }
 }
 
 /* ------------------------------ Oferta ------------------------------ */
@@ -1387,7 +1433,7 @@ html { scroll-padding-top: 84px; }
    pod nią i zamienia się w listwę znaczników (nazwiska zostają w aria-label
    przycisków, więc czytnik ekranu nadal wie, w co się klika). */
 @media (max-width: 980px) {
-  .rev { grid-template-columns: 1fr; gap: 26px; }
+  .rev { grid-template-columns: minmax(0, 1fr); gap: 26px; }
   /* jedna kolumna: wiadomość, pod nią strzałki, na końcu listwa znaczników -
      stąd column-reverse (w kodzie spis stoi przed strzałkami) */
   .rev__side { flex-direction: column-reverse; gap: 22px; }
@@ -1631,7 +1677,9 @@ html { scroll-padding-top: 84px; }
 
 .lb__btn {
   display: grid; place-items: center;
-  width: clamp(40px, 5vw, 52px); height: clamp(40px, 5vw, 52px);
+  /* Dolna granica 44 px, nie 40: na telefonie 5vw zawsze schodzi do minimum,
+     a to jedyne sterowanie galerią w powiększeniu. */
+  width: clamp(44px, 5vw, 52px); height: clamp(44px, 5vw, 52px);
   border: 1px solid rgba(245, 240, 232, 0.28); border-radius: 50%;
   background: rgba(245, 240, 232, 0.06); color: var(--bone);
   cursor: pointer; transition: background 0.3s var(--ease), border-color 0.3s var(--ease);

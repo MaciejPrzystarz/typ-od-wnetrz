@@ -22,6 +22,12 @@ screenshots/
 # Pliki zostają na dysku, IDE działa dalej; git ich po prostu nie śledzi.
 .idea/
 
+# Harness do audytu responsywności - ładuje strony w iframe o zadanej
+# szerokości i zwraca listę elementów wychodzących poza ekran. Narzędzie
+# robocze, nie część strony: gdyby trafiło na serwer, byłoby publicznie
+# dostępną podstroną. Zostaje na dysku, git go nie śledzi.
+_mobile-audit.html
+
 # Materiał źródłowy kadrów „przed / po" z case studies. Jak wyżej: na serwer
 # idą tylko kopie .webp obok (7,1 MB PNG-ów → 474 kB), zrobione ffmpeg-iem
 # tymi samymi ustawieniami co galeria (libwebp, quality 90, preset photo).
