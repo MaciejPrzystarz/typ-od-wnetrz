@@ -77,7 +77,7 @@
   let ticking = false;
   const parallax = () => {
     ticking = false;
-    const m = $(".hero__media .hero__video, .hero__media image-slot, .hero__media .ph");
+    const m = $(".hero__media .hero__video");
     if (!m) return;
     if (noParallax.matches) { m.style.transform = ""; return; }
     const y = window.scrollY;

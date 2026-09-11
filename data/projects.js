@@ -14,7 +14,6 @@
  *              ze strony głównej prowadzi do galerii swojego rodzaju wnętrz.
  *              Wartości muszą się zgadzać ze `slug` w data/gallery.js.
  *   photos   - lista zdjęć; każde daje osobny kafel na stronie głównej
- *   photos   - lista zdjęć; pierwsze jest kadrem otwierającym galerię
  *   location / year - MOGĄ być puste; puste pola po prostu się nie renderują
  *
  * Pola zdjęcia:
@@ -39,7 +38,6 @@ window.PROJECTS = [
     category: "Kuchnie",
     location: "",
     year: "",
-    slot: "pf-kuchnia",
     photos: [
       { src: "images/home-images/kitchen.webp", orient: "tall" },
     ],
@@ -51,7 +49,6 @@ window.PROJECTS = [
     category: "Łazienki",
     location: "",
     year: "",
-    slot: "pf-lazienka",
     photos: [
       { src: "images/home-images/bathroom01.webp", orient: "tall" },
     ],
@@ -63,7 +60,6 @@ window.PROJECTS = [
     category: "Salony",
     location: "",
     year: "",
-    slot: "pf-salon",
     photos: [
       { src: "images/home-images/living-room01.webp", orient: "tall" },
     ],
@@ -75,7 +71,6 @@ window.PROJECTS = [
     category: "Sypialnie",
     location: "",
     year: "",
-    slot: "pf-sypialnia",
     photos: [
       { src: "images/home-images/bedroom01.webp", orient: "tall" },
     ],
@@ -87,7 +82,6 @@ window.PROJECTS = [
     category: "Pokoje dziecięce",
     location: "",
     year: "",
-    slot: "pf-pokoj-dzieciecy",
     photos: [
       { src: "images/home-images/children-room01.webp", orient: "tall" },
     ],
@@ -99,7 +93,6 @@ window.PROJECTS = [
     category: "Komunikacja / Hole",
     location: "",
     year: "",
-    slot: "pf-hol",
     photos: [
       { src: "images/home-images/communication01.webp", orient: "tall" },
     ],

@@ -67,7 +67,7 @@ body {
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
-img, picture, image-slot { display: block; max-width: 100%; }
+img, picture { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
 input, select, textarea { font: inherit; color: inherit; }
@@ -303,7 +303,6 @@ body.menu-open .mobile__nav a { opacity: 1; transform: translateY(0); transition
    ========================================================================= */
 .hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; background: var(--ink); }
 .hero__media { position: absolute; inset: 0; z-index: 0; }
-.hero__media image-slot { width: 100%; height: 116%; }
 .hero__video { display: block; width: 100%; height: 116%; object-fit: cover; object-position: center; will-change: transform; }
 .hero__media::after {
   content: ""; position: absolute; inset: 0;
@@ -492,7 +491,6 @@ html.js .hero.is-in [data-anim] {
 /* Zdjęcie i tekst leżą w tej samej komórce siatki: kadr nie jest przycinany -
    to on wyznacza wysokość sekcji, a napis nakłada się na jego dolną część. */
 .banner { position: relative; display: grid; overflow: hidden; background: var(--ink); }
-.banner image-slot, .banner .ph { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
 .banner__img { grid-area: 1 / 1; align-self: start; width: 100%; height: auto; z-index: 0; display: block; }
 .banner::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background: linear-gradient(180deg, rgb(var(--ink-rgb) / 0.22) 0%, rgb(var(--ink-rgb) / 0.08) 42%, rgb(var(--ink-rgb) / 0.84) 100%); }
@@ -973,17 +971,11 @@ html.js [data-reveal][data-reveal-stagger].is-in > * {
   .hdr__cta .social { display: none; }
 }
 
-/* placeholder gradients for empty image-slots (cozy warm tones) */
-.ph { background: linear-gradient(150deg, #cbb89c 0%, #b49b7c 38%, #8f7a63 72%, #6f5e4c 100%); }
-.ph.v2 { background: linear-gradient(150deg, #d8c7ad 0%, #b9a585 40%, #97836a 100%); }
-.ph.v3 { background: linear-gradient(150deg, #c2a988 0%, #9f8869 55%, #74604a 100%); }
-
 /* =========================================================================
    O MNIE
    ========================================================================= */
 .about { display: grid; grid-template-columns: 0.82fr 1.18fr; gap: clamp(28px, 5vw, 84px); align-items: center; }
 .about__media { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 2px; background: var(--beige); }
-.about__media image-slot, .about__media .ph { width: 100%; height: 100%; }
 .about__media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block; }
 .about__body .kicker { margin-bottom: clamp(18px, 2.4vw, 26px); }
 .about__body h2 { font-size: clamp(2rem, 4vw, 3.4rem); margin-bottom: clamp(16px, 2vw, 24px); }
@@ -1022,7 +1014,7 @@ html.js [data-reveal][data-reveal-stagger].is-in > * {
   .pf__meta { opacity: 1; transform: none; }
   .pf__cat { opacity: 1; }
   /* efekty "na hover", które na dotyku tylko zostają zablokowane po tapnięciu */
-  .pf__item:hover .ph { transform: none; }
+  .pf__item:hover .pf__img { transform: none; }
   .timeline__row:hover { padding-left: 0; }
   .social a:hover { transform: none; }
 }
