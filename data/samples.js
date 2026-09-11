@@ -31,7 +31,7 @@
  * `pay` oznacza etapy z płatnością (bez kwot - te zależą od wyceny).
  */
 window.SCHEDULE_SAMPLE = {
-  note: "Daty z projektu mieszkania rozpoczętego w styczniu 2026. Każdy projekt dostaje własny harmonogram przy podpisaniu umowy – ten jest po to, żebyś wiedział, jak gęsto rozłożone są terminy i co jest po Twojej stronie.",
+  note: "Daty z projektu mieszkania rozpoczętego w styczniu 2026. Każdy projekt dostaje własny harmonogram przy podpisaniu umowy – ten jest po to, żeby było widać, jak gęsto rozłożone są terminy i co jest po Twojej stronie.",
   legend: { Ja: "przygotowuję i wysyłam materiały", Ty: "Twoja decyzja, uwagi albo wpłata" },
   rows: [
     { date: "09.01.26", day: "piątek", who: "Ty", text: "Wpłata zadatku", pay: "I" },
