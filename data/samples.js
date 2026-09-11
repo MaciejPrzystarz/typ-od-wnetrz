@@ -103,6 +103,22 @@ window.SAMPLES = [
     file: "images/pdf/oswietlenie.pdf",
     note: "Oświetlenie górne, kinkiety i listwy LED razem z obsługą łączników.",
   },
+  /* WYŁĄCZONE PRZED PUBLIKACJĄ - NAZWISKO KLIENTA W PLIKU.
+     `lista-zakupow.pdf` ma w metadanych tytuł dokumentu:
+         „K. PASZKIEWICZ IDE I P. IDE LISTA ZAKUPÓW"
+     Widać go w karcie przeglądarki po otwarciu pliku, a Google używa pola
+     Title PDF-a jako tytułu wyniku wyszukiwania. Pozostałe dziewięć plików
+     ma czysty tytuł „Model" - ten jeden nie.
+
+     ŻEBY PRZYWRÓCIĆ (w tej kolejności):
+       1. Otwórz plik i przejrzyj WSZYSTKIE 8 stron - skoro nazwisko jest
+          w tytule projektu, prawdopodobnie stoi też w nagłówku arkusza.
+       2. Wyczyść metadane, np. `qpdf --empty --pages plik.pdf 1-z -- czysty.pdf`
+          (winget install QPDF.QPDF) albo wyeksportuj arkusz na nowo bez nazwy
+          projektu w tytule dokumentu.
+       3. Sprawdź: getMetadata().info.Title ma być puste albo neutralne.
+       4. Odkomentuj tę pozycję.
+
   {
     title: "Lista zakupów",
     scope: "Od Typu 3",
@@ -110,4 +126,5 @@ window.SAMPLES = [
     note: "Konkretne produkty z linkami, ilościami i cenami – osiem stron, od podłogi po dodatki. Ceny są z dnia przygotowania projektu i służą jako punkt odniesienia.",
     maxPages: 3,
   },
+  */
 ];
