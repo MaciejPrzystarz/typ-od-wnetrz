@@ -40,6 +40,24 @@
   const year = $("#year");
   if (year) year.textContent = String(new Date().getFullYear());
 
+  /* ---------------- Odsłanianie treści ----------------
+     Sekcje mają w HTML-u `data-reveal`, a reguła `html.js [data-reveal]`
+     w styles.css daje im `opacity: 0` - dopóki coś nie dopisze `.is-in`,
+     harmonogram, nagłówki sekcji i CTA są na tej podstronie niewidoczne.
+     Świadomie bez IntersectionObserver, z tego samego powodu co podgląd
+     PDF-ów niżej: obserwator odzywa się dopiero, gdy karta się rysuje. */
+  const revealInView = () => $$("[data-reveal]:not(.is-in)").forEach((el) => {
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.92) el.classList.add("is-in");
+  });
+  let rTick = false;
+  window.addEventListener("scroll", () => {
+    if (rTick) return; rTick = true;
+    requestAnimationFrame(() => { revealInView(); rTick = false; });
+  }, { passive: true });
+  window.addEventListener("load", () => { revealInView(); setTimeout(revealInView, 400); });
+  document.addEventListener("visibilitychange", revealInView);
+  revealInView();
+
   /* =======================================================================
      HARMONOGRAM - przykład
      ===================================================================== */
@@ -90,7 +108,12 @@
         <a class="smp__open" href="${s.file}" target="_blank" rel="noopener">Otwórz plik ${/\.pdf$/i.test(s.file) ? "PDF" : "w nowej karcie"} <span aria-hidden="true">→</span></a>
       </header>
       <div class="smp__doc" data-file="${s.file}" data-title="${s.title}"${s.maxPages ? ` data-max="${s.maxPages}"` : ""}>
-        <p class="smp__status">Ładuję podgląd…</p>
+        <!-- Stan POCZĄTKOWY, a nie „ładuję": render startuje dopiero, gdy karta
+             zbliży się do ekranu (patrz sweep niżej), więc pierwsza karta stoi
+             ~2300 px niżej i nic się nie pobiera. Dziesięć napisów „Ładuję
+             podgląd…", z których żaden nic nie ładuje, wyglądało na zawieszone.
+             Uwaga: to wnętrze template literala - żadnych backticków tutaj. -->
+        <p class="smp__status">Podgląd wczyta się przy przewijaniu…</p>
       </div>
     </article>`).join("");
 
@@ -195,6 +218,11 @@
       if (b.dataset.state) return;
       if (b.getBoundingClientRect().top > limit) return;
       b.dataset.state = "loading";
+      // Dopiero TERAZ coś się faktycznie pobiera, więc dopiero teraz napis
+      // o ładowaniu jest prawdziwy (stan początkowy mówi „wczyta się przy
+      // przewijaniu" - patrz komentarz przy szablonie karty wyżej).
+      const st = b.querySelector(".smp__status");
+      if (st) st.textContent = "Ładuję podgląd…";
       renderDoc(b);
     });
   };
