@@ -114,10 +114,13 @@ window.MOODBOARD = {
 // Wspólne źródło dla kalkulatora
 window.PRICING = {
   perType: window.OFFER_TYPES.reduce((acc, t) => ((acc[t.n] = t.price), acc), {}),
+  // Etykiety mówią „od", nie „powyżej": app.js liczy `a >= d.min`, więc rabat
+  // należy się już przy DOKŁADNIE 100 / 150 / 225 m². Notka pod tabelą typów
+  // („już od 100 m²") mówiła to samo, kalkulator przeczył jej o jeden metr.
   discounts: [
-    { min: 225, rate: 0.30, label: "powyżej 225 m²" },
-    { min: 150, rate: 0.20, label: "powyżej 150 m²" },
-    { min: 100, rate: 0.10, label: "powyżej 100 m²" },
+    { min: 225, rate: 0.30, label: "od 225 m²" },
+    { min: 150, rate: 0.20, label: "od 150 m²" },
+    { min: 100, rate: 0.10, label: "od 100 m²" },
   ],
   rushSurcharge: 0.15, // tryb przyspieszony +15%
   minArea: 10, // poniżej -> wycena indywidualna

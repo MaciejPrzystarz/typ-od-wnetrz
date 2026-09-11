@@ -899,6 +899,11 @@ html.js .hero.is-in [data-anim] {
 .form__estimate { display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: var(--beige); border-radius: 4px; margin-bottom: 24px; font-size: 0.9rem; }
 .form__estimate .est-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brass); flex: none; }
 .form__estimate b { font-family: var(--num); font-size: 1rem; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums lining-nums; }
+/* Load-bearing, dokładnie jak .lb[hidden] i .form__error[hidden] niżej:
+   autorskie `display: flex` wygrywa z wbudowaną regułą [hidden] przeglądarki,
+   więc bez tego ramka „Dołączona wstępna wycena: -" stoi w formularzu od
+   załadowania strony, zanim ktokolwiek zaznaczy checkbox. */
+.form__estimate[hidden] { display: none; }
 .form .btn { justify-content: center; }
 .form__error {
   margin-top: 16px; padding: 14px 18px; border-radius: 4px;

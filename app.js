@@ -337,7 +337,7 @@
   // build type selector
   typesWrap.innerHTML = offer.map((t) => `
     <button data-type="${t.n}" class="${t.n === state.type ? "is-on" : ""}">
-      <span class="tn">${t.n}</span><span class="tp">${t.price} zł</span>
+      <span class="tn">${t.n}</span><span class="tp">${t.price} zł/m²</span>
     </button>`).join("");
 
   function activeType() { return offer.find((t) => t.n === state.type); }

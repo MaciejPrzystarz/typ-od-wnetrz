@@ -333,7 +333,10 @@
                 <input id="area" type="number" inputmode="numeric" min="0" max="400" value="60" aria-label="Metraż w metrach kwadratowych" />
                 <span>m²</span>
               </div>
-              <input id="areaRange" class="range" type="range" min="0" max="300" step="1" value="60" aria-label="Suwak metrażu" />
+              <!-- max ten sam co w polu liczbowym wyżej: przy 300 wpisanie 350 zostawiało
+                   suwak na 300, a stan kalkulatora na 350 - pierwsze dotknięcie suwaka
+                   skokowo zmieniało wycenę. -->
+              <input id="areaRange" class="range" type="range" min="0" max="400" step="1" value="60" aria-label="Suwak metrażu" />
             </div>
 
             <div class="field">
