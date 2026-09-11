@@ -145,7 +145,7 @@
             <span class="pfp__more-txt">Pokaż wszystkie ${n} ${plural(n, "zdjęcie", "zdjęcia", "zdjęć")}</span>
             <span class="arr" aria-hidden="true">↓</span>
           </button>
-          <span class="pfp__more-note">Widocznych ${PREVIEW} z ${n}</span>
+          <span class="pfp__more-note" data-collapsed="Widocznych ${PREVIEW} z ${n}" data-open="Widocznych wszystkie ${n}">Widocznych ${PREVIEW} z ${n}</span>
         </div>` : ""}
       </section>`;
   }
@@ -167,6 +167,10 @@
     const open = sec.classList.toggle("is-open");
     btn.setAttribute("aria-expanded", String(open));
     $(".pfp__more-txt", btn).textContent = open ? btn.dataset.less : btn.dataset.all;
+    // Notka obok przycisku musi mówić prawdę także po rozwinięciu - inaczej
+    // przy komplecie zdjęć na ekranie nadal twierdziła „Widocznych 12 z 29".
+    const note = $(".pfp__more-note", sec);
+    if (note) note.textContent = open ? note.dataset.open : note.dataset.collapsed;
 
     // Zwinięcie kasuje kilkadziesiąt ekranów treści NAD przyciskiem, więc
     // czytający zostałby nagle gdzieś w następnej sekcji. Przyklejamy więc
@@ -205,6 +209,25 @@
   const chipWrap = $("#pfFilter");
   const slugIndex = (slug) => gallery.findIndex((s) => s.slug === slug);
 
+  /**
+   * Docelowa pozycja przewijania dla sekcji `node`.
+   *
+   * Kotwiczymy się na PASKU CHIPÓW, nie na samej sekcji. Stała odległość od
+   * sekcji nie działa: nagłówek ma 102 px na desktopie i ~76 px na telefonie,
+   * a chipy z trzykolumnowej siatki rosną tam do kilku wierszy. Przy stałym
+   * odsunięciu pasek kategorii chował się pod przyklejonym nagłówkiem, więc
+   * wchodząc z kafla strony głównej widziało się ścianę zdjęć i żadnej
+   * informacji, że kategorie da się przełączyć.
+   *
+   * Mierzymy więc realną wysokość nagłówka i stawiamy chipy tuż pod nim -
+   * sekcja i tak zaczyna się zaraz niżej.
+   */
+  const scrollTopFor = (node) => {
+    const anchor = chipWrap || node;
+    const hdrH = hdr ? hdr.getBoundingClientRect().height : 80;
+    return anchor.getBoundingClientRect().top + window.scrollY - hdrH - 18;
+  };
+
   if (chipWrap && gallery.length) {
     chipWrap.innerHTML = gallery
       .map((s) => `<button class="chip" type="button" data-slug="${esc(s.slug)}" aria-pressed="false">${esc(s.cat)}</button>`)
@@ -236,7 +259,7 @@
       // pod całą treścią nowej - wtedy wracamy na jej początek. Synchronicznie
       // i „instant" - z tych samych powodów, co przy zwijaniu galerii wyżej.
       if (opts.scroll && node) {
-        const top = node.getBoundingClientRect().top + window.scrollY - 90;
+        const top = scrollTopFor(node);
         if (window.scrollY > top) window.scrollTo({ top, behavior: "instant" });
       }
     };
@@ -419,7 +442,9 @@
     // górze i nie dojeżdżała do sekcji w ogóle.
     const goToTarget = () => {
       if (userMoved) return;
-      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 90, behavior: "instant" });
+      // Pozycję liczy scrollTopFor: kotwiczy pasek chipów tuż pod nagłówkiem,
+      // zamiast odsuwać sekcję o stałą liczbę pikseli (patrz komentarz tam).
+      window.scrollTo({ top: scrollTopFor(target), behavior: "instant" });
     };
     target.classList.add("is-linked");
     requestAnimationFrame(goToTarget);
