@@ -135,7 +135,12 @@
     <!-- ============================ HERO ============================ -->
     <section class="hero" aria-label="Wprowadzenie">
       <div class="hero__media">
+        <!-- poster = pierwsza klatka pliku desktopowego (ffmpeg -vframes 1, WebP, 5 kB).
+             Bez niego hero jest płaską czernią, dopóki nie dojedzie wideo - a na tej
+             czerni główne CTA („Zobacz projekty", tło #2A2723) jest praktycznie
+             niewidoczne. object-fit: cover z .hero__video obejmuje też poster. -->
         <video class="hero__video" id="heroVideo" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true" tabindex="-1"
+               poster="images/hero-poster.webp"
                data-src="images/hero-video.mp4"
                data-src-mobile="images/hero-video-phone-resolution.mp4"
                data-src-av1="images/hero-video-av1.mp4"
