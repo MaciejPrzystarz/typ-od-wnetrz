@@ -1,0 +1,148 @@
+# =========================================================================
+# typodwnetrz.pl - konfiguracja Netlify
+# Strona jest statyczna: nie ma kroku budowania, publikowany jest katalog
+# główny repozytorium. Netlify bierze pliki z GitHuba, więc na serwer trafia
+# wyłącznie to, co jest w gicie - wszystko z .gitignore (oryginały zdjęć,
+# screenshots/, pliki _robocze) nie istnieje tam wcale.
+#
+# Czego ten plik NIE musi robić, bo Netlify robi to sam:
+#  - HTTPS i przekierowanie http -> https (certyfikat Let's Encrypt),
+#  - www -> bez www: wystarczy w panelu ustawić typodwnetrz.pl jako
+#    "primary domain", wtedy www.typodwnetrz.pl dostaje jedno 301,
+#  - własna strona 404: Netlify sam serwuje /404.html,
+#  - listing katalogów: Netlify go nie ma,
+#  - typy MIME dla .webp/.mp4/.svg.
+# =========================================================================
+
+[build]
+  # Bez "command" = brak budowania, pliki idą na serwer tak, jak leżą w repo.
+  publish = "."
+
+# --- Czego nie wolno wystawiać -------------------------------------------
+# Notatki projektowe, narzędzia i pliki konfiguracyjne są w gicie, więc bez
+# tych reguł byłyby publiczne pod swoim adresem. force = true, bo inaczej
+# Netlify pomija przekierowanie, gdy plik istnieje.
+[[redirects]]
+  from = "/CLAUDE.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/tools/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/netlify.toml"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.gitignore"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.git/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+# --- Nagłówki bezpieczeństwa --------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Strona nie używa kamery, mikrofonu ani geolokalizacji.
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# --- Cache ---------------------------------------------------------------
+# Pliki HTML zostają przy domyślnym ustawieniu Netlify (max-age=0,
+# must-revalidate): przeglądarka pyta przy każdej wizycie, dostaje krótkie
+# 304, a nowa wersja strony jest widoczna od razu po deployu.
+# CSS, JS i dane mają ?v=..., a obrazy i wideo się nie zmieniają - te mogą
+# leżeć w cache rok.
+#
+# UWAGA: reguły cache NIE mogą się nakładać. Netlify skleja wartości tego
+# samego nagłówka z kilku pasujących reguł, więc "/images/*" razem
+# z "/images/pdf/*" dałoby PDF-om dwa sprzeczne Cache-Control naraz.
+# Dlatego katalogi są wypisane osobno. Gwiazdka w środku segmentu
+# ("/*.css") pasuje tylko do plików na tym jednym poziomie.
+# Zmieniając czasy, popraw też tabelę w polityka-cookies.html (#pamiec).
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+# Favikony, apple-touch-icon i og-image.jpg w katalogu głównym.
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.ico"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+# Zdjęcia i wideo leżące bezpośrednio w images/ (about-me, hero, poster).
+[[headers]]
+  for = "/images/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/images/*.mp4"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/images/portfolio-web/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/images/home-images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/images/case-studies/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/images/pdf/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"

@@ -130,8 +130,8 @@
         <p class="lead pghead__lead">Napisana po ludzku, ale bez pomijania rzeczy niewygodnych: kto odpowiada za Twoje dane, co dokładnie zbieram, komu to przekazuję i jak w każdej chwili możesz to wszystko dostać albo skasować.</p>
         <div class="legal__stamp">
           <span>Obowiązuje od <b>10 września 2026</b></span>
-          <span>Ostatnia aktualizacja <b>10 września 2026</b></span>
-          <span>Wersja <b>1.0</b></span>
+          <span>Ostatnia aktualizacja <b>13 września 2026</b></span>
+          <span>Wersja <b>1.1</b></span>
         </div>
       </div>
     </section>
@@ -218,7 +218,7 @@
             </ul>
 
             <h3>Logi serwera</h3>
-            <p>Serwer, na którym stoi strona, zapisuje automatycznie standardowe logi: adres IP, adres odwiedzonej podstrony, datę, godzinę oraz typ przeglądarki i systemu. Dzieje się to niezależnie od formularza, po stronie hostingu, i służy wyłącznie bezpieczeństwu oraz diagnostyce awarii.</p>
+            <p>Strona stoi na hostingu Netlify, którego serwery zapisują automatycznie standardowe logi: adres IP, adres odwiedzonej podstrony, datę, godzinę oraz typ przeglądarki i systemu. Dzieje się to niezależnie od formularza, po stronie hostingu, i służy wyłącznie bezpieczeństwu oraz diagnostyce awarii. Sam tych logów nie pobieram ani nie przechowuję.</p>
 
             <div class="legal__note">
               <b>Czego nie zbieram</b>
@@ -268,7 +268,7 @@
                   <tr>
                     <td>Bezpieczeństwo serwisu, logi, obrona przed nadużyciami</td>
                     <td>art. 6 ust. 1 lit. f RODO</td>
-                    <td>zgodnie z konfiguracją hostingu, nie dłużej niż 12 miesięcy</td>
+                    <td>przez okres ustalony przez hosting (Netlify); u siebie tych logów nie przechowuję</td>
                   </tr>
                 </tbody>
               </table>
@@ -294,7 +294,7 @@
                   <tr><th scope="col">Podmiot</th><th scope="col">Po co</th><th scope="col">Gdzie</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>OVH Sp. z o.o.</td><td>hosting strony, logi serwera</td><td>Polska (EOG)</td></tr>
+                  <tr><td>Netlify, Inc.</td><td>hosting strony, logi serwera</td><td>USA (serwery sieci CDN na całym świecie)</td></tr>
                   <tr><td>Formspree, Inc.</td><td>obsługa wysyłki formularza kontaktowego</td><td>USA</td></tr>
                   <tr><td>Google Ireland Ltd. / Google LLC</td><td>poczta Gmail, na której trzymam korespondencję; Google Fonts, które przeglądarka pobiera przy otwarciu strony</td><td>Irlandia (EOG) i USA</td></tr>
                   <tr><td>Cloudflare, Inc. (cdnjs)</td><td>biblioteka PDF.js na podstronie „Co dostajesz” – bez niej podglądy plików PDF nie wyświetlą się</td><td>USA</td></tr>
@@ -313,13 +313,14 @@
 
           <section id="eog">
             <h2><span>Przekazywanie danych poza EOG</span></h2>
-            <p>Trzy z wymienionych wyżej usług mają siedzibę w Stanach Zjednoczonych, więc część danych trafia poza Europejski Obszar Gospodarczy. Piszę o tym wprost, bo to realna różnica w poziomie ochrony, a nie formalność.</p>
+            <p>Cztery z wymienionych wyżej usług mają siedzibę w Stanach Zjednoczonych, więc część danych trafia poza Europejski Obszar Gospodarczy. Piszę o tym wprost, bo to realna różnica w poziomie ochrony, a nie formalność.</p>
             <ul>
+              <li><b>Netlify, Inc.</b> – adres IP i dane techniczne każdego żądania, czyli to, co trafia do logów serwera przy otwarciu dowolnej podstrony. Netlify uczestniczy w programie Data Privacy Framework i stosuje standardowe klauzule umowne zatwierdzone przez Komisję Europejską.</li>
               <li><b>Formspree, Inc.</b> – treść formularza i dane techniczne wysyłki. Transfer opiera się na standardowych klauzulach umownych zatwierdzonych przez Komisję Europejską. Usługa ma certyfikat bezpieczeństwa SOC 2 Type 2.</li>
               <li><b>Google LLC</b> – korespondencja na skrzynce Gmail oraz adres IP przeglądarki pobierającej kroje pisma z Google Fonts. Google uczestniczy w programie Data Privacy Framework i stosuje standardowe klauzule umowne.</li>
               <li><b>Cloudflare, Inc.</b> – adres IP przeglądarki pobierającej bibliotekę PDF.js z sieci cdnjs, wyłącznie na podstronie „Co dostajesz”. Podstawa transferu jak wyżej.</li>
             </ul>
-            <p>Mimo tych zabezpieczeń poziom ochrony w państwie trzecim może być niższy niż w Unii, a organy tamtejszego państwa mogą mieć szersze uprawnienia dostępu. Jeśli Ci to nie odpowiada, masz prostą alternatywę: napisz do mnie zwykłego e-maila zamiast korzystać z formularza, a strony „Co dostajesz” nie otwieraj – reszta serwisu nie łączy się z niczym poza Google Fonts.</p>
+            <p>Mimo tych zabezpieczeń poziom ochrony w państwie trzecim może być niższy niż w Unii, a organy tamtejszego państwa mogą mieć szersze uprawnienia dostępu. Jeśli Ci to nie odpowiada, masz prostą alternatywę: napisz do mnie zwykłego e-maila zamiast korzystać z formularza, a strony „Co dostajesz” nie otwieraj – reszta serwisu łączy się tylko z hostingiem i z Google Fonts. Hostingu ominąć się nie da, bo bez niego strona w ogóle się nie wyświetli, ale trafiają do niego wyłącznie dane techniczne żądania, nigdy treść formularza.</p>
           </section>
 
           <section id="usuwanie">
