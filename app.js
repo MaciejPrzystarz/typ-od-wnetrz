@@ -328,6 +328,11 @@
      ===================================================================== */
   const P = window.PRICING;
   const state = { area: 60, type: 8, rush: false };
+  // Etykieta „Wycena z kalkulatora" w formularzu kontaktowym. Prawdziwą
+  // funkcję podstawia blok kontaktu na dole pliku; do tego czasu - i na
+  // stronach bez formularza - zostaje pusta zaślepka, żeby render() mógł ją
+  // wołać bez sprawdzania, czy już istnieje.
+  let syncEstimate = () => {};
 
   const areaInput = $("#area");
   const areaRange = $("#areaRange");
@@ -352,12 +357,27 @@
     const disc = P.discounts.find((d) => a >= d.min);
     const afterDisc = disc ? base * (1 - disc.rate) : base;
     const rushAdd = state.rush ? afterDisc * P.rushSurcharge : 0;
-    const total = afterDisc + rushAdd;
+    // W GÓRĘ do pełnej złotówki, nie do najbliższej. Rabat 30% i dopłata 15%
+    // potrafią trafić dokładnie w połówkę (225 m² x 205 zł x 0,7 = 32 287,5),
+    // a mnożenie zmiennoprzecinkowe raz podaje 32 287,499..., raz 32 287,5 -
+    // przy zaokrąglaniu do najbliższej ta sama wycena wychodziła więc raz w
+    // dół, raz w górę. Sufit daje jeden wynik zawsze i nigdy nie pokazuje
+    // kwoty niższej niż faktyczna. Grosze i tak nie mają tu sensu - to
+    // wycena orientacyjna, a nie faktura.
+    // Grosze zbijamy PRZED sufitem: samo Math.ceil na wyniku mnożenia potrafi
+    // podnieść czystą kwotę o złotówkę, bo 14 500 x 0,9 bywa w double
+    // 13 050,000000000002. Najpierw do groszy, dopiero potem w górę.
+    const total = Math.ceil(Math.round((afterDisc + rushAdd) * 100) / 100);
     return { a, per, base, disc, afterDisc, rushAdd, total };
   }
 
   function render() {
     typeName.innerHTML = `Typ ${state.type} – <b>${activeType().name}</b>`;
+    // Etykieta wyceny w formularzu jedzie razem z kalkulatorem. Bez tego
+    // zaznaczenie „dołącz wycenę", a potem ruch suwakiem, zostawiało w niej
+    // STARĄ kwotę - i dokładnie ta kwota szła w mailu (patrz niżej: treść
+    // zgłoszenia bierze textContent tej etykiety).
+    syncEstimate();
     if (state.area < P.minArea) {
       outMain.classList.add("is-hidden");
       outSmall.classList.remove("is-hidden");
@@ -721,7 +741,7 @@
     const attachCb = $("#f-estimate");
 
     // keep contact estimate label in sync with calculator
-    const syncEstimate = () => {
+    syncEstimate = () => {
       if (state.area >= P.minArea) {
         estimateVal.textContent = `${PLN(compute().total)} zł · Typ ${state.type}, ${state.area} m²${state.rush ? ", tryb przyspieszony" : ""}`;
       } else {
