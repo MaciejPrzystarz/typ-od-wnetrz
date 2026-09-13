@@ -1190,28 +1190,28 @@ html { scroll-padding-top: 84px; }
      nagłówkiem i akapitem naraz, więc ich wzajemne proporcje zostają
      takie, jak zaprojektowane. 1 = stopnie sprzed powiększenia. */
   .hero__inner {
-    --hero-txt: 0.8;
+    --hero-txt: 0.96;
     /* Bliżej lewej krawędzi niż wspólny gutter strony (16 -> 12 px): kolumna
        tekstu jest tu wąska, więc ma się trzymać brzegu kadru. */
     padding-inline: 12px;
     padding-top: clamp(84px, 16vh, 128px); padding-bottom: clamp(28px, 4.5vh, 56px);
   }
 
-  /* Napisy zeszły dokładnie o połowę względem poprzedniej wersji: mnożnik
-     1,6 -> 0,8. Na ekranie 390 px nagłówek ma ~12,9 px zamiast ~25,8,
-     akapit ~10,5 zamiast ~21, mikro-etykieta ~8,4 zamiast ~16,8. Kadr
-     filmu zostaje przez to prawie nietknięty - o to w tym bloku chodzi. */
+  /* Napisy są małe z wyboru, żeby kadr filmu został prawie nietknięty.
+     Mnożnik szedł 1,6 -> 0,8 (o połowę), potem 0,8 -> 0,96 (+20%). Na
+     ekranie 390 px nagłówek ma ~15,5 px, akapit ~12,6, mikro-etykieta ~10,1. */
   /* Sufit 1,1x na mikro-etykiecie pilnuje jej tylko przy wyższych mnożnikach:
      „Studio projektowe · Wrocław & online" to 36 wersalików i powyżej tego
      stopnia nie mieści się w jednym wierszu na 360-390 px, a złamane na dwa
-     czyta się gorzej niż mniejsze. Przy 0,8 sufit nic nie robi. */
+     czyta się gorzej niż mniejsze. Przy 0,96 sufit nic nie robi. */
   .hero__kicker { font-size: calc(0.66rem * min(var(--hero-txt), 1.1)); letter-spacing: 0.06em; opacity: 0.8; }
 
   /* max-width w `ch` kurczy się razem z pismem, więc limit musi iść odwrotnie
      do mnożnika, żeby SZEROKOŚĆ kolumny w pikselach została ta sama:
-     17ch przy 1x, ~26ch przy 1,6x, 52ch przy 0,8x. Dzięki temu podział
-     wiersza zaprojektowany w HTML (<br /> po „Dom bez stresu") zostaje
-     nienaruszony, a limit nigdy nie łamie drugiej linii od siebie. */
+     17ch przy 1x, ~26ch przy 1,6x. Przy małych mnożnikach (0,8–0,96) stoi
+     luźne 52ch - nagłówek jest wtedy tak mały, że limitu i tak nie sięga,
+     więc podział wiersza zaprojektowany w HTML (<br /> po „Dom bez stresu")
+     zostaje nienaruszony, a limit nigdy nie łamie drugiej linii od siebie. */
   .hero h1 { font-size: calc(clamp(1.07rem, 4.13vw, 1.53rem) * var(--hero-txt)); font-weight: 400; line-height: 1.16; margin-top: 0.5em; max-width: 52ch; }
 
   /* twarde łamanie wiersza z desktopu psuje akapit na wąskim ekranie */
