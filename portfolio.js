@@ -414,15 +414,15 @@
     }
   });
 
-  /* ---------------- Liczby w nagłówku podstrony ---------------- */
+  /* ---------------- Liczby w nagłówku podstrony ----------------
+     Została jedna liczba: ile zdjęć leży w galerii. Licznik kategorii stąd
+     zniknął - pasek chipów tuż pod spodem i tak wymienia je wszystkie z
+     nazwy, więc „7 kategorii wnętrz" nic do strony nie wnosiło. */
   const stats = $("#pgStats");
   if (stats && gallery.length) {
     const shots = gallery.reduce((n, s) => n + s.photos.length, 0);
-    const tiles = [
-      [shots, plural(shots, "zdjęcie w galerii", "zdjęcia w galerii", "zdjęć w galerii")],
-      [gallery.length, plural(gallery.length, "kategoria wnętrz", "kategorie wnętrz", "kategorii wnętrz")],
-    ];
-    stats.innerHTML = tiles.map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join("");
+    const label = plural(shots, "zdjęcie w galerii", "zdjęcia w galerii", "zdjęć w galerii");
+    stats.innerHTML = `<div><b>${shots}</b><span>${label}</span></div>`;
   }
 
   /* ---------------- Wejście z linku #slug ----------------
