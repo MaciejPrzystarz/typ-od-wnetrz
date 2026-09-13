@@ -27,7 +27,7 @@
   <!-- WSZYSTKIE ścieżki na tej stronie są bezwzględne (od /), bo serwer poda ją
        pod dowolnym adresem - np. /kuchnie/cos-tam. Przy ścieżkach względnych
        arkusz stylów szukałby się w /kuchnie/styles.css i strona byłaby goła. -->
-  <link rel="stylesheet" href="/styles.css?v=95" />
+  <link rel="stylesheet" href="/styles.css?v=97" />
 </head>
 <body class="page-sub">
 
@@ -72,7 +72,7 @@
   </header>
 
   <!-- mobile overlay -->
-  <div class="mobile" id="mobileMenu" aria-hidden="true">
+  <div class="mobile" id="mobileMenu" aria-hidden="true" inert>
     <nav class="mobile__nav" aria-label="Menu mobilne">
       <a href="/#o-mnie" style="--i:0"><span>01</span> O mnie</a>
       <a href="/portfolio.html" style="--i:1"><span>02</span> Projekty</a>
@@ -174,6 +174,7 @@
         burger.setAttribute("aria-expanded", String(open));
         burger.setAttribute("aria-label", open ? "Zamknij menu" : "Otwórz menu");
         menu.setAttribute("aria-hidden", String(!open));
+        menu.toggleAttribute("inert", !open);
       };
       burger.addEventListener("click", function () {
         setMenu(!document.body.classList.contains("menu-open"));

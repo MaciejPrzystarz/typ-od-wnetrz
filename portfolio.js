@@ -28,6 +28,9 @@
     burger?.setAttribute("aria-expanded", String(open));
     burger?.setAttribute("aria-label", open ? "Zamknij menu" : "Otwórz menu");
     mobileMenu?.setAttribute("aria-hidden", String(!open));
+    // Zamknięte menu jest schowane tylko clip-pathem - bez inert Tab na
+    // desktopie wchodziłby w jego niewidoczne linki.
+    mobileMenu?.toggleAttribute("inert", !open);
   };
   const closeMenu = () => setMenu(false);
   burger?.addEventListener("click", () => setMenu(!isMenuOpen()));
