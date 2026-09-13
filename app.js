@@ -189,9 +189,19 @@
         || null;
   }
 
+  // Wybór z window.HOME_CATEGORY_PHOTOS (data/projects.js), a luki
+  // dopełnia kolejność galerii - żeby zawsze było 8 kafli.
+  function pickPhotos(sec) {
+    const all = sec.photos || [];
+    const wanted = (window.HOME_CATEGORY_PHOTOS || {})[sec.slug] || [];
+    const picked = wanted.map((f) => all.find((ph) => ph.f === f)).filter(Boolean);
+    const rest = all.filter((ph) => !picked.includes(ph));
+    return picked.concat(rest).slice(0, CAT_TILES);
+  }
+
   function categoryTiles(cat) {
     const sec = galleryOf(cat);
-    const photos = sec ? (sec.photos || []).slice(0, CAT_TILES) : [];
+    const photos = sec ? pickPhotos(sec) : [];
     if (!photos.length) return "";
     return photos.map((ph, i) => {
       const alt = `${sec.alt} – kadr ${i + 1}`;

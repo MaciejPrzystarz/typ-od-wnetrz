@@ -78,7 +78,7 @@ window.PROJECTS = [
   {
     slug: "pokoj-dzieciecy-z-antresola",
     catSlug: "pokoje-dzieciece",
-    title: "Pokój dziecięcy z antresolą",
+    title: "Pokój dziecięcy z łóżkiem piętrowym",
     category: "Pokoje dziecięce",
     location: "",
     year: "",
@@ -99,6 +99,24 @@ window.PROJECTS = [
   },
 ];
 
+/**
+ * Ręczny wybór 8 kadrów na stronie głównej po kliknięciu kategorii,
+ * klucz = slug z data/gallery.js, wartości = nazwy plików (.webp) w kolejności
+ * na ekranie. Kategoria, której tu nie ma, bierze pierwsze 8 z galerii.
+ * Plik, którego nie ma w galerii, jest pomijany, a brakujące miejsca
+ * dopełniają kolejne zdjęcia z galerii.
+ */
+window.HOME_CATEGORY_PHOTOS = {
+  lazienki: ["1.webp", "2.webp", "3.webp", "4.webp", "5.webp", "6.webp", "1.1.webp", "8.webp"],
+  sypialnie: ["16.webp", "Syp_2.webp", "18.webp", "44.webp", "38.webp", "Syp._1.webp", "22.webp", "37.webp"],
+  salony: ["1.webp", "2.webp", "3.webp", "4.webp", "23.webp", "25.webp", "7.webp", "8.webp"],
+  gabinety: ["Pok_p.Kasi_4.webp", "Pok_p.Kasi_1.webp", "35.webp", "26.webp", "29(1).webp", "23.webp", "30(1).webp", "33.webp"],
+  // Wszystkie osiem wypisane, choć sześć z nich to i tak początek galerii:
+  // gdyby lista była krótsza, luki dopełniłyby kolejne kadry z gallery.js -
+  // czyli dokładnie 1.webp i 5.webp, te wyrzucone.
+  komunikacja: ["30.webp", "3.webp", "28.webp", "6.webp", "8.webp", "14.webp", "15.webp", "16.webp"],
+};
+
 window.PROJECT_CATEGORIES = [
   "Wszystkie",
   "Kuchnie",
@@ -106,5 +124,6 @@ window.PROJECT_CATEGORIES = [
   "Salony",
   "Sypialnie",
   "Pokoje dziecięce",
+  "Gabinety",
   "Komunikacja / Hole",
 ];
