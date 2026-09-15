@@ -15,8 +15,8 @@
       d.setAttribute("data-theme", "light");
     })();
   </script>
-  <title>Projektant Wnętrz Wrocław | Typ od Wnętrz – Projekty Online i Stacjonarne</title>
-  <meta name="description" content="Szukasz projektanta wnętrz we Wrocławiu lub online? Tworzę projekty mieszkań i domów z jasnym harmonogramem, wizualizacjami 3D, listą zakupów i dokumentacją techniczną." />
+  <title>Projektant wnętrz Wrocław i online | Typ od Wnętrz</title>
+  <meta name="description" content="Architekt wnętrz – Wrocław i online. Projekty mieszkań i domów w całej Polsce: układy funkcjonalne, wizualizacje 3D, lista zakupów i dokumentacja techniczna." />
   <meta name="theme-color" content="#000000" />
   <!-- Podwójne zabezpieczenie przed „Auto Dark Mode" w Chrome na Androidzie:
        tu, żeby zadziałało zanim wczyta się styles.css (bez mignięcia), i raz
@@ -37,22 +37,70 @@
   <meta property="og:image:alt" content="Jasny salon z drewnianą podłogą w jodełkę i dużym przeszkleniem" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <!-- schema.org – usługa / profesjonalista -->
+  <!-- schema.org – firma, właściciel i serwis. Stałe dane stoją tutaj;
+       usługi (8 typów z cenami) i FAQPage dokłada app.js z window.OFFER_TYPES
+       i window.FAQ, żeby ceny i pytania nie istniały w dwóch miejscach.
+       Adres świadomie bez ulicy (tylko miejscowość), bez telefonu i bez godzin.
+       priceRange to jedyna cena wpisana ręcznie – zmieniając skrajne stawki
+       w data/offer.js, popraw ją też tutaj. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "Typ od Wnętrz",
-    "description": "Projektowanie wnętrz, wizualizacje 3D, projekty online i stacjonarne.",
-    "areaServed": "Polska",
-    "url": "https://typodwnetrz.pl",
-    "sameAs": [
-      "https://www.instagram.com/typ_od_wnetrz/",
-      "https://www.tiktok.com/@mateusz_przystarz"
-    ],
-    "address": { "@type": "PostalAddress", "addressLocality": "Wrocław", "addressCountry": "PL" },
-    "priceRange": "50–240 zł / m²",
-    "knowsAbout": ["projektowanie wnętrz", "wizualizacje 3D", "projekt kuchni", "projekt łazienki", "projekt salonu", "projekt sypialni", "projekt pokoju dziecięcego", "projekt gabinetu", "projekt holu"]
+    "@graph": [
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://typodwnetrz.pl/#firma",
+        "name": "Typ od Wnętrz",
+        "legalName": "Mateusz Przystarz Wnętrza",
+        "description": "Pracownia architekta wnętrz: projekty mieszkań i domów online w całej Polsce, spotkania i inwentaryzacja we Wrocławiu i okolicach, także projekty zagraniczne.",
+        "url": "https://typodwnetrz.pl/",
+        "logo": "https://typodwnetrz.pl/apple-touch-icon.png",
+        "image": "https://typodwnetrz.pl/og-image.jpg",
+        "email": "typodwnetrz@gmail.com",
+        "taxID": "9151832022",
+        "identifier": { "@type": "PropertyValue", "propertyID": "REGON", "value": "529897354" },
+        "address": { "@type": "PostalAddress", "addressLocality": "Wrocław", "addressRegion": "dolnośląskie", "addressCountry": "PL" },
+        "areaServed": [
+          { "@type": "City", "name": "Wrocław" },
+          { "@type": "Country", "name": "Polska" }
+        ],
+        "founder": { "@id": "https://typodwnetrz.pl/#mateusz-przystarz" },
+        "employee": { "@id": "https://typodwnetrz.pl/#mateusz-przystarz" },
+        "sameAs": [
+          "https://www.instagram.com/typ_od_wnetrz/",
+          "https://www.tiktok.com/@mateusz_przystarz"
+        ],
+        "priceRange": "50–240 zł / m²",
+        "knowsAbout": ["projektowanie wnętrz", "wizualizacje 3D", "projekt kuchni", "projekt łazienki", "projekt salonu", "projekt sypialni", "projekt pokoju dziecięcego", "projekt gabinetu", "projekt holu"]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://typodwnetrz.pl/#mateusz-przystarz",
+        "name": "Mateusz Przystarz",
+        "jobTitle": "Architekt wnętrz",
+        "image": "https://typodwnetrz.pl/images/about-me.webp",
+        "url": "https://typodwnetrz.pl/#o-mnie",
+        "worksFor": { "@id": "https://typodwnetrz.pl/#firma" },
+        "alumniOf": [
+          { "@type": "CollegeOrUniversity", "name": "Politechnika Wrocławska", "sameAs": "https://pwr.edu.pl/" },
+          { "@type": "CollegeOrUniversity", "name": "Akademia Sztuk Pięknych im. Eugeniusza Gepperta we Wrocławiu", "sameAs": "https://www.asp.wroc.pl/" }
+        ],
+        "hasCredential": [
+          { "@type": "EducationalOccupationalCredential", "credentialCategory": "degree", "name": "Inżynier, kierunek Architektura", "recognizedBy": { "@type": "CollegeOrUniversity", "name": "Politechnika Wrocławska" } },
+          { "@type": "EducationalOccupationalCredential", "credentialCategory": "degree", "name": "Magister, Architektura Wnętrz", "recognizedBy": { "@type": "CollegeOrUniversity", "name": "Akademia Sztuk Pięknych im. Eugeniusza Gepperta we Wrocławiu" } }
+        ],
+        "award": "Laureat międzynarodowego konkursu Roca One Day Design Challenge",
+        "sameAs": ["https://www.tiktok.com/@mateusz_przystarz"]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://typodwnetrz.pl/#serwis",
+        "name": "Typ od Wnętrz",
+        "url": "https://typodwnetrz.pl/",
+        "inLanguage": "pl-PL",
+        "publisher": { "@id": "https://typodwnetrz.pl/#firma" }
+      }
+    ]
   }
   </script>
 
@@ -65,7 +113,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=98" />
+  <link rel="stylesheet" href="styles.css?v=100" />
 </head>
 <body>
 
@@ -77,10 +125,10 @@
         <span class="logo__txt">Typ od Wnętrz<small>Studio projektowe</small></span>
       </a>
       <nav class="nav" aria-label="Główna nawigacja">
-        <a href="#o-mnie">O mnie</a>
-        <a href="#projekty">Projekty</a>
-        <a href="#oferta">Oferta</a>
+        <a href="portfolio.html">Projekty</a>
         <a href="przykladowy-projekt.html">Co dostajesz</a>
+        <a href="#o-mnie">O mnie</a>
+        <a href="#oferta">Oferta</a>
         <a href="#wycena">Wycena</a>
         <a href="#proces">Proces</a>
         <a href="#faq">FAQ</a>
@@ -112,10 +160,10 @@
   <!-- mobile overlay -->
   <div class="mobile" id="mobileMenu" aria-hidden="true" inert>
     <nav class="mobile__nav" aria-label="Menu mobilne">
-      <a href="#o-mnie" style="--i:0"><span>01</span> O mnie</a>
-      <a href="#projekty" style="--i:1"><span>02</span> Projekty</a>
-      <a href="#oferta" style="--i:2"><span>03</span> Oferta</a>
-      <a href="przykladowy-projekt.html" style="--i:3"><span>04</span> Co dostajesz</a>
+      <a href="portfolio.html" style="--i:0"><span>01</span> Projekty</a>
+      <a href="przykladowy-projekt.html" style="--i:1"><span>02</span> Co dostajesz</a>
+      <a href="#o-mnie" style="--i:2"><span>03</span> O mnie</a>
+      <a href="#oferta" style="--i:3"><span>04</span> Oferta</a>
       <a href="#wycena" style="--i:4"><span>05</span> Wycena</a>
       <a href="#proces" style="--i:5"><span>06</span> Proces</a>
       <a href="#faq" style="--i:6"><span>07</span> FAQ</a>
@@ -185,7 +233,7 @@
         </script>
       </div>
       <div class="hero__inner wrap">
-        <span class="kicker hero__kicker" data-anim style="--d:0.1">Studio projektowe · Wrocław &amp; online</span>
+        <span class="kicker hero__kicker" data-anim style="--d:0.1">Architekt wnętrz · Wrocław &amp; online</span>
         <h1 class="display" data-anim style="--d:0.2">
           Dom bez stresu<br />
           <span class="indent">zaczyna się od<em> Typa</em></span>
@@ -220,12 +268,12 @@
       <div class="wrap">
         <div class="about">
           <div class="about__media" data-reveal>
-            <img src="images/about-me.webp" width="1200" height="1500" loading="lazy" decoding="async" alt="Portret projektanta wnętrz – Typ od Wnętrz" />
+            <img src="images/about-me.webp" width="1200" height="1500" loading="lazy" decoding="async" alt="Mateusz Przystarz, architekt wnętrz – Typ od Wnętrz" />
           </div>
           <div class="about__body" data-reveal data-reveal-stagger>
             <span class="kicker">O&nbsp;mnie</span>
             <h2 class="display">Architekt z&nbsp;dyplomem</h2>
-            <p class="lead">Jestem absolwentem studiów inżynierskich na kierunku Architektura na Politechnice Wrocławskiej oraz magisterskich na Wydziale Architektury Wnętrz wrocławskiej ASP.</p>
+            <p class="lead">Nazywam się Mateusz Przystarz i&nbsp;jestem architektem wnętrz – absolwentem studiów inżynierskich na kierunku Architektura na Politechnice Wrocławskiej oraz magisterskich na Wydziale Architektury Wnętrz wrocławskiej ASP.</p>
             <p class="about__txt">Posiadam wieloletnie doświadczenie w&nbsp;projektowaniu wnętrz oraz wcześniejszą praktykę przy projektach czysto architektonicznych od strony technicznej. Jestem laureatem międzynarodowego konkursu Roca One Day Design Challenge.</p>
             <p class="about__txt">Choć w&nbsp;przeszłości pracowałem w&nbsp;różnych biurach projektowych, to niezależna praca z&nbsp;klientem daje mi największą satysfakcję i&nbsp;motywację do działania. Z&nbsp;natury jestem ekstrawertykiem – otwartym na ludzi i&nbsp;ich potrzeby, co pozwala mi łatwo budować relacje oraz tworzyć projekty idealnie dopasowane do indywidualnego stylu życia użytkownika.</p>
             <p class="about__txt">W&nbsp;projektowaniu stawiam na równowagę między estetyką a&nbsp;funkcjonalnością, ergonomią i&nbsp;wygodą, a&nbsp;moim ulubionym narzędziem kreowania atmosfery jest praca ze światłem.</p>
@@ -546,7 +594,7 @@
         </div>
         <div class="foot__col">
           <h5>Nawigacja</h5>
-          <a href="#projekty">Projekty</a>
+          <a href="portfolio.html">Projekty</a>
           <a href="przykladowy-projekt.html">Co dostajesz</a>
           <a href="#oferta">Oferta</a>
           <a href="#wycena">Wycena</a>
@@ -581,6 +629,6 @@
   <!-- lista przykładowych PDF-ów: app.js sprawdza ją, żeby wiedzieć, czy
        pokazać odnośnik do podstrony przykladowy-projekt.html -->
   <script src="data/samples.js?v=8"></script>
-  <script src="app.js?v=38"></script>
+  <script src="app.js?v=39"></script>
 </body>
 </html>

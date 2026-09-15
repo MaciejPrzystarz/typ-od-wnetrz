@@ -80,6 +80,13 @@
   // Pok_p.Kasi_4.webp). W adresie muszą być zakodowane, inaczej serwer dostaje
   // inną ścieżkę, niż widać w danych.
   const enc = (f) => encodeURIComponent(f);
+  // #slug z adresu. decodeURIComponent rzuca URIError na uszkodzonym
+  // kodowaniu (np. #zle%E0 z uciętego linku) - a że czytamy go przed
+  // wyrenderowaniem sekcji, taki adres dawał całkiem pustą stronę.
+  const hashSlug = () => {
+    try { return decodeURIComponent(window.location.hash || "").slice(1); }
+    catch (e) { return ""; }
+  };
 
   /* Polska odmiana przez przypadki: 1 zdjęcie / 2-4 zdjęcia / 5+ zdjęć.
      Bez tego przycisk mówiłby „Pokaż wszystkie 22 zdjęć". */
@@ -100,6 +107,16 @@
   const PREVIEW = 12;
 
   /**
+   * Kategoria, którą zobaczy wchodzący: z #slug w adresie (tak prowadzą kafle
+   * ze strony głównej), inaczej pierwsza. Tylko ona dostaje trzy kadry
+   * "eager" (pierwszy z fetchpriority="high" - to kandydat na LCP). Wcześniej
+   * dostawały je zawsze Kuchnie, więc wejście z #lazienki pobierało trzy
+   * niewidoczne zdjęcia kuchni, a widoczne łazienki czekały jako "lazy".
+   */
+  const startSlug = hashSlug();
+  const startIdx = Math.max(0, gallery.findIndex((s) => s.slug === startSlug));
+
+  /**
    * Kadr. Wymiary idą do atrybutów width/height - przeglądarka zna kształt
    * zdjęcia zanim je pobierze, więc rezerwuje na nie miejsce i nic nie skacze
    * przy doczytywaniu (żadnego mierzenia przez new Image(), jak w poprzedniej
@@ -116,7 +133,7 @@
         <button type="button" class="pfp__open" data-sec="${secIdx}" data-i="${i}"
                 aria-label="Powiększ: ${esc(alt)}">
           <img src="${esc(sec.dir)}/${esc(enc(p.f))}" width="${p.w}" height="${p.h}"
-               loading="${eager ? "eager" : "lazy"}" decoding="async"
+               loading="${eager ? "eager" : "lazy"}" decoding="async"${eager && i === 0 ? ` fetchpriority="high"` : ""}
                alt="${esc(alt)}" />
         </button>
       </figure>`;
@@ -138,7 +155,7 @@
           </dl>
         </header>
         <div class="pfp__gallery" id="${galId}" data-reveal>
-          ${sec.photos.map((p, i) => shotHTML(sec, p, i, idx === 0 && i < 3, idx)).join("")}
+          ${sec.photos.map((p, i) => shotHTML(sec, p, i, idx === startIdx && i < 3, idx)).join("")}
         </div>
         ${rest > 0 ? `
         <div class="pfp__more">
@@ -151,6 +168,36 @@
           <span class="pfp__more-note" data-collapsed="Widocznych ${PREVIEW} z ${n}" data-open="Widocznych wszystkie ${n}">Widocznych ${PREVIEW} z ${n}</span>
         </div>` : ""}
       </section>`;
+  }
+
+  /* Dane strukturalne: ImageGallery z jednym kadrem na kategorię (okładka,
+     czyli pierwsze zdjęcie z gallery.js). Wszystkie 395 tylko spuchłyby
+     stronę - a z pliku generowanego, bo tylko on wie, co leży na serwerze. */
+  if (gallery.length) {
+    const site = "https://typodwnetrz.pl/";
+    const ld = document.createElement("script");
+    ld.type = "application/ld+json";
+    ld.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "@id": `${site}portfolio.html#galeria`,
+      url: `${site}portfolio.html`,
+      name: "Portfolio projektów wnętrz – Typ od Wnętrz",
+      inLanguage: "pl-PL",
+      isPartOf: { "@id": `${site}#serwis` },
+      image: gallery.filter((s) => s.photos.length).map((s) => ({
+        "@type": "ImageObject",
+        contentUrl: `${site}${s.dir}/${enc(s.photos[0].f)}`,
+        width: s.photos[0].w,
+        height: s.photos[0].h,
+        name: s.cat,
+        caption: s.alt,
+        creator: { "@type": "Person", "@id": `${site}#mateusz-przystarz`, name: "Mateusz Przystarz" },
+        creditText: "Typ od Wnętrz",
+        copyrightNotice: "© Mateusz Przystarz Wnętrza",
+      })),
+    });
+    document.head.appendChild(ld);
   }
 
   if (list && gallery.length) {
@@ -276,7 +323,7 @@
     // Wejście: kategoria z adresu (#lazienki - tak prowadzą kafle ze strony
     // głównej), a bez adresu pierwsza z brzegu. Adresu przy starcie NIE
     // dopisujemy - wejście na czyste portfolio.html ma zostać czyste.
-    const start = decodeURIComponent(window.location.hash || "").slice(1);
+    const start = hashSlug();
     showCat(slugIndex(start) >= 0 ? start : gallery[0].slug, { url: false });
   }
 
@@ -431,7 +478,7 @@
      powtarzamy po `load` i chwilę później, bo fonty ustalają ostateczne
      wysokości dopiero po pierwszym renderze - ale tylko dopóki użytkownik
      sam nie ruszy stroną, żeby mu jej nie wyrywać spod palca. */
-  const hash = decodeURIComponent(window.location.hash || "").slice(1);
+  const hash = hashSlug();
   const target = hash ? document.getElementById(hash) : null;
   if (target) {
     let userMoved = false;

@@ -724,6 +724,55 @@
   }
 
   /* =======================================================================
+     DANE STRUKTURALNE - usługi i FAQ
+     Firma i właściciel stoją statycznie w <head> index.html. Tu dokładamy
+     osiem typów projektu (Service z ceną za m²) i FAQPage - z tych samych
+     tablic, z których renderują się sekcje, więc pytania w schemie zawsze
+     zgadzają się 1:1 z widocznymi, a ceny nie są wpisane drugi raz.
+     Google czyta JSON-LD dołożony skryptem.
+     ===================================================================== */
+  const ldText = (s) => String(s).replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+  const ldGraph = [];
+  offer.forEach((t) => ldGraph.push({
+    "@type": "Service",
+    "@id": `https://typodwnetrz.pl/#typ-${t.n}`,
+    name: `Projekt wnętrza – Typ ${t.n}: ${ldText(t.name).replace(/^\+\s*/, "")}`,
+    serviceType: "Projektowanie wnętrz",
+    description: ldText(t.scope),
+    url: "https://typodwnetrz.pl/#oferta",
+    provider: { "@id": "https://typodwnetrz.pl/#firma" },
+    areaServed: [{ "@type": "City", name: "Wrocław" }, { "@type": "Country", name: "Polska" }],
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "PLN",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: t.price,
+        priceCurrency: "PLN",
+        unitCode: "MTK",
+        unitText: "m²",
+      },
+    },
+  }));
+  if (window.FAQ && window.FAQ.length) {
+    ldGraph.push({
+      "@type": "FAQPage",
+      "@id": "https://typodwnetrz.pl/#faq",
+      mainEntity: window.FAQ.map((f) => ({
+        "@type": "Question",
+        name: ldText(f.q),
+        acceptedAnswer: { "@type": "Answer", text: ldText(f.a) },
+      })),
+    });
+  }
+  if (ldGraph.length) {
+    const ld = document.createElement("script");
+    ld.type = "application/ld+json";
+    ld.textContent = JSON.stringify({ "@context": "https://schema.org", "@graph": ldGraph });
+    document.head.appendChild(ld);
+  }
+
+  /* =======================================================================
      KONTAKT - formularz + dołączenie wyceny z kalkulatora
      ===================================================================== */
   const form = $("#contactForm");
