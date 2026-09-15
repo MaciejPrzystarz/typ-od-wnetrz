@@ -76,7 +76,10 @@
   // Na telefonie paralaksa jest wyłączona: pionowy kadr i tak wypełnia ekran
   // (CSS ustawia tam height:100% zamiast 116%), a przesuwanie wideo przy
   // chowającym się pasku adresu kosztuje tylko płynność przewijania.
-  const noParallax = window.matchMedia("(max-width: 820px), (pointer: coarse)");
+  // Wyłączona też przy „ogranicz ruch" w systemie: tło jadące innym tempem
+  // niż strona to właśnie ten ruch, który potrafi przeszkadzać. Samo wideo
+  // gra dalej - patrz niżej.
+  const noParallax = window.matchMedia("(max-width: 820px), (pointer: coarse), (prefers-reduced-motion: reduce)");
   let ticking = false;
   const parallax = () => {
     ticking = false;
@@ -91,9 +94,14 @@
   /* ---------------- Hero video loop ---------------- */
   const heroVideo = $(".hero__video");
   if (heroVideo) {
-    const rm = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // Wideo gra ZAWSZE, także przy „ogranicz ruch" (prefers-reduced-motion).
+    // Wcześniej stawało wtedy na pierwszej klatce - a tę opcję ma włączoną
+    // sporo osób na Windowsie, często nieświadomie („Efekty animacji" wyłączone
+    // albo tryb najlepszej wydajności), i hero wyglądało im na zepsute.
+    // Film to spokojne ujęcie wnętrza bez cięć; przy tej opcji odpada tylko
+    // paralaksa (noParallax wyżej). Decyzja właściciela.
     // Autoplay can still be blocked (iOS low-power, data saver) - retry on first interaction.
-    const play = () => { if (!rm.matches) heroVideo.play().catch(() => {}); };
+    const play = () => { heroVideo.play().catch(() => {}); };
     play();
     ["pointerdown", "touchstart", "keydown"].forEach((ev) =>
       window.addEventListener(ev, play, { once: true, passive: true })
@@ -104,10 +112,6 @@
         entries.forEach((e) => (e.isIntersecting ? play() : heroVideo.pause()));
       }, { threshold: 0.01 }).observe(heroVideo);
     }
-    // Respect reduced-motion: freeze on the first frame instead of looping.
-    const applyRM = () => { if (rm.matches) { heroVideo.pause(); heroVideo.removeAttribute("loop"); } else { heroVideo.setAttribute("loop", ""); play(); } };
-    applyRM();
-    rm.addEventListener?.("change", applyRM);
   }
 
   /* ---------------- Smooth scroll for in-page anchors ---------------- */
